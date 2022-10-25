@@ -42,6 +42,7 @@ public class AnimationRecorder : MonoBehaviour
     //Changes to be made: Find target object's AnimatorController automatically
     void StartRecording(GameObject target, AnimatorController controller)
     {
+        Debug.Log("i've started recording");
         m_Recorder = new GameObjectRecorder(target);
 
         // Bind all the Transforms on the GameObject and all its children.
@@ -57,6 +58,7 @@ public class AnimationRecorder : MonoBehaviour
     //Called to stop recording
     void StopRecording()
     {
+        Debug.Log("i've stopped recording");
         if (clip == null)
             return;
 
