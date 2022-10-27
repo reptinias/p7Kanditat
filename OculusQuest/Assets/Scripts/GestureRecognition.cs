@@ -30,7 +30,7 @@ public class GestureRecognition : MonoBehaviour
     private ThreeDPoint[] reducedPoints;
     private GestureTemplates templates;
     private float tempTime = 0f;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,32 +79,39 @@ public class GestureRecognition : MonoBehaviour
     {
         tempTime += Time.deltaTime;
         // vvv Change this to a static gesture output fra DNN vvv
-        if (Input.GetMouseButton(0))
+        for (int i = 0; i < InputDevices.m_hands.Length; i++)
         {
-            if (inputReady)
+            //if (Input.GetMouseButton(0))
+            if(InputDevices.procesGesture[i] == true)
             {
-                if (!gestureStarted)
+                if (inputReady)
                 {
-                    gestureStarted = true;
-                    StartGesture();
+                    if (!gestureStarted)
+                    {
+                        gestureStarted = true;
+                        StartGesture(InputDevices.m_hands[i].Bones[20].Transform.position*10);
+                    }
+
+                    if ((!gestureComplete) && (tempTime > samplingRate))
+                    {
+                        tempTime = 0f;
+                        ContinueGesture(InputDevices.m_hands[i].Bones[20].Transform.position*10);
+                    }
+
+                    if (gestureComplete)
+                    {
+                        EndGesture();
+                    }
                 }
-                if ((!gestureComplete) && (tempTime > samplingRate))
-                {
-                    tempTime = 0f;
-                    ContinueGesture();
-                }
-                if (gestureComplete)
+            }
+            else
+            {
+                if (gestureStarted)
                 {
                     EndGesture();
                 }
+                inputReady = true;
             }
-        } else
-        {
-            if (gestureStarted)
-            {
-                EndGesture();
-            }
-            inputReady = true;
         }
     }
     
@@ -126,19 +133,25 @@ public class GestureRecognition : MonoBehaviour
         }
     }
     
-    private void StartGesture()
+    private void StartGesture(Vector3 followPoint)
     {
         Debug.Log("gesture started");
-        startPoint.SetX(Input.mousePosition.x);
-        startPoint.SetY(Input.mousePosition.y);
-        startPoint.SetZ(Input.mousePosition.z);
+        startPoint.SetX(followPoint.x);
+        startPoint.SetY(followPoint.y);
+        startPoint.SetZ(followPoint.z);
         gestureComplete = false;
     }
     
-    private void ContinueGesture()
+    private void ContinueGesture(Vector3 followPoint)
     {
-        currentPoint.SetX(Input.mousePosition.x - startPoint.GetX());
-        currentPoint.SetY(Input.mousePosition.y - startPoint.GetY());
+        Debug.Log(followPoint.x + " " + startPoint.GetX());
+        Debug.Log(followPoint.y + " " + startPoint.GetY());
+        Debug.Log(followPoint.z + " " + startPoint.GetZ());
+        
+        currentPoint.SetX(followPoint.x - startPoint.GetX());
+        currentPoint.SetY(followPoint.y - startPoint.GetY());
+        currentPoint.SetZ(followPoint.z - startPoint.GetZ());
+        //Debug.Log("x: " + currentPoint.GetX() + " y: " + currentPoint.GetY() + " z: " + currentPoint.GetZ());
         currentPointList.Add(new ThreeDPoint(currentPoint.GetX(), currentPoint.GetY(), currentPoint.GetZ()));
         if (currentPoint.GetX() > currentGesture.GetMaxX())
         {
@@ -188,6 +201,7 @@ public class GestureRecognition : MonoBehaviour
                 currentGesture.GetMaxX(), currentGesture.GetMaxY(), currentGesture.GetMaxZ(),
                 currentGesture.GetMinX(), currentGesture.GetMinY(), currentGesture.GetMinZ(),
                 currentGesture.GetPoints()));
+            SaveTemplates();
         } else
         {
             DrawnGesture m = FindMatch(currentGesture, templates);
@@ -202,17 +216,20 @@ public class GestureRecognition : MonoBehaviour
         float xrange = gesture.GetMaxX() - gesture.GetMinX();
         float yrange = gesture.GetMaxY() - gesture.GetMinY();
         float zrange = gesture.GetMaxZ() - gesture.GetMinZ();
-        
-        // Skal omskrives til at tage x, y og z
-        if (xrange >= yrange)
+
+        if (xrange >= yrange && xrange >= zrange)
         {
             scale = standardRatio / (gesture.GetMaxX() - gesture.GetMinX());
-        } else
+        } 
+        if(yrange >= xrange && yrange >= zrange)
         {
             scale = standardRatio / (gesture.GetMaxY() - gesture.GetMinY());
         }
-        
-        
+        if (zrange >= xrange && zrange >= yrange)
+        {
+            scale = standardRatio / (gesture.GetMaxZ() - gesture.GetMinZ());
+        }
+
         if (scale != 1)
         {
             foreach (ThreeDPoint point in currentPointList)
@@ -317,6 +334,7 @@ public class GestureRecognition : MonoBehaviour
         float xDif = a.GetX() - b.GetX();
         float yDif = a.GetY() - b.GetY();
         float zDif = a.GetZ() - b.GetZ();
+        Debug.Log("Distance: " + (xDif * xDif) + (yDif * yDif) + (zDif * zDif));
         return Mathf.Sqrt((xDif * xDif) + (yDif * yDif) + (zDif * zDif));
     }
 }
@@ -327,7 +345,6 @@ public class GestureRecognition : MonoBehaviour
 public class GestureTemplates
 {
     public List<DrawnGesture> templates;
-
     public GestureTemplates()
     {
         templates = new List<DrawnGesture>();
