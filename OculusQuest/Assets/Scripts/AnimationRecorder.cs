@@ -9,10 +9,15 @@ public class AnimationRecorder : MonoBehaviour
 {
     private GameObjectRecorder m_Recorder;
     public GameObject target;
-    public AnimatorController controller;
+    private AnimatorController controller;
     private bool recording = false;
     private AnimationClip clip;
-    
+
+    private void Start()
+    {
+        controller = target.GetComponent<Animator>().runtimeAnimatorController as AnimatorController;
+    }
+
     void LateUpdate()
     {
         //If the program is recording and the p-key is pressed, stop recording
@@ -65,7 +70,7 @@ public class AnimationRecorder : MonoBehaviour
         if (m_Recorder.isRecording)
         {
             //Creates a new animation clip in the designated path
-            AssetDatabase.CreateAsset(clip, "Assets/Test" + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".anim");
+            AssetDatabase.CreateAsset(clip, "Assets/" + target.name + "Anim" + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".anim");
             //Saves clip to AnimatorController
             controller.AddMotion(clip);
             // Save the recorded session to the clip.
