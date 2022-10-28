@@ -10,6 +10,7 @@ using System.Linq;
 public class ReadInputDevices : MonoBehaviour
 {
     public OVRSkeleton[] m_hands;
+    public OVRHand[] trackedHands;
     private int handIndex;
 
     private float[] xCoordinates = new float[24];
@@ -22,6 +23,7 @@ public class ReadInputDevices : MonoBehaviour
     private IWorker _engine;
     public Prediction prediction;
     public string[] predString = new string[2];
+    public bool[] procesGesture = new bool[2];
 
     public struct Prediction
     {
@@ -63,7 +65,7 @@ public class ReadInputDevices : MonoBehaviour
         {
             predicted = tensor.AsFloats();
             predictedValue = Array.IndexOf(predicted, predicted.Max());
-            Debug.Log($" hand {handIndex} predicted as {convertPrediction(predictedValue)}");
+            //Debug.Log($" hand {handIndex} predicted as {convertPrediction(predictedValue)}");
             return convertPrediction(predictedValue);
         }
     }
@@ -71,10 +73,16 @@ public class ReadInputDevices : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        procesGesture = new bool[] { false, false };
         m_hands = new OVRSkeleton[]
         {
             GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRSkeleton>(),
             GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRSkeleton>()
+        };
+        trackedHands = new OVRHand[]
+        {
+            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRHand>(),
+            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRHand>()
         };
 
         _runTimeModel = ModelLoader.Load(nnmodel);
@@ -110,11 +118,11 @@ public class ReadInputDevices : MonoBehaviour
             }
             
             //Debug.Log($"hand {handIndex}. coordinates max: {normCoordinates.Max()}. coordinates min: {normCoordinates.Min()}");
-            var input = new Tensor(1, 72, normCoordinates);
+            /*var input = new Tensor(1, 72, normCoordinates);
             Tensor output = _engine.Execute(input).PeekOutput();
             input.Dispose();
             predString[handIndex] = prediction.SetPrediction(output, handIndex);
-            handIndex += 1;
+            handIndex += 1;*/
         }
     }
 
