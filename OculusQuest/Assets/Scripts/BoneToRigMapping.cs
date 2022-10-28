@@ -4,35 +4,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manages the Cube with the Oculus Hands base functionalities
+/// When the Left Index touches the cube, it becomes blue;
+/// When the Right Index touches the cube, it become green;
+/// When the Left hand pinches the middle finger, it becomes red;
+/// </summary>
+[RequireComponent(typeof(Collider))]
 public class BoneToRigMapping : MonoBehaviour
 {
+    /// <summary>
+    /// Renderer of this cube
+    /// </summary>
     private Renderer m_renderer;
+
+    /// <summary>
+    /// Reference to the managers of the hands.
+    /// First item is left hand, second item is right hand
+    /// </summary>
     private OVRHand[] m_hands;
+
+    /// <summary>
+    /// True if an index tip is inside the cube, false otherwise.
+    /// First item is left hand, second item is right hand
+    /// </summary>
     private bool[] m_isIndexStaying;
 
-    public ReadInputDevices InputDevices;
-    private string name;
-    private OVRSkeleton hand;
-
-    private int index;
-
-    // Start is called before the first frame update
+    /// <summary>
+    /// Start
+    /// </summary>
     void Start()
     {
-        //we don't want the cube to move over collision, so let's just use a trigger
-        GetComponent<Collider>().isTrigger = true;
-
-        name = gameObject.name;
         m_renderer = GetComponent<Renderer>();
         m_hands = new OVRHand[]
         {
-            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRHand>(),
-            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRHand>()
+            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/OVRHandPrefab").GetComponent<OVRHand>(),
+            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/OVRHandPrefab").GetComponent<OVRHand>()
         };
         m_isIndexStaying = new bool[2] { false, false };
 
+        //we don't want the cube to move over collision, so let's just use a trigger
+        GetComponent<Collider>().isTrigger = true;
     }
 
+    /// <summary>
+    /// Update
+    /// </summary>
     void Update()
     {
         //check for middle finger pinch on the left hand, and make che cube red in this case
@@ -43,6 +60,11 @@ public class BoneToRigMapping : MonoBehaviour
             m_renderer.material.color = Color.white;
     }
 
+    /// <summary>
+    /// Trigger enter.
+    /// Notice that this gameobject must have a trigger collider
+    /// </summary>
+    /// <param name="collider">Collider of interest</param>
     private void OnTriggerEnter(Collider collider)
     {
         //get hand associated with trigger
@@ -57,6 +79,11 @@ public class BoneToRigMapping : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Trigger Exit.
+    /// Notice that this gameobject must have a trigger collider
+    /// </summary>
+    /// <param name="collider">Collider of interest</param>
     private void OnTriggerExit(Collider collider)
     {
         //get hand associated with trigger
@@ -72,6 +99,11 @@ public class BoneToRigMapping : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets the hand id associated with the index finger of the collider passed as parameter, if any
+    /// </summary>
+    /// <param name="collider">Collider of interest</param>
+    /// <returns>0 if the collider represents the finger tip of left hand, 1 if it is the one of right hand, -1 if it is not an index fingertip</returns>
     private int GetIndexFingerHandId(Collider collider)
     {
         //Checking Oculus code, it is possible to see that physics capsules gameobjects always end with _CapsuleCollider
