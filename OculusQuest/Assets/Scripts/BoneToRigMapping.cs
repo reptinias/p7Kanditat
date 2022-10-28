@@ -18,8 +18,11 @@ public class BoneToRigMapping : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_renderer = GetComponent<Renderer>();
+        //we don't want the cube to move over collision, so let's just use a trigger
+        GetComponent<Collider>().isTrigger = true;
 
+        name = gameObject.name;
+        m_renderer = GetComponent<Renderer>();
         m_hands = new OVRHand[]
         {
             GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/OVRHandPrefab").GetComponent<OVRHand>(),
@@ -27,8 +30,6 @@ public class BoneToRigMapping : MonoBehaviour
         };
         m_isIndexStaying = new bool[2] { false, false };
 
-        //we don't want the cube to move over collision, so let's just use a trigger
-        GetComponent<Collider>().isTrigger = true;
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -43,16 +44,6 @@ public class BoneToRigMapping : MonoBehaviour
             m_renderer.material.color = handIdx == 0 ? m_renderer.material.color = Color.blue : m_renderer.material.color = Color.green;
             m_isIndexStaying[handIdx] = true;
         }
-    }
-
-    void Update()
-    {
-        //check for middle finger pinch on the left hand, and make che cube red in this case
-        if (m_hands[0].GetFingerIsPinching(OVRHand.HandFinger.Middle))
-            m_renderer.material.color = Color.red;
-        //if no pinch, and the cube was red, make it white again
-        else if (m_renderer.material.color == Color.red)
-            m_renderer.material.color = Color.white;
     }
 
     private void OnTriggerExit(Collider collider)
@@ -95,5 +86,12 @@ public class BoneToRigMapping : MonoBehaviour
         }
 
         return -1;
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 }
