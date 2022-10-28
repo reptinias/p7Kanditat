@@ -22,16 +22,14 @@ public class BoneToRigMapping : MonoBehaviour
         GetComponent<Collider>().isTrigger = true;
 
         name = gameObject.name;
-        if (name == "LeftHandAnchor")
+        m_renderer = GetComponent<Renderer>();
+        m_hands = new OVRHand[]
         {
-            hand = InputDevices.m_hands[0];
-            index = 0;
-        }
-        else
-        {
-            hand = InputDevices.m_hands[1];
-            index = 1;
-        }
+            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/OVRHandPrefab").GetComponent<OVRHand>(),
+            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/OVRHandPrefab").GetComponent<OVRHand>()
+        };
+        m_isIndexStaying = new bool[2] { false, false };
+
     }
 
     private void OnTriggerEnter(Collider collider)
