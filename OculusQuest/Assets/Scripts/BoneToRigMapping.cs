@@ -33,6 +33,16 @@ public class BoneToRigMapping : MonoBehaviour
 
     }
 
+    void Update()
+    {
+        //check for middle finger pinch on the left hand, and make che cube red in this case
+        if (m_hands[0].GetFingerIsPinching(OVRHand.HandFinger.Middle))
+            m_renderer.material.color = Color.red;
+        //if no pinch, and the cube was red, make it white again
+        else if (m_renderer.material.color == Color.red)
+            m_renderer.material.color = Color.white;
+    }
+
     private void OnTriggerEnter(Collider collider)
     {
         //get hand associated with trigger
@@ -89,10 +99,4 @@ public class BoneToRigMapping : MonoBehaviour
         return -1;
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
