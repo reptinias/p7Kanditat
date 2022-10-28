@@ -38,8 +38,8 @@ public class BoneToRigMapping : MonoBehaviour
         m_renderer = GetComponent<Renderer>();
         m_hands = new OVRHand[]
         {
-            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/OVRHandPrefab").GetComponent<OVRHand>(),
-            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/OVRHandPrefab").GetComponent<OVRHand>()
+            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRHand>(),
+            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRHand>()
         };
         m_isIndexStaying = new bool[2] { false, false };
 
