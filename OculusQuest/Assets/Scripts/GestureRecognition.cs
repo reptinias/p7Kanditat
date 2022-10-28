@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using Unity.XR.CoreUtils;
 
 public class GestureRecognition : MonoBehaviour
 {
@@ -23,11 +24,11 @@ public class GestureRecognition : MonoBehaviour
     private bool inputReady;
 
     private string gestureFileName = "gestures.json";
-    private ThreeDPoint startPoint;
-    private ThreeDPoint currentPoint;
+    private Vector3 startPoint;
+    private Vector3 currentPoint;
     private DrawnGesture currentGesture;
-    private List<ThreeDPoint> currentPointList;
-    private ThreeDPoint[] reducedPoints;
+    private List<Vector3> currentPointList;
+    private Vector3[] reducedPoints;
     private GestureTemplates templates;
     private float tempTime = 0f;
 
@@ -42,14 +43,14 @@ public class GestureRecognition : MonoBehaviour
     #region variable initialization and reset
     private void varInitialization()
     {
-        currentPoint = new ThreeDPoint(0, 0, 0);
-        startPoint = new ThreeDPoint(0, 0, 0);
-        currentPointList = new List<ThreeDPoint>();
-        currentPointList.Add(new ThreeDPoint(0, 0, 0));
-        reducedPoints = new ThreeDPoint[pointsPerGesture];
+        currentPoint = new Vector3(0, 0, 0);
+        startPoint = new Vector3(0, 0, 0);
+        currentPointList = new List<Vector3>();
+        currentPointList.Add(new Vector3(0, 0, 0));
+        reducedPoints = new Vector3[pointsPerGesture];
         for (int i = 0; i < pointsPerGesture; i++)
         {
-            reducedPoints[i] = new ThreeDPoint(0, 0, 0);
+            reducedPoints[i] = new Vector3(0, 0, 0);
         }
         gestureStarted = false;
         gestureComplete = false;
@@ -62,12 +63,12 @@ public class GestureRecognition : MonoBehaviour
     {
         for (int i = 0; i < pointsPerGesture; i++)
         {
-            reducedPoints[i].SetX(0);
-            reducedPoints[i].SetY(0);
-            reducedPoints[i].SetZ(0);
+            reducedPoints[i].Set(0, 0, 0);
+            //reducedPoints[i].SetY(0);
+            //reducedPoints[i].SetZ(0);
         }
         currentPointList.Clear();
-        currentPointList.Add(new ThreeDPoint(0,0, 0));
+        currentPointList.Add(new Vector3(0,0, 0));
         gestureStarted = false;
         gestureComplete = false;
     }
@@ -136,48 +137,51 @@ public class GestureRecognition : MonoBehaviour
     private void StartGesture(Vector3 followPoint)
     {
         Debug.Log("gesture started");
-        startPoint.SetX(followPoint.x);
-        startPoint.SetY(followPoint.y);
-        startPoint.SetZ(followPoint.z);
+        Vector3 fP = new Vector3(followPoint.x, followPoint.y, followPoint.z);
+        startPoint.Set(fP.x, fP.y, fP.z);
+        //startPoint.SetY(fP.y);
+        //startPoint.SetZ(fP.z);
         gestureComplete = false;
     }
     
     private void ContinueGesture(Vector3 followPoint)
     {
-        Debug.Log(followPoint.x + " " + startPoint.GetX());
-        Debug.Log(followPoint.y + " " + startPoint.GetY());
-        Debug.Log(followPoint.z + " " + startPoint.GetZ());
+        //Vector3 fP = new Vector3(followPoint.x, followPoint.y, followPoint.z);
+        Debug.Log("points: " );
+        Debug.Log(followPoint.x + " " + startPoint.x);
+        Debug.Log(followPoint.y + " " + startPoint.y);
+        Debug.Log(followPoint.z + " " + startPoint.z);
         
-        currentPoint.SetX(followPoint.x - startPoint.GetX());
-        currentPoint.SetY(followPoint.y - startPoint.GetY());
-        currentPoint.SetZ(followPoint.z - startPoint.GetZ());
+        currentPoint.Set(followPoint.x - startPoint.x, followPoint.y - startPoint.y, followPoint.z - startPoint.z);
+        //currentPoint.SetY(followPoint.y - startPoint.GetY());
+        //currentPoint.SetZ(followPoint.z - startPoint.GetZ());
         //Debug.Log("x: " + currentPoint.GetX() + " y: " + currentPoint.GetY() + " z: " + currentPoint.GetZ());
-        currentPointList.Add(new ThreeDPoint(currentPoint.GetX(), currentPoint.GetY(), currentPoint.GetZ()));
-        if (currentPoint.GetX() > currentGesture.GetMaxX())
+        currentPointList.Add(new Vector3(currentPoint.x, currentPoint.y, currentPoint.z));
+        if (currentPoint.x > currentGesture.GetMaxX())
         {
-            currentGesture.SetMaxX(currentPoint.GetX());
+            currentGesture.SetMaxX(currentPoint.x);
         }
-        if (currentPoint.GetX() < currentGesture.GetMinX())
+        if (currentPoint.x < currentGesture.GetMinX())
         {
-            currentGesture.SetMinX(currentPoint.GetX());
-        }
-        
-        if (currentPoint.GetY() > currentGesture.GetMaxY())
-        {
-            currentGesture.SetMaxY(currentPoint.GetY());
-        }
-        if (currentPoint.GetY() < currentGesture.GetMinY())
-        {
-            currentGesture.SetMinY(currentPoint.GetY());
+            currentGesture.SetMinX(currentPoint.x);
         }
         
-        if (currentPoint.GetZ() < currentGesture.GetMinZ())
+        if (currentPoint.y > currentGesture.GetMaxY())
         {
-            currentGesture.SetMinZ(currentPoint.GetZ());
+            currentGesture.SetMaxY(currentPoint.y);
         }
-        if (currentPoint.GetZ() < currentGesture.GetMinZ())
+        if (currentPoint.y < currentGesture.GetMinY())
         {
-            currentGesture.SetMinZ(currentPoint.GetZ());
+            currentGesture.SetMinY(currentPoint.y);
+        }
+        
+        if (currentPoint.z < currentGesture.GetMinZ())
+        {
+            currentGesture.SetMinZ(currentPoint.z);
+        }
+        if (currentPoint.z < currentGesture.GetMinZ())
+        {
+            currentGesture.SetMinZ(currentPoint.z);
         }
         
         if (limitSamples && currentPointList.Count >= maxPointsAllowed)
@@ -232,19 +236,19 @@ public class GestureRecognition : MonoBehaviour
 
         if (scale != 1)
         {
-            foreach (ThreeDPoint point in currentPointList)
+            foreach (Vector3 point in currentPointList)
             {
-                point.SetX(point.GetX() * scale);
-                point.SetY(point.GetY() * scale);
-                point.SetZ(point.GetZ() * scale);
+                point.Set(point.x * scale, point.y * scale, point.z * scale);
+                //point.SetY(point.GetY() * scale);
+                //point.SetZ(point.GetZ() * scale);
             }
         }
     }
     
     private void MapPoints(DrawnGesture gesture)
     {
-        reducedPoints[0].SetX(currentPointList[0].GetX());
-        reducedPoints[0].SetY(currentPointList[0].GetY());
+        reducedPoints[0].Set(currentPointList[0].x, currentPointList[0].y, currentPointList[0].z);
+        //reducedPoints[0].SetY(currentPointList[0].GetY());
         int newIndex = 1;
         float totalDistance = TotalDistance();
         float coveredDistance = 0;
@@ -256,16 +260,16 @@ public class GestureRecognition : MonoBehaviour
             bool passedIdeal = (coveredDistance + thisDistance) >= idealInterval;
             if (passedIdeal)
             {
-                ThreeDPoint reference = currentPointList[i];
+                Vector3 reference = currentPointList[i];
                 while (passedIdeal && newIndex < reducedPoints.Length)
                 {
                     float percentNeeded = (idealInterval - coveredDistance) / thisDistance;
                     if (percentNeeded > 1f) percentNeeded = 1f;
                     if (percentNeeded < 0f) percentNeeded = 0f;
-                    float new_x = (((1f - percentNeeded) * reference.GetX()) + (percentNeeded * currentPointList[i + 1].GetX()));
-                    float new_y = (((1f - percentNeeded) * reference.GetY()) + (percentNeeded * currentPointList[i + 1].GetY()));
-                    float new_z = (((1f - percentNeeded) * reference.GetZ()) + (percentNeeded * currentPointList[i + 1].GetZ()));
-                    reducedPoints[newIndex] = new ThreeDPoint(new_x, new_y, new_z);
+                    float new_x = (((1f - percentNeeded) * reference.x) + (percentNeeded * currentPointList[i + 1].x));
+                    float new_y = (((1f - percentNeeded) * reference.y) + (percentNeeded * currentPointList[i + 1].y));
+                    float new_z = (((1f - percentNeeded) * reference.z) + (percentNeeded * currentPointList[i + 1].z));
+                    reducedPoints[newIndex] = new Vector3(new_x, new_y, new_z);
                     reference = reducedPoints[newIndex];
                     newIndex++;
                     thisDistance = (coveredDistance + thisDistance) - idealInterval;
@@ -329,11 +333,11 @@ public class GestureRecognition : MonoBehaviour
         Debug.Log("total distance: " + totalDistance);
         return totalDistance;
     }
-    private float PointDistance(ThreeDPoint a, ThreeDPoint b)
+    private float PointDistance(Vector3 a, Vector3 b)
     {
-        float xDif = a.GetX() - b.GetX();
-        float yDif = a.GetY() - b.GetY();
-        float zDif = a.GetZ() - b.GetZ();
+        float xDif = a.x - b.x;
+        float yDif = a.y - b.y;
+        float zDif = a.z - b.z;
         Debug.Log("Distance: " + (xDif * xDif) + (yDif * yDif) + (zDif * zDif));
         return Mathf.Sqrt((xDif * xDif) + (yDif * yDif) + (zDif * zDif));
     }
@@ -354,7 +358,7 @@ public class GestureTemplates
 
 public class DrawnGesture
 {
-    private ThreeDPoint[] points;
+    private Vector3[] points;
     private string name;
     private float maxX;
     private float minX;
@@ -367,17 +371,17 @@ public class DrawnGesture
     public DrawnGesture(string newName, int pointsPerGesture)
     {
         numPoints = pointsPerGesture;
-        points = new ThreeDPoint[numPoints];
+        points = new Vector3[numPoints];
         name = newName;
         maxX = 0;
         maxY = 0;
         maxZ = 0;
     }
     public DrawnGesture(string newName, int pointsPerGesture, float max_x, float max_y, float max_z, 
-        float min_x, float min_y, float min_z, ThreeDPoint[] newPoints)
+        float min_x, float min_y, float min_z, Vector3[] newPoints)
     {
         numPoints = pointsPerGesture;
-        points = new ThreeDPoint[numPoints];
+        points = new Vector3[numPoints];
         SetPoints(newPoints);
         name = newName;
         maxX = max_x;
@@ -399,15 +403,15 @@ public class DrawnGesture
         Array.Clear(points, 0, numPoints);
     }
 
-    public ThreeDPoint[] GetPoints()
+    public Vector3[] GetPoints()
     {
         return points;
     }
-    public void SetPoints(ThreeDPoint[] new_points)
+    public void SetPoints(Vector3[] new_points)
     {
         for(int i = 0; i < numPoints; i++)
         {
-            points[i] = new ThreeDPoint(new_points[i].GetX(), new_points[i].GetY(), new_points[i].GetZ());
+            points[i] = new Vector3(new_points[i].x, new_points[i].y, new_points[i].z);
         }
     }
     public string GetName()

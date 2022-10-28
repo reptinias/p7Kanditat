@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class HandPointer : MonoBehaviour
@@ -19,6 +20,8 @@ public class HandPointer : MonoBehaviour
     private OVRSkeleton hand;
 
     private int index;
+
+    public TMP_Text text;
 
     // Start is called before the first frame update
     void Start()
@@ -54,7 +57,7 @@ public class HandPointer : MonoBehaviour
         }
 
         //Debug.Log(InputDevices.m_hands[1].Bones.ElementAt(20).Transform.position - InputDevices.m_hands[1].Bones.ElementAt(8).Transform.position);
-        if (toggle)
+        if (toggle && hand)
         {
             Telekenesis(hand.Bones.ElementAt(20).Transform.position,hand.Bones.ElementAt(20).Transform.position 
                                                                     - hand.Bones.ElementAt(8).Transform.position, maxLineLength);
@@ -71,10 +74,22 @@ public class HandPointer : MonoBehaviour
         {
             if (hit.transform.gameObject.CompareTag("AnimateAble"))
             {
+                InputDevices.procesGesture[index] = true;
                 Collider hitObject = hit.transform.gameObject.GetComponent<Collider>();
                 endPosition = hitObject.bounds.center;
             }
+            else
+            {
+                InputDevices.procesGesture[index] = false;
+            }
+
+            
         }
+        else
+        {
+            InputDevices.procesGesture[index] = false;
+        }
+        text.text = InputDevices.procesGesture[index].ToString();
         line.SetPositions(new Vector3[2]{transformPosition, endPosition});
     }
 }
