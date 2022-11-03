@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Linq;
+using Unity.Mathematics;
 using Unity.XR.CoreUtils;
 
 public class GestureRecognition : MonoBehaviour
@@ -17,40 +19,56 @@ public class GestureRecognition : MonoBehaviour
     public int maxPointsAllowed = 100;
     public float standardRatio = 100f;
     public float devTightness = 1f;
-    public float anomaliesFactor = 5f; 
+    public float anomaliesFactor = 5f;
+    public bool extendedGesture = false;
+    public float threshold = 1.0f;
     
     private bool gestureStarted;
     private bool gestureComplete;
     private bool inputReady;
 
     private string gestureFileName = "gestures.json";
-    private Vector3 startPoint;
-    private Vector3 currentPoint;
+    private ThreeDPoint startPoint;
+    private ThreeDPoint currentPoint;
     private DrawnGesture currentGesture;
-    private List<Vector3> currentPointList;
-    private Vector3[] reducedPoints;
+    private List<ThreeDPoint> currentPointList;
+    private ThreeDPoint[] reducedPoints;
     private GestureTemplates templates;
     private float tempTime = 0f;
 
+    private int handIndex;
+    private OVRSkeleton hand;
     // Start is called before the first frame update
     void Start()
     {
-        InputDevices = GameObject.Find("ReadInputs").GetComponent<ReadInputDevices>();
         varInitialization();
-        LoadTemplates();    
+        LoadTemplates();
+        
+        InputDevices = GameObject.Find("ReadInputs").GetComponent<ReadInputDevices>();
+        name = gameObject.name;
+        if (name == "LeftHandAnchor")
+        {
+            hand = InputDevices.m_hands[0];
+            handIndex = 0;
+        }
+        else
+        {
+            hand = InputDevices.m_hands[1];
+            handIndex = 1;
+        }
     }
     
     #region variable initialization and reset
     private void varInitialization()
     {
-        currentPoint = new Vector3(0, 0, 0);
-        startPoint = new Vector3(0, 0, 0);
-        currentPointList = new List<Vector3>();
-        currentPointList.Add(new Vector3(0, 0, 0));
-        reducedPoints = new Vector3[pointsPerGesture];
+        currentPoint = new ThreeDPoint(0, 0, 0);
+        startPoint = new ThreeDPoint(0, 0, 0);
+        currentPointList = new List<ThreeDPoint>();
+        currentPointList.Add(new ThreeDPoint(0, 0, 0));
+        reducedPoints = new ThreeDPoint[pointsPerGesture];
         for (int i = 0; i < pointsPerGesture; i++)
         {
-            reducedPoints[i] = new Vector3(0, 0, 0);
+            reducedPoints[i] = new ThreeDPoint(0, 0, 0);
         }
         gestureStarted = false;
         gestureComplete = false;
@@ -63,12 +81,12 @@ public class GestureRecognition : MonoBehaviour
     {
         for (int i = 0; i < pointsPerGesture; i++)
         {
-            reducedPoints[i].Set(0, 0, 0);
-            //reducedPoints[i].SetY(0);
-            //reducedPoints[i].SetZ(0);
+            reducedPoints[i].SetX(0);
+            reducedPoints[i].SetY(0);
+            reducedPoints[i].SetZ(0);
         }
         currentPointList.Clear();
-        currentPointList.Add(new Vector3(0,0, 0));
+        currentPointList.Add(new ThreeDPoint(0,0, 0));
         gestureStarted = false;
         gestureComplete = false;
     }
@@ -79,47 +97,43 @@ public class GestureRecognition : MonoBehaviour
     void Update()
     {
         tempTime += Time.deltaTime;
-        // vvv Change this to a static gesture output fra DNN vvv
-        for (int i = 0; i < InputDevices.m_hands.Length; i++)
+        if(InputDevices.procesGesture[handIndex] == true)
         {
-            //if (Input.GetMouseButton(0))
-            if(InputDevices.procesGesture[i] == true)
+            if (inputReady)
             {
-                if (inputReady)
+                if (!gestureStarted)
                 {
-                    if (!gestureStarted)
-                    {
-                        gestureStarted = true;
-                        StartGesture(InputDevices.m_hands[i].Bones[20].Transform.position*10);
-                    }
-
-                    if ((!gestureComplete) && (tempTime > samplingRate))
-                    {
-                        tempTime = 0f;
-                        ContinueGesture(InputDevices.m_hands[i].Bones[20].Transform.position*10);
-                    }
-
-                    if (gestureComplete)
-                    {
-                        EndGesture();
-                    }
+                    gestureStarted = true;
+                    StartGesture(hand.Bones.ElementAt(20).Transform.position*10);
                 }
-            }
-            else
-            {
-                if (gestureStarted)
+
+                if ((!gestureComplete) && (tempTime > samplingRate))
+                {
+                    tempTime = 0f;
+                    ContinueGesture(hand.Bones.ElementAt(20).Transform.position*10);
+                }
+                
+                if (gestureComplete && extendedGesture == false)
                 {
                     EndGesture();
                 }
-                inputReady = true;
             }
+        }
+        else
+        {
+            if (gestureStarted && extendedGesture == false)
+            {
+                EndGesture();
+            }
+
+            inputReady = true;
         }
     }
     
     private void SaveTemplates()
     {
         string filePath = Application.dataPath + "/StreamingAssets/" + gestureFileName;
-        string saveData = JsonUtility.ToJson(templates);
+        string saveData = JsonUtility.ToJson(templates, true);
         File.WriteAllText(filePath, saveData);
     }
 
@@ -138,56 +152,62 @@ public class GestureRecognition : MonoBehaviour
     {
         Debug.Log("gesture started");
         Vector3 fP = new Vector3(followPoint.x, followPoint.y, followPoint.z);
-        startPoint.Set(fP.x, fP.y, fP.z);
-        //startPoint.SetY(fP.y);
-        //startPoint.SetZ(fP.z);
+        startPoint.SetX(fP.x);
+        startPoint.SetY(fP.y);
+        startPoint.SetZ(fP.z);
         gestureComplete = false;
+        extendedGesture = false;
     }
     
     private void ContinueGesture(Vector3 followPoint)
     {
-        //Vector3 fP = new Vector3(followPoint.x, followPoint.y, followPoint.z);
-        Debug.Log("points: " );
-        Debug.Log(followPoint.x + " " + startPoint.x);
-        Debug.Log(followPoint.y + " " + startPoint.y);
-        Debug.Log(followPoint.z + " " + startPoint.z);
-        
-        currentPoint.Set(followPoint.x - startPoint.x, followPoint.y - startPoint.y, followPoint.z - startPoint.z);
-        //currentPoint.SetY(followPoint.y - startPoint.GetY());
-        //currentPoint.SetZ(followPoint.z - startPoint.GetZ());
-        //Debug.Log("x: " + currentPoint.GetX() + " y: " + currentPoint.GetY() + " z: " + currentPoint.GetZ());
-        currentPointList.Add(new Vector3(currentPoint.x, currentPoint.y, currentPoint.z));
-        if (currentPoint.x > currentGesture.GetMaxX())
+        currentPoint.SetX(followPoint.x - startPoint.GetX());
+        currentPoint.SetY(followPoint.y - startPoint.GetY());
+        currentPoint.SetZ(followPoint.z - startPoint.GetZ());
+
+        currentPointList.Add(new ThreeDPoint(currentPoint.GetX(), currentPoint.GetY(), currentPoint.GetZ()));
+        if (currentPoint.GetX() > currentGesture.GetMaxX())
         {
-            currentGesture.SetMaxX(currentPoint.x);
+            currentGesture.SetMaxX(currentPoint.GetX());
         }
-        if (currentPoint.x < currentGesture.GetMinX())
+        if (currentPoint.GetX() < currentGesture.GetMinX())
         {
-            currentGesture.SetMinX(currentPoint.x);
+            currentGesture.SetMinX(currentPoint.GetX());
         }
         
-        if (currentPoint.y > currentGesture.GetMaxY())
+        if (currentPoint.GetY() > currentGesture.GetMaxY())
         {
-            currentGesture.SetMaxY(currentPoint.y);
+            currentGesture.SetMaxY(currentPoint.GetY());
         }
-        if (currentPoint.y < currentGesture.GetMinY())
+        if (currentPoint.GetY() < currentGesture.GetMinY())
         {
-            currentGesture.SetMinY(currentPoint.y);
+            currentGesture.SetMinY(currentPoint.GetY());
         }
         
-        if (currentPoint.z < currentGesture.GetMinZ())
+        if (currentPoint.GetZ() > currentGesture.GetMaxZ())
         {
-            currentGesture.SetMinZ(currentPoint.z);
+            currentGesture.SetMaxZ(currentPoint.GetZ());
         }
-        if (currentPoint.z < currentGesture.GetMinZ())
+        if (currentPoint.GetZ() < currentGesture.GetMinZ())
         {
-            currentGesture.SetMinZ(currentPoint.z);
+            currentGesture.SetMinZ(currentPoint.GetZ());
         }
         
         if (limitSamples && currentPointList.Count >= maxPointsAllowed)
         {
-            gestureComplete = true;
-            Debug.Log(message: "Gesture Complete!");
+            extendedGesture = true;
+            Rescale(currentGesture);
+            MapPoints(currentGesture);
+            DrawnGesture m = FindMatch(currentGesture, templates);
+            if (m.GetName() == "no match")
+            {
+                currentPointList.RemoveRange(0, Math.Min(10, currentPointList.Count));
+            }
+            else
+            {
+                gestureComplete = true;
+                Debug.Log("Extended Gesture: " + m.GetName());
+            }
         }
     }
     
@@ -206,11 +226,13 @@ public class GestureRecognition : MonoBehaviour
                 currentGesture.GetMinX(), currentGesture.GetMinY(), currentGesture.GetMinZ(),
                 currentGesture.GetPoints()));
             SaveTemplates();
-        } else
+        }
+        else
         {
             DrawnGesture m = FindMatch(currentGesture, templates);
-            Debug.Log(m.GetName());
+            Debug.Log("short Gesture: " + m.GetName());
         }
+
         varReset();
     }
     
@@ -236,19 +258,20 @@ public class GestureRecognition : MonoBehaviour
 
         if (scale != 1)
         {
-            foreach (Vector3 point in currentPointList)
+            foreach (ThreeDPoint point in currentPointList)
             {
-                point.Set(point.x * scale, point.y * scale, point.z * scale);
-                //point.SetY(point.GetY() * scale);
-                //point.SetZ(point.GetZ() * scale);
+                point.SetX(point.GetX() * scale);
+                point.SetY(point.GetY() * scale);
+                point.SetZ(point.GetZ() * scale);
             }
         }
     }
     
     private void MapPoints(DrawnGesture gesture)
     {
-        reducedPoints[0].Set(currentPointList[0].x, currentPointList[0].y, currentPointList[0].z);
-        //reducedPoints[0].SetY(currentPointList[0].GetY());
+        reducedPoints[0].SetX(currentPointList[0].GetX());
+        reducedPoints[0].SetY(currentPointList[0].GetY());
+        reducedPoints[0].SetZ(currentPointList[0].GetZ());
         int newIndex = 1;
         float totalDistance = TotalDistance();
         float coveredDistance = 0;
@@ -260,16 +283,16 @@ public class GestureRecognition : MonoBehaviour
             bool passedIdeal = (coveredDistance + thisDistance) >= idealInterval;
             if (passedIdeal)
             {
-                Vector3 reference = currentPointList[i];
+                ThreeDPoint reference = currentPointList[i];
                 while (passedIdeal && newIndex < reducedPoints.Length)
                 {
                     float percentNeeded = (idealInterval - coveredDistance) / thisDistance;
                     if (percentNeeded > 1f) percentNeeded = 1f;
                     if (percentNeeded < 0f) percentNeeded = 0f;
-                    float new_x = (((1f - percentNeeded) * reference.x) + (percentNeeded * currentPointList[i + 1].x));
-                    float new_y = (((1f - percentNeeded) * reference.y) + (percentNeeded * currentPointList[i + 1].y));
-                    float new_z = (((1f - percentNeeded) * reference.z) + (percentNeeded * currentPointList[i + 1].z));
-                    reducedPoints[newIndex] = new Vector3(new_x, new_y, new_z);
+                    float new_x = (((1f - percentNeeded) * reference.GetX()) + (percentNeeded * currentPointList[i + 1].GetX()));
+                    float new_y = (((1f - percentNeeded) * reference.GetY()) + (percentNeeded * currentPointList[i + 1].GetY()));
+                    float new_z = (((1f - percentNeeded) * reference.GetZ()) + (percentNeeded * currentPointList[i + 1].GetZ()));
+                    reducedPoints[newIndex] = new ThreeDPoint(new_x, new_y, new_z);
                     reference = reducedPoints[newIndex];
                     newIndex++;
                     thisDistance = (coveredDistance + thisDistance) - idealInterval;
@@ -288,13 +311,14 @@ public class GestureRecognition : MonoBehaviour
     private DrawnGesture FindMatch(DrawnGesture playerGesture, GestureTemplates templates)
     {
         float minAvgDifference = float.MaxValue;
+        
         DrawnGesture match = new DrawnGesture("no match", pointsPerGesture);
         foreach(DrawnGesture template in templates.templates)
         {
-            Debug.Log(template.GetName());
+            //Debug.Log(template.GetName());
             float d = AverageDifference(playerGesture, template);
-            Debug.Log(d.ToString());
-            if (d < minAvgDifference)
+            //Debug.Log(d.ToString());
+            if (d < minAvgDifference && d < threshold)
             {
                 minAvgDifference = d;
                 match = template;               
@@ -333,12 +357,11 @@ public class GestureRecognition : MonoBehaviour
         Debug.Log("total distance: " + totalDistance);
         return totalDistance;
     }
-    private float PointDistance(Vector3 a, Vector3 b)
+    private float PointDistance(ThreeDPoint a, ThreeDPoint b)
     {
-        float xDif = a.x - b.x;
-        float yDif = a.y - b.y;
-        float zDif = a.z - b.z;
-        Debug.Log("Distance: " + (xDif * xDif) + (yDif * yDif) + (zDif * zDif));
+        float xDif = a.GetX() - b.GetX();
+        float yDif = a.GetY() - b.GetY();
+        float zDif = a.GetZ() - b.GetZ();
         return Mathf.Sqrt((xDif * xDif) + (yDif * yDif) + (zDif * zDif));
     }
 }
@@ -356,32 +379,33 @@ public class GestureTemplates
 
 }
 
+[Serializable]
 public class DrawnGesture
 {
-    private Vector3[] points;
-    private string name;
-    private float maxX;
-    private float minX;
-    private float maxY;
-    private float minY;
-    private float maxZ;
-    private float minZ;
-    private int numPoints;
+    public ThreeDPoint[] points;
+    public string name;
+    public float maxX;
+    public float minX;
+    public float maxY;
+    public float minY;
+    public float maxZ;
+    public float minZ;
+    public int numPoints;
 
     public DrawnGesture(string newName, int pointsPerGesture)
     {
         numPoints = pointsPerGesture;
-        points = new Vector3[numPoints];
+        points = new ThreeDPoint[numPoints];
         name = newName;
         maxX = 0;
         maxY = 0;
         maxZ = 0;
     }
     public DrawnGesture(string newName, int pointsPerGesture, float max_x, float max_y, float max_z, 
-        float min_x, float min_y, float min_z, Vector3[] newPoints)
+        float min_x, float min_y, float min_z, ThreeDPoint[] newPoints)
     {
         numPoints = pointsPerGesture;
-        points = new Vector3[numPoints];
+        points = new ThreeDPoint[numPoints];
         SetPoints(newPoints);
         name = newName;
         maxX = max_x;
@@ -403,15 +427,15 @@ public class DrawnGesture
         Array.Clear(points, 0, numPoints);
     }
 
-    public Vector3[] GetPoints()
+    public ThreeDPoint[] GetPoints()
     {
         return points;
     }
-    public void SetPoints(Vector3[] new_points)
+    public void SetPoints(ThreeDPoint[] new_points)
     {
         for(int i = 0; i < numPoints; i++)
         {
-            points[i] = new Vector3(new_points[i].x, new_points[i].y, new_points[i].z);
+            points[i] = new ThreeDPoint(new_points[i].GetX(), new_points[i].GetY(), new_points[i].GetZ());
         }
     }
     public string GetName()
@@ -481,11 +505,12 @@ public class DrawnGesture
     }
 }
 
+[Serializable]
 public class ThreeDPoint
 {
-    private float x;
-    private float y;
-    private float z;
+    public float x;
+    public float y;
+    public float z;
 
     public ThreeDPoint(float startx, float starty, float startz)
     {
