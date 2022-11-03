@@ -48,7 +48,7 @@ public class BoneToRigMapping : MonoBehaviour
     void Start()
     {
         //StartMapping();
-        /*m_renderer = GetComponent<Renderer>();
+        m_renderer = GetComponent<Renderer>();
         m_hands = new OVRHand[]
         {
             GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRHand>(),
@@ -57,7 +57,7 @@ public class BoneToRigMapping : MonoBehaviour
         m_isIndexStaying = new bool[2] { false, false };
 
         //we don't want the cube to move over collision, so let's just use a trigger
-        GetComponent<Collider>().isTrigger = true;*/
+        GetComponent<Collider>().isTrigger = true;
     }
 
     /// <summary>
