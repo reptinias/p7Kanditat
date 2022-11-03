@@ -36,7 +36,7 @@ public class BoneToRigMappingOLD : MonoBehaviour
     void Start()
     {
         //StartMapping();
-        /*m_renderer = GetComponent<Renderer>();
+        m_renderer = GetComponent<Renderer>();
         m_hands = new OVRHand[]
         {
             GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRHand>(),
@@ -45,7 +45,7 @@ public class BoneToRigMappingOLD : MonoBehaviour
         m_isIndexStaying = new bool[2] { false, false };
 
         //we don't want the cube to move over collision, so let's just use a trigger
-        GetComponent<Collider>().isTrigger = true;*/
+        GetComponent<Collider>().isTrigger = true;
     }
 
     /// <summary>
@@ -53,13 +53,13 @@ public class BoneToRigMappingOLD : MonoBehaviour
     /// </summary>
     void Update()
     {
-        /*
+        
         //check for middle finger pinch on the left hand, and make che cube red in this case
         if (m_hands[0].GetFingerIsPinching(OVRHand.HandFinger.Middle))
             m_renderer.material.color = Color.red;
         //if no pinch, and the cube was red, make it white again
         else if (m_renderer.material.color == Color.red)
-            m_renderer.material.color = Color.white;*/
+            m_renderer.material.color = Color.white;
     }
 
     /// <summary>
