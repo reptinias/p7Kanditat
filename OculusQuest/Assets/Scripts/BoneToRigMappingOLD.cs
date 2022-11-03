@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 /// <summary>
 /// Manages the Cube with the Oculus Hands base functionalities
@@ -12,7 +11,7 @@ using TMPro;
 /// When the Left hand pinches the middle finger, it becomes red;
 /// </summary>
 [RequireComponent(typeof(Collider))]
-public class BoneToRigMapping : MonoBehaviour
+public class BoneToRigMappingOLD : MonoBehaviour
 {
     /// <summary>
     /// Renderer of this cube
@@ -30,17 +29,6 @@ public class BoneToRigMapping : MonoBehaviour
     /// First item is left hand, second item is right hand
     /// </summary>
     private bool[] m_isIndexStaying;
-
-    public Collider curFingertipCollider;
-    OVRPlugin.BoneId curFingertip;
-    public TMP_Text testText;
-
-    bool curMapping = false;
-
-    Vector3 initialFingertipPos;
-    Quaternion initialFingertipRotation;
-    Vector3 initialPos;
-    Quaternion initialRotation;
 
     /// <summary>
     /// Start
@@ -65,14 +53,6 @@ public class BoneToRigMapping : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (curMapping)
-        {
-            Vector3 differencePos = curFingertipCollider.transform.position - initialFingertipPos;//20 -30 = -10
-            Quaternion differenceRot = Quaternion.Inverse(initialFingertipRotation) * curFingertipCollider.transform.rotation;//20 -30 = -10
-
-            transform.position = initialPos + differencePos;
-            transform.rotation = initialRotation * differenceRot;
-        }
         /*
         //check for middle finger pinch on the left hand, and make che cube red in this case
         if (m_hands[0].GetFingerIsPinching(OVRHand.HandFinger.Middle))
@@ -89,8 +69,6 @@ public class BoneToRigMapping : MonoBehaviour
     /// <param name="collider">Collider of interest</param>
     private void OnTriggerEnter(Collider collider)
     {
-        if (!curMapping)
-        {
             //get hand associated with trigger
             int handIdx = GetIndexFingerHandId(collider);
 
@@ -101,7 +79,6 @@ public class BoneToRigMapping : MonoBehaviour
                 m_renderer.material.color = handIdx == 0 ? m_renderer.material.color = Color.blue : m_renderer.material.color = Color.green;
                 m_isIndexStaying[handIdx] = true;
             }
-        }
     }
 
     /// <summary>
@@ -111,8 +88,6 @@ public class BoneToRigMapping : MonoBehaviour
     /// <param name="collider">Collider of interest</param>
     private void OnTriggerExit(Collider collider)
     {
-        if (!curMapping)
-        {
             //get hand associated with trigger
             int handIdx = GetIndexFingerHandId(collider);
 
@@ -124,7 +99,6 @@ public class BoneToRigMapping : MonoBehaviour
                 m_renderer.material.color = m_isIndexStaying[0] ? m_renderer.material.color = Color.blue :
                                             (m_isIndexStaying[1] ? m_renderer.material.color = Color.green : Color.white);
             }
-        }
     }
 
     /// <summary>
@@ -141,47 +115,23 @@ public class BoneToRigMapping : MonoBehaviour
             string boneName = collider.gameObject.name.Substring(0, collider.gameObject.name.Length - 16);
             OVRPlugin.BoneId boneId = (OVRPlugin.BoneId)Enum.Parse(typeof(OVRPlugin.BoneId), boneName);
 
-            OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
-
             //if it is the tip of the Index
-            for (int i=0; i < fingerTips.Length; i++) //OVRPlugin.BoneId fingertip in fingerTips)
-                if (boneId == fingerTips[i])
+            if (boneId == OVRPlugin.BoneId.Hand_Index3)
+            {
+                //check if it is left or right hand, and change color accordingly.
+                //Notice that absurdly, we don't have a way to detect the type of the hand
+                //so we have to use the hierarchy to detect current hand
+                if (collider.transform.IsChildOf(m_hands[0].transform))
                 {
-                    if (curFingertip != fingerTips[i])
-                    {
-                        curFingertip = fingerTips[i];
-                        testText.text = i.ToString();
-                        curFingertipCollider = collider;
-                    }
-                    //check if it is left or right hand, and change color accordingly.
-                    //Notice that absurdly, we don't have a way to detect the type of the hand
-                    //so we have to use the hierarchy to detect current hand
-                    if (collider.transform.IsChildOf(m_hands[0].transform))
-                    {
-                        return 0;
-                    }
-                    else if (collider.transform.IsChildOf(m_hands[1].transform))
-                    {
-                        return 1;
-                    }
+                    return 0;
                 }
+                else if (collider.transform.IsChildOf(m_hands[1].transform))
+                {
+                    return 1;
+                }
+            }
         }
 
         return -1;
     }
-
-    public void StartMapping()
-    {
-        curMapping = true;
-        initialFingertipPos = curFingertipCollider.transform.position;
-        initialFingertipRotation = curFingertipCollider.transform.rotation;
-        initialPos = transform.position;
-        initialRotation = transform.rotation;
-    }
-
-    public void StopMapping()
-    {
-        curMapping = false;
-    }
-
 }
