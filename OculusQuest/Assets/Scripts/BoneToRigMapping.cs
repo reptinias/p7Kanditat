@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Manages the Cube with the Oculus Hands base functionalities
@@ -30,6 +31,9 @@ public class BoneToRigMapping : MonoBehaviour
     /// </summary>
     private bool[] m_isIndexStaying;
 
+    OVRPlugin.BoneId curFingertip;
+    public TMP_Text testText;
+
     /// <summary>
     /// Start
     /// </summary>
@@ -51,13 +55,13 @@ public class BoneToRigMapping : MonoBehaviour
     /// Update
     /// </summary>
     void Update()
-    {
+    {/*
         //check for middle finger pinch on the left hand, and make che cube red in this case
         if (m_hands[0].GetFingerIsPinching(OVRHand.HandFinger.Middle))
             m_renderer.material.color = Color.red;
         //if no pinch, and the cube was red, make it white again
         else if (m_renderer.material.color == Color.red)
-            m_renderer.material.color = Color.white;
+            m_renderer.material.color = Color.white;*/
     }
 
     /// <summary>
@@ -113,18 +117,28 @@ public class BoneToRigMapping : MonoBehaviour
             string boneName = collider.gameObject.name.Substring(0, collider.gameObject.name.Length - 16);
             OVRPlugin.BoneId boneId = (OVRPlugin.BoneId)Enum.Parse(typeof(OVRPlugin.BoneId), boneName);
 
+            OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
+
             //if it is the tip of the Index
-            if (boneId == OVRPlugin.BoneId.Hand_Index3)
-                //check if it is left or right hand, and change color accordingly.
-                //Notice that absurdly, we don't have a way to detect the type of the hand
-                //so we have to use the hierarchy to detect current hand
-                if (collider.transform.IsChildOf(m_hands[0].transform))
+            for (int i=0; i < fingerTips.Length; i++) //OVRPlugin.BoneId fingertip in fingerTips)
+                if (boneId == fingerTips[i])
                 {
-                    return 0;
-                }
-                else if (collider.transform.IsChildOf(m_hands[1].transform))
-                {
-                    return 1;
+                    if (curFingertip != fingerTips[i])
+                    {
+                        curFingertip = fingerTips[i];
+                        testText.text = i.ToString();
+                    }
+                    //check if it is left or right hand, and change color accordingly.
+                    //Notice that absurdly, we don't have a way to detect the type of the hand
+                    //so we have to use the hierarchy to detect current hand
+                    if (collider.transform.IsChildOf(m_hands[0].transform))
+                    {
+                        return 0;
+                    }
+                    else if (collider.transform.IsChildOf(m_hands[1].transform))
+                    {
+                        return 1;
+                    }
                 }
         }
 
