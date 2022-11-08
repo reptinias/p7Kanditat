@@ -104,8 +104,11 @@ public class BoneToRigMapping : MonoBehaviour
             {
                 finger_index.Add(fingerIdx);
 
+                string text = "";
                 foreach (int idx in finger_index)
-                    testText.text += idx.ToString() + " ";
+                    text += idx.ToString() + " ";
+
+                testText.text = text;
                 //m_renderer.material.color = fingerIdx == 0 ? m_renderer.material.color = Color.blue : m_renderer.material.color = Color.green;
                //m_isIndexStaying[0] = true;
                 //m_isIndexStaying[1] = true;
@@ -130,8 +133,12 @@ public class BoneToRigMapping : MonoBehaviour
             if (fingerIdx != -1)
             {
                 finger_index.Remove(fingerIdx);
+
+                string text = "";
                 foreach (int idx in finger_index)
-                    testText.text += idx.ToString() + " ";
+                    text += idx.ToString() + " ";
+
+                testText.text = text;
                 //m_isIndexStaying[handIdx] = false;
                 //m_renderer.material.color = m_isIndexStaying[0] ? m_renderer.material.color = Color.blue :
                 //(m_isIndexStaying[1] ? m_renderer.material.color = Color.green : Color.white);
