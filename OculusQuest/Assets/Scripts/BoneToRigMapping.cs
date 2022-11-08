@@ -186,7 +186,8 @@ public class BoneToRigMapping : MonoBehaviour
                     }
                 }
             }
-            testText.text = testTextString;
+            if (testTextString != "")
+                testText.text = testTextString;
 
             return handIndex;
         }
