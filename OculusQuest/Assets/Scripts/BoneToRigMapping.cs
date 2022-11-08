@@ -19,11 +19,8 @@ public class BoneToRigMapping : MonoBehaviour
     /// </summary>
     private Renderer m_renderer;
 
-    /// <summary>
-    /// Reference to the managers of the hands.
-    /// First item is left hand, second item is right hand
-    /// </summary>
-    private OVRHand[] m_hands;
+    private OVRSkeleton[] m_hands;
+    private OVRHand[] trackedHands;
 
     /// <summary>
     /// True if an index tip is inside the cube, false otherwise.
@@ -31,7 +28,7 @@ public class BoneToRigMapping : MonoBehaviour
     /// </summary>
     private bool[] m_isIndexStaying;
 
-    public Collider curFingertipCollider;
+    private OVRBone curFingertipBone;
     OVRPlugin.BoneId curFingertip;
     public TMP_Text testText;
 
@@ -49,11 +46,18 @@ public class BoneToRigMapping : MonoBehaviour
     {
         //StartMapping();
         m_renderer = GetComponent<Renderer>();
-        m_hands = new OVRHand[]
+        trackedHands = new OVRHand[]
         {
             GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRHand>(),
             GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRHand>()
         };
+
+        m_hands = new OVRSkeleton[]
+{
+            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRSkeleton>(),
+            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRSkeleton>()
+};
+
         m_isIndexStaying = new bool[2] { false, false };
 
         //we don't want the cube to move over collision, so let's just use a trigger
@@ -67,8 +71,8 @@ public class BoneToRigMapping : MonoBehaviour
     {
         if (curMapping)
         {
-            Vector3 differencePos = curFingertipCollider.transform.position - initialFingertipPos;//20 -30 = -10
-            Quaternion differenceRot = Quaternion.Inverse(initialFingertipRotation) * curFingertipCollider.transform.rotation;//20 -30 = -10
+            Vector3 differencePos = curFingertipBone.Transform.position - initialFingertipPos;//20 -30 = -10
+            Quaternion differenceRot = Quaternion.Inverse(initialFingertipRotation) * curFingertipBone.Transform.rotation;//20 -30 = -10
 
             transform.position = initialPos + differencePos;
             transform.rotation = initialRotation * differenceRot;
@@ -141,7 +145,8 @@ public class BoneToRigMapping : MonoBehaviour
             string boneName = collider.gameObject.name.Substring(0, collider.gameObject.name.Length - 16);
             OVRPlugin.BoneId boneId = (OVRPlugin.BoneId)Enum.Parse(typeof(OVRPlugin.BoneId), boneName);
 
-            OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
+            OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_ThumbTip, OVRPlugin.BoneId.Hand_IndexTip, OVRPlugin.BoneId.Hand_MiddleTip, OVRPlugin.BoneId.Hand_RingTip, OVRPlugin.BoneId.Hand_PinkyTip };
+            int[] fingerTipsIndex = { 19, 20, 21, 22, 23};
 
             //if it is the tip of the Index
             for (int i=0; i < fingerTips.Length; i++) //OVRPlugin.BoneId fingertip in fingerTips)
@@ -151,16 +156,16 @@ public class BoneToRigMapping : MonoBehaviour
                     {
                         curFingertip = fingerTips[i];
                         testText.text = i.ToString();
-                        curFingertipCollider = collider;
+                        curFingertipBone = m_hands[0].Bones[fingerTipsIndex[i]];
                     }
                     //check if it is left or right hand, and change color accordingly.
                     //Notice that absurdly, we don't have a way to detect the type of the hand
                     //so we have to use the hierarchy to detect current hand
-                    if (collider.transform.IsChildOf(m_hands[0].transform))
+                    if (collider.transform.IsChildOf(trackedHands[0].transform))
                     {
                         return 0;
                     }
-                    else if (collider.transform.IsChildOf(m_hands[1].transform))
+                    else if (collider.transform.IsChildOf(trackedHands[1].transform))
                     {
                         return 1;
                     }
@@ -173,8 +178,8 @@ public class BoneToRigMapping : MonoBehaviour
     public void StartMapping()
     {
         curMapping = true;
-        initialFingertipPos = curFingertipCollider.transform.position;
-        initialFingertipRotation = curFingertipCollider.transform.rotation;
+        initialFingertipPos = curFingertipBone.Transform.position;
+        initialFingertipRotation = curFingertipBone.Transform.rotation;
         initialPos = transform.position;
         initialRotation = transform.rotation;
     }
