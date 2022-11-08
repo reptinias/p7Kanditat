@@ -157,6 +157,7 @@ public class BoneToRigMapping : MonoBehaviour
                 print("index: " + i);
                 if (boneId == fingerTips[i])
                 {
+
                     print("DIng DING DING");
                     int handIndex = -1;
 
@@ -169,12 +170,19 @@ public class BoneToRigMapping : MonoBehaviour
                         handIndex = 1;
                     }
 
-                    if (curFingertip != fingerTips[i])
+                    if (handIndex >= 0)
                     {
-                        print("Not the same as last time");
-                        curFingertip = fingerTips[i];
-                        testText.text = i.ToString();
-                        curFingertipBone = m_hands[handIndex].Bones[fingerTipsIndex[i]];
+                        if (curFingertip != fingerTips[i])
+                        {
+                            OVRBone fingerTipBone = m_hands[handIndex].Bones[fingerTipsIndex[i]];
+                            if (collider.bounds.Contains(fingerTipBone.Transform.position))
+                            {
+                                print("Not the same as last time");
+                                curFingertip = fingerTips[i];
+                                testText.text = i.ToString();
+                                curFingertipBone = fingerTipBone;
+                            }
+                        }
                     }
                     //check if it is left or right hand, and change color accordingly.
                     //Notice that absurdly, we don't have a way to detect the type of the hand
