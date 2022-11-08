@@ -149,7 +149,7 @@ public class BoneToRigMapping : MonoBehaviour
             OVRPlugin.BoneId boneId = (OVRPlugin.BoneId)Enum.Parse(typeof(OVRPlugin.BoneId), boneName);
 
             OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
-            int[] fingerTipsIndex = { 19, 20, 21, 22, 23};
+            int[] fingerTipsIndex = { 5, 8, 11, 14, 18};
 
             //if it is the tip of the Index
             for (int i = 0; i < fingerTips.Length; i++) //OVRPlugin.BoneId fingertip in fingerTips)
