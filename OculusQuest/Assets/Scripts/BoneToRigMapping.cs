@@ -151,6 +151,17 @@ public class BoneToRigMapping : MonoBehaviour
             OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
             int[] fingerTipsIndex = { 5, 8, 11, 14, 18};
 
+            int handIndex = -1;
+            if (collider.transform.IsChildOf(trackedHands[0].transform))
+            {
+                handIndex = 0;
+            }
+            else if (collider.transform.IsChildOf(trackedHands[1].transform))
+            {
+                handIndex = 1;
+            }
+
+            string testTextString = "";
             //if it is the tip of the Index
             for (int i = 0; i < fingerTips.Length; i++) //OVRPlugin.BoneId fingertip in fingerTips)
             {
@@ -159,17 +170,6 @@ public class BoneToRigMapping : MonoBehaviour
                 {
 
                     print("DIng DING DING");
-                    int handIndex = -1;
-
-                    if (collider.transform.IsChildOf(trackedHands[0].transform))
-                    {
-                        handIndex = 0;
-                    }
-                    else if (collider.transform.IsChildOf(trackedHands[1].transform))
-                    {
-                        handIndex = 1;
-                    }
-
                     if (handIndex >= 0)
                     {
                         if (curFingertip != fingerTips[i])
@@ -179,20 +179,19 @@ public class BoneToRigMapping : MonoBehaviour
                             {
                                 print("Not the same as last time");
                                 curFingertip = fingerTips[i];
-                                testText.text = i.ToString();
+                                testTextString += i.ToString() + " ";
                                 curFingertipBone = fingerTipBone;
                             }
                         }
                     }
-                    //check if it is left or right hand, and change color accordingly.
-                    //Notice that absurdly, we don't have a way to detect the type of the hand
-                    //so we have to use the hierarchy to detect current hand
-                    return handIndex;
                 }
             }
-        }
+            testText.text = testTextString;
 
+            return handIndex;
+        }
         return -1;
+
     }
 
     public void StartMapping()
