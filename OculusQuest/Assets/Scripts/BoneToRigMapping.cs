@@ -93,11 +93,13 @@ public class BoneToRigMapping : MonoBehaviour
     /// <param name="collider">Collider of interest</param>
     private void OnTriggerEnter(Collider collider)
     {
+        print("trigger");
         if (!curMapping)
         {
+            print("cur Not mapping");
             //get hand associated with trigger
             int handIdx = GetIndexFingerHandId(collider);
-
+            print(handIdx);
             //if there is an associated hand, it means that an index of one of two hands is entering the cube
             //change the color of the cube accordingly (blue for left hand, green for right one)
             if (handIdx != -1)
@@ -138,6 +140,7 @@ public class BoneToRigMapping : MonoBehaviour
     /// <returns>0 if the collider represents the finger tip of left hand, 1 if it is the one of right hand, -1 if it is not an index fingertip</returns>
     private int GetIndexFingerHandId(Collider collider)
     {
+        print("GetIndexFingerHandId");
         //Checking Oculus code, it is possible to see that physics capsules gameobjects always end with _CapsuleCollider
         if (collider.gameObject.name.Contains("_CapsuleCollider"))
         {
@@ -149,27 +152,36 @@ public class BoneToRigMapping : MonoBehaviour
             int[] fingerTipsIndex = { 19, 20, 21, 22, 23};
 
             //if it is the tip of the Index
-            for (int i=0; i < fingerTips.Length; i++) //OVRPlugin.BoneId fingertip in fingerTips)
+            for (int i = 0; i < fingerTips.Length; i++) //OVRPlugin.BoneId fingertip in fingerTips)
+            {
+                print("index: " + i);
                 if (boneId == fingerTips[i])
                 {
+                    print("DIng DING DING");
+                    int handIndex = -1;
+
+                    if (collider.transform.IsChildOf(trackedHands[0].transform))
+                    {
+                        handIndex = 0;
+                    }
+                    else if (collider.transform.IsChildOf(trackedHands[1].transform))
+                    {
+                        handIndex = 1;
+                    }
+
                     if (curFingertip != fingerTips[i])
                     {
+                        print("Not the same as last time");
                         curFingertip = fingerTips[i];
                         testText.text = i.ToString();
-                        curFingertipBone = m_hands[0].Bones[fingerTipsIndex[i]];
+                        curFingertipBone = m_hands[handIndex].Bones[fingerTipsIndex[i]];
                     }
                     //check if it is left or right hand, and change color accordingly.
                     //Notice that absurdly, we don't have a way to detect the type of the hand
                     //so we have to use the hierarchy to detect current hand
-                    if (collider.transform.IsChildOf(trackedHands[0].transform))
-                    {
-                        return 0;
-                    }
-                    else if (collider.transform.IsChildOf(trackedHands[1].transform))
-                    {
-                        return 1;
-                    }
+                    return handIndex;
                 }
+            }
         }
 
         return -1;
