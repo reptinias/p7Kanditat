@@ -25,7 +25,7 @@ public class Selection : MonoBehaviour
     private OVRHand[] trackedHands;
     public float length = 1.0f;
 
-
+    public LineRenderer line;
 
     // Start is called before the first frame update
     void Start()
@@ -202,7 +202,8 @@ public class Selection : MonoBehaviour
 
             print(hit.transform);
             //draw invisible ray cast/vector
-            //Debug.DrawLine(ray.origin, hit.point);
+
+            line.SetPositions(new Vector3[2] { transformPosition, endPosition });
             //log hit area to the console
             //Debug.Log(hit.point);
         }
