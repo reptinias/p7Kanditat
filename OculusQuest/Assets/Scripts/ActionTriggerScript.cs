@@ -17,8 +17,8 @@ public class ActionTriggerScript : MonoBehaviour
         m_hands = readInputs.m_hands;
         gestureRecognition = new GestureRecognition[]
         {
-            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor").GetComponent<GestureRecognition>(),
-            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor").GetComponent<GestureRecognition>()
+            GameObject.Find("OVRCameraRigCustom/TrackingSpace/LeftHandAnchor").GetComponent<GestureRecognition>(),
+            GameObject.Find("OVRCameraRigCustom/TrackingSpace/RightHandAnchor").GetComponent<GestureRecognition>()
         };
     }
 

@@ -77,7 +77,7 @@ public class GestureRecognition : MonoBehaviour
         }
         gestureStarted = false;
         gestureComplete = false;
-        inputReady = false;
+        inputReady = true;
         currentGesture = new DrawnGesture("currentGesture", pointsPerGesture);
     }
 
@@ -102,29 +102,29 @@ public class GestureRecognition : MonoBehaviour
     void Update()
     {
         tempTime += Time.deltaTime;
-        if(dnn.procesGesture[handIndex] == true)
+        /*if(dnn.procesGesture[handIndex] == true)
         {
             if (inputReady)
-            {
+            {*/
                 if (!gestureStarted)
                 {
                     gestureStarted = true;
                     StartGesture(hand.Bones.ElementAt(20).Transform.position*10);
                 }
 
-                if ((!gestureComplete) && (tempTime > samplingRate))
+                if (tempTime > samplingRate)
                 {
                     tempTime = 0f;
                     ContinueGesture(hand.Bones.ElementAt(20).Transform.position*10);
                 }
                 
-                if (gestureComplete && extendedGesture == false)
+                /*if (gestureComplete && extendedGesture == false)
                 {
                     EndGesture();
                 }
             }
-        }
-        else
+        }*/
+        /*else
         {
             if (gestureStarted && extendedGesture == false)
             {
@@ -132,7 +132,7 @@ public class GestureRecognition : MonoBehaviour
             }
             GesturePrediction[0] = dnn.predString[handIndex];
             inputReady = true;
-        }
+        }*/
     }
     
     private void SaveTemplates()
@@ -198,7 +198,7 @@ public class GestureRecognition : MonoBehaviour
             currentGesture.SetMinZ(currentPoint.GetZ());
         }
         
-        if (limitSamples && currentPointList.Count >= maxPointsAllowed)
+        if (currentPointList.Count >= maxPointsAllowed)
         {
             extendedGesture = true;
             Rescale(currentGesture);
@@ -214,6 +214,9 @@ public class GestureRecognition : MonoBehaviour
             {
                 gestureComplete = true;
                 Debug.Log("Extended Gesture: " + m.GetName());
+                GesturePrediction[0] = dnn.predString[handIndex];
+                GesturePrediction[1] = m.GetName();
+                currentPointList.RemoveRange(0, Math.Min(10, currentPointList.Count));
             }
         }
     }
@@ -329,7 +332,7 @@ public class GestureRecognition : MonoBehaviour
             if (d < minAvgDifference && d < threshold)
             {
                 minAvgDifference = d;
-                match = template;               
+                match = template;
             }
         }
         return match;
