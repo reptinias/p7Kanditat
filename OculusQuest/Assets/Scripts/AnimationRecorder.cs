@@ -44,44 +44,51 @@ public class AnimationRecorder : MonoBehaviour
 
     //Called to start recording. Takes a target object and that target's AnimatorController as arguments(will fix later)
     //Changes to be made: Find target object's AnimatorController automatically
-    void StartRecording()
+    public void StartRecording()
     {
-        Debug.Log("i've started recording");
-        m_Recorder = new GameObjectRecorder(target);
+        if (!recording)
+        {
+            Debug.Log("i've started recording");
+            m_Recorder = new GameObjectRecorder(target);
 
-        // Bind all the Transforms on the GameObject and all its children.
-        m_Recorder.BindComponentsOfType<Transform>(target, true);
-        //Clears clip data
-        clip = null;
-        clip = new AnimationClip();
-        
-        //Safeguard. Dunno if it does anything anymore
-        target.GetComponent<Animator>().StopPlayback();
-        recording = true;
+            // Bind all the Transforms on the GameObject and all its children.
+            m_Recorder.BindComponentsOfType<Transform>(target, true);
+            //Clears clip data
+            clip = null;
+            clip = new AnimationClip();
+
+            //Safeguard. Dunno if it does anything anymore
+            target.GetComponent<Animator>().StopPlayback();
+            recording = true;
+        }
     }
 
     //Called to stop recording
-    void StopRecording()
+    public void StopRecording()
     {
-        Debug.Log("i've stopped recording");
-        if (clip == null)
-            return;
-
-        if (m_Recorder.isRecording)
+        if (recording)
         {
-            //Creates a new animation clip in the designated path
-            AssetDatabase.CreateAsset(clip, "Assets/" + target.name + "Anim" + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".anim");
-            //Saves clip to AnimatorController
-            controller.AddMotion(clip);
-            // Save the recorded session to the clip.
-            m_Recorder.SaveToClip(clip);
-            
-            //Safeguard. Dunno if it does anything anymore
-            target.GetComponent<Animator>().StopPlayback();
-            
-        }
+            Debug.Log("i've stopped recording");
+            if (clip == null)
+                return;
 
-        recording = false;
+            if (m_Recorder.isRecording)
+            {
+                //Creates a new animation clip in the designated path
+                AssetDatabase.CreateAsset(clip,
+                    "Assets/" + target.name + "Anim" + System.DateTime.Now.Minute.ToString() +
+                    System.DateTime.Now.Second.ToString() + ".anim");
+                //Saves clip to AnimatorController
+                controller.AddMotion(clip);
+                // Save the recorded session to the clip.
+                m_Recorder.SaveToClip(clip);
+
+                //Safeguard. Dunno if it does anything anymore
+                target.GetComponent<Animator>().StopPlayback();
+
+            }
+            recording = false;
+        }
     }
 
     public void SetTarget(GameObject newTarget)

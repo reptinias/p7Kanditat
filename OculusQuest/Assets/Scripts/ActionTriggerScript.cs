@@ -6,6 +6,7 @@ public class ActionTriggerScript : MonoBehaviour
 {
     private NewReadInputs readInputs;
     private GestureRecognition[] gestureRecognition;
+    private AnimationRecorder animationRecorder;
     public string[] currentGestures = {" ", " "};
     public string[] prevGestures = {" ", " "};
     private OVRSkeleton[] m_hands;
@@ -20,23 +21,40 @@ public class ActionTriggerScript : MonoBehaviour
             GameObject.Find("OVRCameraRigCustom/TrackingSpace/LeftHandAnchor").GetComponent<GestureRecognition>(),
             GameObject.Find("OVRCameraRigCustom/TrackingSpace/RightHandAnchor").GetComponent<GestureRecognition>()
         };
+        animationRecorder = GameObject.Find("Animation Master").GetComponent<AnimationRecorder>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < 2; i++)
+        /*for (int i = 0; i < 2; i++)
         {
             string[] newGesture = gestureRecognition[i].getGesture();
-            Debug.Log(i);
             if (newGesture[0] != "open hand" && currentGestures[i] != newGesture[0] && currentGestures[i] != newGesture[1])
             {
                 opdateCurrentGesture();
                 break;
             }
-        }
+        }*/
         //startPointing();
-       
+        for (int i = 0; i < 2; i++)
+        {
+            string tempGesture = gestureRecognition[i].getGesture()[0];
+            
+            // vvv Fix start stop contradiction vvv
+            // vvv plus accidental gesture      vvv
+            if (tempGesture == "thumb up")
+            {
+                animationRecorder.StartRecording();
+            }
+
+            if (tempGesture == "open hand")
+            {
+                animationRecorder.StopRecording();
+            }
+            
+            
+        }
     }
 
     void opdateCurrentGesture()
