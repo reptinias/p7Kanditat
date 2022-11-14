@@ -9,7 +9,8 @@ using Unity.XR.CoreUtils;
 
 public class GestureRecognition : MonoBehaviour
 {
-    private ReadInputDevices InputDevices;
+    private NewReadInputs InputDevices;
+    private DNNScript dnn;
     public bool recording = true;
     public bool anomaliesTesting = false;
     public string templateSaveName;
@@ -38,13 +39,17 @@ public class GestureRecognition : MonoBehaviour
 
     private int handIndex;
     private OVRSkeleton hand;
+
+    private string[] GesturePrediction = new string[]{" ", " "};
     // Start is called before the first frame update
     void Start()
     {
         varInitialization();
         LoadTemplates();
         
-        InputDevices = GameObject.Find("ReadInputs").GetComponent<ReadInputDevices>();
+        InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
+        dnn = GameObject.Find("ReadInputs").GetComponent<DNNScript>();
+        
         name = gameObject.name;
         if (name == "LeftHandAnchor")
         {
@@ -97,7 +102,7 @@ public class GestureRecognition : MonoBehaviour
     void Update()
     {
         tempTime += Time.deltaTime;
-        if(InputDevices.procesGesture[handIndex] == true)
+        if(dnn.procesGesture[handIndex] == true)
         {
             if (inputReady)
             {
@@ -125,7 +130,7 @@ public class GestureRecognition : MonoBehaviour
             {
                 EndGesture();
             }
-
+            GesturePrediction[0] = dnn.predString[handIndex];
             inputReady = true;
         }
     }
@@ -202,6 +207,8 @@ public class GestureRecognition : MonoBehaviour
             if (m.GetName() == "no match")
             {
                 currentPointList.RemoveRange(0, Math.Min(10, currentPointList.Count));
+                GesturePrediction[0] = dnn.predString[handIndex];
+                GesturePrediction[1] = " ";
             }
             else
             {
@@ -231,9 +238,10 @@ public class GestureRecognition : MonoBehaviour
         {
             DrawnGesture m = FindMatch(currentGesture, templates);
             Debug.Log("short Gesture: " + m.GetName());
+            GesturePrediction[1] = m.GetName();
         }
 
-        varReset();
+        
     }
     
     private void Rescale(DrawnGesture gesture)
@@ -363,6 +371,18 @@ public class GestureRecognition : MonoBehaviour
         float yDif = a.GetY() - b.GetY();
         float zDif = a.GetZ() - b.GetZ();
         return Mathf.Sqrt((xDif * xDif) + (yDif * yDif) + (zDif * zDif));
+    }
+
+    public string[] getGesture()
+    {
+        return GesturePrediction;
+    }
+
+    public void setGesture()
+    {
+        GesturePrediction[0]= " ";
+        GesturePrediction[1]= " ";
+        varReset();
     }
 }
 

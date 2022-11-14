@@ -1,23 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 using Unity.Barracuda;
 using System;
 using System.Linq;
 
-
-public class ReadInputDevices : MonoBehaviour
+public class DNNScript : MonoBehaviour
 {
-    public OVRSkeleton[] m_hands;
-    public OVRHand[] trackedHands;
-    private int handIndex;
-
+    private OVRSkeleton[] m_hands;
+    private NewReadInputs InputDevices;
+    
     private float[] xCoordinates = new float[24];
     private float[] yCoordinates = new float[24];
     private float[] zCoordinates = new float[24];
     private float[] normCoordinates = new float[72];
-
+    
+    private int handIndex = 0;
     public NNModel nnmodel;
     private Model _runTimeModel;
     private IWorker _engine;
@@ -69,32 +67,20 @@ public class ReadInputDevices : MonoBehaviour
             return convertPrediction(predictedValue);
         }
     }
-
     // Start is called before the first frame update
     void Start()
     {
         procesGesture = new bool[] { false, false };
-        m_hands = new OVRSkeleton[]
-        {
-            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRSkeleton>(),
-            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRSkeleton>()
-        };
-        trackedHands = new OVRHand[]
-        {
-            GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRHand>(),
-            GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRHand>()
-        };
-
+        InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
+        m_hands = InputDevices.m_hands;
         _runTimeModel = ModelLoader.Load(nnmodel);
         _engine = WorkerFactory.CreateWorker(_runTimeModel, WorkerFactory.Device.GPU);
-        prediction = new Prediction();
-
+        prediction = new Prediction();    
     }
 
     // Update is called once per frame
     void Update()
     {
-
         handIndex = 0;
         foreach (OVRSkeleton hand in m_hands)
         {
@@ -125,7 +111,6 @@ public class ReadInputDevices : MonoBehaviour
             handIndex += 1;
         }
     }
-
     private void OnDestroy()
     {
         _engine?.Dispose();

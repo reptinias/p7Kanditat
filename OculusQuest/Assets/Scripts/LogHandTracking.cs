@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
+using System.Linq;
 
 public class LogHandTracking : MonoBehaviour
 {
@@ -13,6 +15,13 @@ public class LogHandTracking : MonoBehaviour
     [SerializeField] 
     private int classID = 0;
     
+    private float[] xCoordinates = new float[24];
+    private float[] yCoordinates = new float[24];
+    private float[] zCoordinates = new float[24];
+    
+    private float[] normCoordinates = new float[72];
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -24,17 +33,6 @@ public class LogHandTracking : MonoBehaviour
         
         // Find the logging Manager in the scene.
         loggingManager = GameObject.Find("Logging").GetComponent<LoggingManager>();
-
-        // Tell the logging manager to save the data (to disk and SQL by default).
-        loggingManager.SaveLog("MyLabel");
-
-        // After saving the data, you can tell the logging manager to clear its logs.
-        // Now its ready to save more data. Saving data will append to the existing log.
-        loggingManager.ClearLog("MyLabel");
-
-        // If you want to start a new file, you can ask loggingManager to generate
-        // a new file timestamp. Saving data hereafter will go to the new file.
-        loggingManager.NewFilestamp();
     }
 
     // Update is called once per frame
@@ -42,16 +40,32 @@ public class LogHandTracking : MonoBehaviour
     {
         foreach (OVRSkeleton hand in m_hands)
         {
-           
+            int index = 0;
+            loggingManager.Log(CsvFileName, "Class", classID);
             IList<OVRBone> handBones = hand.Bones;
             foreach (OVRBone bone in handBones)
             {
-                loggingManager.Log(CsvFileName, classID + ", x", bone.Transform.position.x);
-                loggingManager.Log(CsvFileName, classID + ", y", bone.Transform.position.y);
-                loggingManager.Log(CsvFileName, classID + ", z", bone.Transform.position.z);
-                Debug.Log(bone.Transform.position);
+                xCoordinates[index] = bone.Transform.position.x;
+                yCoordinates[index] = bone.Transform.position.y;
+                zCoordinates[index] = bone.Transform.position.z;
+                index++;
+            }
+
+            index = 0;
+            for (int i = 0; i < xCoordinates.Length; i++)
+            {
+                normCoordinates[index]   = (xCoordinates[i] - xCoordinates.Min()) / (xCoordinates.Max() - xCoordinates.Min());
+                normCoordinates[index+1] = (yCoordinates[i] - yCoordinates.Min()) / (yCoordinates.Max() - yCoordinates.Min());
+                normCoordinates[index+2] = (zCoordinates[i] - zCoordinates.Min()) / (zCoordinates.Max() - zCoordinates.Min());
+                index += 3;
+            }
+
+            for (int i = 0; i < normCoordinates.Length; i++)
+            {
+                loggingManager.Log(CsvFileName, "$Coord " + i.ToString(), normCoordinates[i]);
             }
         }
+
         if (Input.GetKey("space"))
         {
             loggingManager.SaveLog(CsvFileName);

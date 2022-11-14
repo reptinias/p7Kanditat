@@ -25,7 +25,7 @@ public class PointingRay : MonoBehaviour
         foreach (OVRSkeleton hand in InputDevices.m_hands)
         {
             Debug.Log(hand.GetCurrentNumBones());
-            if (hand.GetCurrentNumBones() != 0)
+            if (hand.GetCurrentNumBones() != 0 || InputDevices.predString[index] == "1-finger point")
             {
                 Vector3 point = hand.Bones.ElementAt(6).Transform.position;
                 Vector3 direction = hand.Bones.ElementAt(6).Transform.position - hand.Bones.ElementAt(20).Transform.position;
