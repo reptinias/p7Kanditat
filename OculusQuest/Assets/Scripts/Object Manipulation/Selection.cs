@@ -17,6 +17,8 @@ public class Selection : MonoBehaviour
     InteractableObject curInteractableObject;
     InteractableObject selectedInteractableObject;
 
+    public AnimationRecorder animationRecorder;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -113,69 +115,75 @@ public class Selection : MonoBehaviour
         if (rs)
             obj.GetComponent<RigSelection>().SelectSphere(false);
     }
+
+    public void SelectObject()
+    {
+        foreach (GameObject child in objects)
+        {
+            if (selectedInteractableObject)
+                if (selectedInteractableObject.gameObject == child)
+                    continue;
+            RemoveSelection(child);
+        }
+
+        //create a ray cast and set it to the mouses cursor position in game
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, distance))
+        {
+            selectedObject = hit.transform.gameObject;
+
+            Animator targetAnim = selectedObject.GetComponent<Animator>();
+            if (!targetAnim)
+            {
+                selectedObject = selectedObject.transform.parent.gameObject;
+            }
+
+            InteractableObject io = selectedObject.GetComponent<InteractableObject>();
+            if (io)
+            {
+                if (selectedInteractableObject)
+                {
+                    GameObject previousSelectedObject = selectedInteractableObject.gameObject;
+                    if (selectedObject != previousSelectedObject)
+                    {
+                        RemoveSelection(previousSelectedObject);
+                    }
+                }
+
+                selectedInteractableObject = selectedObject.GetComponent<InteractableObject>();
+                selectedInteractableObject.EnableOutline(true);
+                animationRecorder.SetTarget(selectedInteractableObject.gameObject);
+            }
+
+            RigSelection rs = selectedObject.GetComponent<RigSelection>();
+            if (rs)
+            {
+                rs.SelectSphere(true);
+            }
+
+            print(hit.transform);
+            //draw invisible ray cast/vector
+            Debug.DrawLine(ray.origin, hit.point);
+            //log hit area to the console
+            //Debug.Log(hit.point);
+        }
+        else
+        {
+            selectedObject = null;
+            if (selectedInteractableObject)
+            {
+                RemoveSelection(selectedInteractableObject.gameObject);
+                selectedInteractableObject = null;
+            }
+        }
+    }
     
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0)){
-
-            foreach (GameObject child in objects) {
-                if (selectedInteractableObject)
-                    if (selectedInteractableObject.gameObject == child)
-                        continue;
-                RemoveSelection(child);
-            }
-
-            //create a ray cast and set it to the mouses cursor position in game
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, distance))
-            {
-                selectedObject = hit.transform.gameObject;
-
-                Animator targetAnim = selectedObject.GetComponent<Animator>();
-                if (!targetAnim)
-                {
-                    selectedObject = selectedObject.transform.parent.gameObject;
-                }
-
-                InteractableObject io = selectedObject.GetComponent<InteractableObject>();
-                if (io)
-                {
-                    if (selectedInteractableObject)
-                    {
-                        GameObject previousSelectedObject = selectedInteractableObject.gameObject;
-                        if (selectedObject != previousSelectedObject)
-                        {
-                            RemoveSelection(previousSelectedObject);
-                        }
-                    }
-
-                    selectedInteractableObject = selectedObject.GetComponent<InteractableObject>();
-                    selectedInteractableObject.EnableOutline(true);
-                }
-
-                RigSelection rs = selectedObject.GetComponent<RigSelection>();
-                if (rs)
-                {
-                    rs.SelectSphere(true);
-                }
-
-                print(hit.transform);
-                //draw invisible ray cast/vector
-                Debug.DrawLine(ray.origin, hit.point);
-                //log hit area to the console
-                //Debug.Log(hit.point);
-            }
-            else
-            {
-                selectedObject = null;
-                if (selectedInteractableObject)
-                {
-                    RemoveSelection(selectedInteractableObject.gameObject);
-                    selectedInteractableObject = null;
-                }
-            }
+            SelectObject();
         }
     }
 }

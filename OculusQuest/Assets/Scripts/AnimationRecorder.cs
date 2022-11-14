@@ -20,19 +20,18 @@ public class AnimationRecorder : MonoBehaviour
 
     void LateUpdate()
     {
-        //If the program is recording and the p-key is pressed, stop recording
+       /* //If the program is recording and the p-key is pressed, stop recording
+    
         if (recording && Input.GetKey("p"))
         {
             StopRecording();
-            recording = false;
         }
 
         //If the program is NOT recording and the k-key is pressed, start recording
         if (recording == false && Input.GetKey("k"))
         {
-            recording = true;
             StartRecording(target, controller);
-        }
+        }*/
         //Records changes to the object and saves them to the recorder
         if (recording)
         {
@@ -45,7 +44,7 @@ public class AnimationRecorder : MonoBehaviour
 
     //Called to start recording. Takes a target object and that target's AnimatorController as arguments(will fix later)
     //Changes to be made: Find target object's AnimatorController automatically
-    void StartRecording(GameObject target, AnimatorController controller)
+    void StartRecording()
     {
         Debug.Log("i've started recording");
         m_Recorder = new GameObjectRecorder(target);
@@ -58,6 +57,7 @@ public class AnimationRecorder : MonoBehaviour
         
         //Safeguard. Dunno if it does anything anymore
         target.GetComponent<Animator>().StopPlayback();
+        recording = true;
     }
 
     //Called to stop recording
@@ -80,5 +80,12 @@ public class AnimationRecorder : MonoBehaviour
             target.GetComponent<Animator>().StopPlayback();
             
         }
+
+        recording = false;
+    }
+
+    public void SetTarget(GameObject newTarget)
+    {
+        target = newTarget;
     }
 }

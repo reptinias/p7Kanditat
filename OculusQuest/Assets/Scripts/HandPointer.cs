@@ -68,7 +68,7 @@ public class HandPointer : MonoBehaviour
             Telekenesis(hand.Bones.ElementAt(20).Transform.position,hand.Bones.ElementAt(20).Transform.position 
                                                                     - hand.Bones.ElementAt(8).Transform.position, maxLineLength);
         }
-        //text.text = dnn.procesGesture[index].ToString();
+        text.text = dnn.procesGesture[index].ToString();
     }
 
     private void Telekenesis(Vector3 transformPosition, Vector3 transformForward, float length)
