@@ -40,6 +40,7 @@ public class BoneToRigMapping : MonoBehaviour
     Quaternion initialRotation;
 
     List<int> finger_index = new List<int>();
+    private NewReadInputs InputDevices;
 
     /// <summary>
     /// Start
@@ -48,17 +49,11 @@ public class BoneToRigMapping : MonoBehaviour
     {
         //StartMapping();
         m_renderer = GetComponent<Renderer>();
-        trackedHands = new OVRHand[]
-        {
-            GameObject.Find("OVRCameraRigCustom/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRHand>(),
-            GameObject.Find("OVRCameraRigCustom/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRHand>()
-        };
 
-        m_hands = new OVRSkeleton[]
-{
-            GameObject.Find("OVRCameraRigCustom/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab").GetComponent<OVRSkeleton>(),
-            GameObject.Find("OVRCameraRigCustom/TrackingSpace/RightHandAnchor/RightOVRHandPrefab").GetComponent<OVRSkeleton>()
-};
+        InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
+        trackedHands = InputDevices.trackedHands;
+
+        m_hands = InputDevices.m_hands;
 
         m_isIndexStaying = new bool[2] { false, false };
 

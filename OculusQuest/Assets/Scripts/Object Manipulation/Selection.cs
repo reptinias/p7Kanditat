@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using System.Linq;
 
 public class Selection : MonoBehaviour
 {
@@ -19,9 +20,20 @@ public class Selection : MonoBehaviour
 
     public AnimationRecorder animationRecorder;
 
+    private NewReadInputs InputDevices;
+    private OVRSkeleton[] m_hands;
+    private OVRHand[] trackedHands;
+    public float length = 1.0f;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+        InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
+
+        m_hands = InputDevices.m_hands;
+
         UpdateObjectsInScene();
     }
 
@@ -116,7 +128,20 @@ public class Selection : MonoBehaviour
             obj.GetComponent<RigSelection>().SelectSphere(false);
     }
 
-    public void SelectObject()
+    public void DeselectObject() //
+    {
+        RemoveSelectedObjects();
+
+        selectedObject = null;
+        if (selectedInteractableObject)
+        {
+            RemoveSelection(selectedInteractableObject.gameObject);
+            selectedInteractableObject = null;
+        }
+
+    }
+
+    void RemoveSelectedObjects()
     {
         foreach (GameObject child in objects)
         {
@@ -125,10 +150,23 @@ public class Selection : MonoBehaviour
                     continue;
             RemoveSelection(child);
         }
+    }
+
+    public void SelectObject(int handIndex)
+    {
+        RemoveSelectedObjects();
+
+        Vector3 transformPosition = m_hands[handIndex].Bones.ElementAt(20).Transform.position;
+        Vector3 transformForward = m_hands[handIndex].Bones.ElementAt(20).Transform.position - m_hands[handIndex].Bones.ElementAt(8).Transform.position;
 
         //create a ray cast and set it to the mouses cursor position in game
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
+
+
+        Ray ray = new Ray(transformPosition, transformForward);
+        Vector3 endPosition = transformPosition + length * transformForward;
+
         if (Physics.Raycast(ray, out hit, distance))
         {
             selectedObject = hit.transform.gameObject;
@@ -164,26 +202,21 @@ public class Selection : MonoBehaviour
 
             print(hit.transform);
             //draw invisible ray cast/vector
-            Debug.DrawLine(ray.origin, hit.point);
+            //Debug.DrawLine(ray.origin, hit.point);
             //log hit area to the console
             //Debug.Log(hit.point);
         }
         else
         {
-            selectedObject = null;
-            if (selectedInteractableObject)
-            {
-                RemoveSelection(selectedInteractableObject.gameObject);
-                selectedInteractableObject = null;
-            }
+            DeselectObject();
         }
     }
     
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)){
+        /*if (Input.GetMouseButtonDown(0)){
             SelectObject();
-        }
+        }*/
     }
 }
