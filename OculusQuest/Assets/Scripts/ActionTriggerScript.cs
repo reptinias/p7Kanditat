@@ -42,6 +42,9 @@ public class ActionTriggerScript : MonoBehaviour
             }
         }*/
 
+        bool shouldTransRot = false;
+        int handIndexTransRot = -1;
+
         string[] tempGesture = {gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
         if (tempGesture[0] != tempGesture[1])
         {
@@ -88,9 +91,18 @@ public class ActionTriggerScript : MonoBehaviour
 
                 if (tempGesture[i] == "closed hand")
                 {
-                    selector.MoveAndRotate(i, transRot);
+                    shouldTransRot = true;
+                    handIndexTransRot = i;
+                    //selector.MoveAndRotate(i, transRot);
                 }
             }
+
+            if (transRot != shouldTransRot)
+            {
+                transRot = shouldTransRot;
+                selector.MoveAndRotate(handIndexTransRot, transRot);
+            }
+
         }
     }
 
