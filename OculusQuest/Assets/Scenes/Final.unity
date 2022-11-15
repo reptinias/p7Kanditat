@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2315,7 +2315,7 @@ MonoBehaviour:
   objectsInScene: {fileID: 66960792}
   outlineScript: {fileID: 1231012979}
   rigSelectionScript: {fileID: 1231012977}
-  animationRecorder: {fileID: 0}
+  animationRecorder: {fileID: 268409825}
   length: 1
   line: {fileID: 595176747}
 --- !u!4 &1231012981

@@ -207,10 +207,10 @@ public class Selection : MonoBehaviour
             //log hit area to the console
             //Debug.Log(hit.point);
         }
-        else
+        /*else
         {
             DeselectObject();
-        }
+        }*/
     }
     
     // Update is called once per frame
