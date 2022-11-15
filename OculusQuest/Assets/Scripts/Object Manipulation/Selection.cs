@@ -27,6 +27,15 @@ public class Selection : MonoBehaviour
 
     public LineRenderer line;
 
+    bool moveAndRotate = false;
+
+    Vector3 initialRootBonePos;
+    Quaternion initialRootBoneRotation;
+    Vector3 initialPos;
+    Quaternion initialRotation;
+
+    private OVRBone rootBone;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +44,7 @@ public class Selection : MonoBehaviour
         m_hands = InputDevices.m_hands;
 
         UpdateObjectsInScene();
+
     }
 
     void UpdateObjectsInScene()
@@ -207,15 +217,37 @@ public class Selection : MonoBehaviour
             //log hit area to the console
             //Debug.Log(hit.point);
         }
-        /*else
+        else
         {
             DeselectObject();
-        }*/
+        }
+    }
+
+    public void MoveAndRotate(int handIndex, bool shouldMoveAndRotate)
+    {
+        moveAndRotate = shouldMoveAndRotate;
+
+        if (shouldMoveAndRotate)
+        {
+            rootBone = m_hands[handIndex].Bones[0];
+            initialRootBonePos = rootBone.Transform.position;
+            initialRootBoneRotation = rootBone.Transform.rotation;
+            initialPos = transform.position;
+            initialRotation = transform.rotation;
+        }
     }
     
     // Update is called once per frame
     void Update()
     {
+        if (moveAndRotate)
+        {
+            Vector3 differencePos = rootBone.Transform.position - initialRootBonePos;//20 -30 = -10
+            Quaternion differenceRot = Quaternion.Inverse(initialRootBoneRotation) * rootBone.Transform.rotation;//20 -30 = -10
+
+            transform.position = initialPos + differencePos;
+            transform.rotation = initialRotation * differenceRot;
+        }
         /*if (Input.GetMouseButtonDown(0)){
             SelectObject();
         }*/
