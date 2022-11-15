@@ -245,8 +245,8 @@ public class Selection : MonoBehaviour
             Vector3 differencePos = rootBone.Transform.position - initialRootBonePos;//20 -30 = -10
             Quaternion differenceRot = Quaternion.Inverse(initialRootBoneRotation) * rootBone.Transform.rotation;//20 -30 = -10
 
-            transform.position = initialPos + differencePos;
-            transform.rotation = initialRotation * differenceRot;
+            selectedObject.transform.position = initialPos + differencePos;
+            selectedObject.transform.rotation = initialRotation * differenceRot;
         }
         /*if (Input.GetMouseButtonDown(0)){
             SelectObject();
