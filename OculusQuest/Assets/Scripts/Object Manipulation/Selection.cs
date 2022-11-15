@@ -232,8 +232,8 @@ public class Selection : MonoBehaviour
             rootBone = m_hands[handIndex].Bones[0];
             initialRootBonePos = rootBone.Transform.position;
             initialRootBoneRotation = rootBone.Transform.rotation;
-            initialPos = transform.position;
-            initialRotation = transform.rotation;
+            initialPos = selectedObject.transform.position;
+            initialRotation = selectedObject.transform.rotation;
         }
     }
     
