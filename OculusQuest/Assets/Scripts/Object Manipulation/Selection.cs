@@ -182,44 +182,49 @@ public class Selection : MonoBehaviour
             selectedObject = hit.transform.gameObject;
 
             Animator targetAnim = selectedObject.GetComponent<Animator>();
-            if (!targetAnim)
+            if (!targetAnim && selectedObject.transform.parent)
             {
                 selectedObject = selectedObject.transform.parent.gameObject;
             }
 
-            InteractableObject io = selectedObject.GetComponent<InteractableObject>();
-            if (io)
+            if (selectedObject.tag == "AnimateAble")
             {
-                if (selectedInteractableObject)
+                InteractableObject io = selectedObject.GetComponent<InteractableObject>();
+                if (io)
                 {
-                    GameObject previousSelectedObject = selectedInteractableObject.gameObject;
-                    if (selectedObject != previousSelectedObject)
+                    if (selectedInteractableObject)
                     {
-                        RemoveSelection(previousSelectedObject);
+                        GameObject previousSelectedObject = selectedInteractableObject.gameObject;
+                        if (selectedObject != previousSelectedObject)
+                        {
+                            RemoveSelection(previousSelectedObject);
+                        }
                     }
+
+                    selectedInteractableObject = selectedObject.GetComponent<InteractableObject>();
+                    selectedInteractableObject.EnableOutline(true);
+                    animationRecorder.SetTarget(selectedInteractableObject.gameObject);
                 }
 
-                selectedInteractableObject = selectedObject.GetComponent<InteractableObject>();
-                selectedInteractableObject.EnableOutline(true);
-                animationRecorder.SetTarget(selectedInteractableObject.gameObject);
+                RigSelection rs = selectedObject.GetComponent<RigSelection>();
+                if (rs)
+                {
+                    rs.SelectSphere(true);
+                }
+
+                print(hit.transform);
+                //draw invisible ray cast/vector
+
+                line.SetPositions(new Vector3[2] { transformPosition, endPosition });
             }
-
-            RigSelection rs = selectedObject.GetComponent<RigSelection>();
-            if (rs)
-            {
-                rs.SelectSphere(true);
-            }
-
-            print(hit.transform);
-            //draw invisible ray cast/vector
-
-            line.SetPositions(new Vector3[2] { transformPosition, endPosition });
+            else
+                selectedObject = null;
             //log hit area to the console
             //Debug.Log(hit.point);
         }
         else
         {
-            DeselectObject();
+            //DeselectObject();
         }
     }
 
@@ -227,7 +232,7 @@ public class Selection : MonoBehaviour
     {
         moveAndRotate = shouldMoveAndRotate;
 
-        if (shouldMoveAndRotate)
+        if (shouldMoveAndRotate && selectedObject)
         {
             rootBone = m_hands[handIndex].Bones[0];
             initialRootBonePos = rootBone.Transform.position;
@@ -240,7 +245,7 @@ public class Selection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (moveAndRotate)
+        if (moveAndRotate && selectedObject)
         {
             Vector3 differencePos = rootBone.Transform.position - initialRootBonePos;//20 -30 = -10
             Quaternion differenceRot = Quaternion.Inverse(initialRootBoneRotation) * rootBone.Transform.rotation;//20 -30 = -10
