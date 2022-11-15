@@ -36,6 +36,8 @@ public class Selection : MonoBehaviour
 
     private OVRBone rootBone;
 
+    private ActionTriggerScript actionTrigger;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -218,7 +220,10 @@ public class Selection : MonoBehaviour
                 line.SetPositions(new Vector3[2] { transformPosition, endPosition });
             }
             else
+            {
                 selectedObject = null;
+                actionTrigger.ResetTransRotation();
+            }
             //log hit area to the console
             //Debug.Log(hit.point);
         }

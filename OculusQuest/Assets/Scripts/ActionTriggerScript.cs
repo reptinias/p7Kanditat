@@ -106,6 +106,11 @@ public class ActionTriggerScript : MonoBehaviour
         }
     }
 
+    public void ResetTransRotation()
+    {
+        transRot = false;
+    }
+
     void opdateCurrentGesture()
     {
         for (int i = 0; i < 2; i++)
