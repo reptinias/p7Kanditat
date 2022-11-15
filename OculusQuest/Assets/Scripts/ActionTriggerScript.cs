@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public class ActionTriggerScript : MonoBehaviour
@@ -12,6 +13,7 @@ public class ActionTriggerScript : MonoBehaviour
     public string[] prevGestures = {" ", " "};
     private OVRSkeleton[] m_hands;
     private OVRHand[] trackedHands;
+    private bool transRot = false; 
     // Start is called before the first frame update
     void Start()
     {
@@ -39,36 +41,55 @@ public class ActionTriggerScript : MonoBehaviour
                 break;
             }
         }*/
-        //startPointing();
+
         string[] tempGesture = {gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
-        
-        for (int i = 0; i < 2; i++)
+        if (tempGesture[0] != tempGesture[1])
         {
-            if (!trackedHands[i].IsTracked)
+            for (int i = 0; i < 2; i++)
             {
-                continue;
-            }
+                if (!trackedHands[i].IsTracked)
+                {
+                    continue;
+                }
 
-            // vvv Fix start stop contradiction vvv
-            // vvv plus accidental gesture      vvv
-            /*if (tempGesture[i] == "thumb up")
-            {
-                animationRecorder.StartRecording();
-            }
+                if (tempGesture[0] == "thumb up" && tempGesture[1] == "open hand" ||
+                    tempGesture[1] == "thumb up" && tempGesture[0] == "open hand")
+                {
+                    continue;
+                }
+                else{ 
+                    // vvv Fix start stop contradiction vvv
+                    // vvv plus accidental gesture      vvv
+                    if (tempGesture[i] == "thumb up")
+                    {
+                        animationRecorder.StartRecording();
+                    }
+                    if (tempGesture[i] == "open hand")
+                    {
+                        animationRecorder.StopRecording();
+                    }
+                }
 
-            if (tempGesture[i] == "open hand")
-            {
-                animationRecorder.StopRecording();
-            }*/
+                if (tempGesture[0] == "1-finger point" && tempGesture[1] == "ok hand" ||
+                    tempGesture[1] == "1-finger point" && tempGesture[0] == "ok hand")
+                {
+                    continue;
+                }
+                else{
+                    if (tempGesture[i] == "1-finger point")
+                    {
+                        selector.SelectObject(i);
+                    }
+                    if (tempGesture[i] == "ok hand")
+                    {
+                        selector.DeselectObject();
+                    }
+                }
 
-            if (tempGesture[i] == "1-finger point")
-            {
-                selector.SelectObject(i);
-            }
-
-            if (tempGesture[i] == "ok hand")
-            {
-                selector.DeselectObject();
+                if (tempGesture[i] == "closed hand")
+                {
+                    selector.MoveAndRotate(i, transRot);
+                }
             }
         }
     }
@@ -100,16 +121,4 @@ public class ActionTriggerScript : MonoBehaviour
         currentGestures[0] = " ";
         currentGestures[1] = " ";
     }
-
-    /*void startPointing()
-    {
-        for (int i  = 0; i < 2; i++)
-        {
-            if (gestureRecognition[i].GesturePrediction[0] == "1-finger point")
-            {
-                opdateCurrentGesture();
-                break;
-            }
-        }
-    }*/
 }
