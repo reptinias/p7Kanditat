@@ -151,6 +151,7 @@ public class Selection : MonoBehaviour
             RemoveSelection(selectedInteractableObject.gameObject);
             selectedInteractableObject = null;
         }
+        actionTrigger.ResetTransRotation();
 
     }
 
@@ -222,7 +223,6 @@ public class Selection : MonoBehaviour
             }
             else
             {
-                selectedObject = null;
                 actionTrigger.ResetTransRotation();
             }
             //log hit area to the console
