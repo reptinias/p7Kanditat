@@ -234,12 +234,11 @@ public class Selection : MonoBehaviour
         }
     }
 
-    public void MoveAndRotate(int handIndex, bool shouldMoveAndRotate)
+    public void MoveAndRotate(int handIndex)
     {
-        moveAndRotate = shouldMoveAndRotate;
-
-        if (shouldMoveAndRotate && selectedObject)
+        if (selectedObject)
         {
+            moveAndRotate = true;
             rootBone = m_hands[handIndex].Bones[0];
             initialRootBonePos = rootBone.Transform.position;
             initialRootBoneRotation = rootBone.Transform.rotation;
@@ -253,6 +252,11 @@ public class Selection : MonoBehaviour
             initialRotation = selectedObject.transform.rotation;
             Debug.Log("Initial info " + initialPos + " " + initialRotation);
         }
+    }
+
+    public void StopMoveAndRotate()
+    {
+        moveAndRotate = false;
     }
     
     // Update is called once per frame

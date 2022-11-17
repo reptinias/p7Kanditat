@@ -100,7 +100,10 @@ public class ActionTriggerScript : MonoBehaviour
             if (transRot != shouldTransRot)
             {
                 transRot = shouldTransRot;
-                selector.MoveAndRotate(handIndexTransRot, transRot);
+                if (transRot)
+                    selector.MoveAndRotate(handIndexTransRot);
+                else
+                    selector.StopMoveAndRotate();
             }
 
         }
