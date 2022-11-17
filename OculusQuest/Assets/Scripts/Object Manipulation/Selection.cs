@@ -183,16 +183,17 @@ public class Selection : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, distance))
         {
-            selectedObject = hit.transform.gameObject;
+            GameObject tempObj = hit.transform.gameObject;
 
-            Animator targetAnim = selectedObject.GetComponent<Animator>();
-            if (!targetAnim && selectedObject.transform.parent)
+            Animator targetAnim = tempObj.GetComponent<Animator>();
+            if (!targetAnim && tempObj.transform.parent)
             {
-                selectedObject = selectedObject.transform.parent.gameObject;
+                tempObj = tempObj.transform.parent.gameObject;
             }
 
-            if (selectedObject.tag == "AnimateAble")
+            if (tempObj.tag == "AnimateAble")
             {
+                selectedObject = tempObj;
                 InteractableObject io = selectedObject.GetComponent<InteractableObject>();
                 if (io)
                 {

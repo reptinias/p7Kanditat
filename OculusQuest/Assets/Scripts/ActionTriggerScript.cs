@@ -97,11 +97,14 @@ public class ActionTriggerScript : MonoBehaviour
                 }
             }
 
+            if (transRot != shouldTransRot)
+            {
                 transRot = shouldTransRot;
                 if (transRot)
                     selector.MoveAndRotate(handIndexTransRot);
                 else
                     selector.StopMoveAndRotate();
+            }
         }
     }
 
