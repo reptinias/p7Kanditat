@@ -63,7 +63,7 @@ public class ActionTriggerScript : MonoBehaviour
                 else{ 
                     // vvv Fix start stop contradiction vvv
                     // vvv plus accidental gesture      vvv
-                    if (tempGesture[i] == "thumb up")
+                    if (tempGesture[i] == "thumb up" && selector.allowRecording)
                     {
                         animationRecorder.StartRecording();
                     }

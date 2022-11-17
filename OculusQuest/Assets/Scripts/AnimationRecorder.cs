@@ -94,5 +94,6 @@ public class AnimationRecorder : MonoBehaviour
     public void SetTarget(GameObject newTarget)
     {
         target = newTarget;
+        controller = target.GetComponent<Animator>().runtimeAnimatorController as AnimatorController;
     }
 }

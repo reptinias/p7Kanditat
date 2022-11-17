@@ -10,6 +10,7 @@ public class Selection : MonoBehaviour
     private List<GameObject> objects;
     public Outline outlineScript;
     public RigSelection rigSelectionScript;
+    public bool allowRecording;
 
     float distance = 50f;
 
@@ -46,8 +47,8 @@ public class Selection : MonoBehaviour
 
         m_hands = InputDevices.m_hands;
 
+        allowRecording = false;
         UpdateObjectsInScene();
-
     }
 
     void UpdateObjectsInScene()
@@ -144,7 +145,7 @@ public class Selection : MonoBehaviour
     public void DeselectObject() //
     {
         RemoveSelectedObjects();
-
+        
         selectedObject = null;
         if (selectedInteractableObject)
         {
@@ -152,7 +153,7 @@ public class Selection : MonoBehaviour
             selectedInteractableObject = null;
         }
         actionTrigger.ResetTransRotation();
-
+        allowRecording = false;
     }
 
     void RemoveSelectedObjects()
@@ -222,6 +223,7 @@ public class Selection : MonoBehaviour
 
                 line.SetPositions(new Vector3[2] { transformPosition, endPosition });
                 InitialiseMoveAndRotate();
+                allowRecording = true;
             }
             else
             {
@@ -242,13 +244,13 @@ public class Selection : MonoBehaviour
         {
             initialRootBonePos = rootBone.Transform.position;
             initialRootBoneRotation = rootBone.Transform.rotation;
-            Collider selectedObjectCollider = selectedObject.GetComponent<Collider>();
+            /*Collider selectedObjectCollider = selectedObject.GetComponent<Collider>();
             if (!selectedObjectCollider)
             {
                 selectedObjectCollider = selectedObject.GetComponentInChildren<Collider>();
             }
-            initialPos = selectedObjectCollider.bounds.center;
-            //initialPos = selectedObject.transform.position;
+            initialPos = selectedObjectCollider.bounds.center;*/
+            initialPos = selectedObject.transform.position;
             initialRotation = selectedObject.transform.rotation;
             Debug.Log("Initial info " + initialPos + " " + initialRotation);
         }
@@ -272,7 +274,7 @@ public class Selection : MonoBehaviour
         if (moveAndRotate && selectedObject)
         {
             Vector3 differencePos = rootBone.Transform.position - initialRootBonePos;//20 -30 = -10
-            Quaternion differenceRot = Quaternion.Inverse(initialRootBoneRotation) * rootBone.Transform.rotation;//20 -30 = -10
+            Quaternion differenceRot = initialRootBoneRotation * Quaternion.Inverse((rootBone.Transform.rotation));//20 -30 = -10
 
             selectedObject.transform.position = initialPos + differencePos;
             selectedObject.transform.rotation = initialRotation * differenceRot;

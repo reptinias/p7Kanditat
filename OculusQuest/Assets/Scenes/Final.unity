@@ -2315,6 +2315,7 @@ MonoBehaviour:
   objectsInScene: {fileID: 66960792}
   outlineScript: {fileID: 1231012979}
   rigSelectionScript: {fileID: 1231012977}
+  allowRecording: 0
   animationRecorder: {fileID: 268409825}
   length: 1
   line: {fileID: 595176747}
@@ -3151,7 +3152,7 @@ Animator:
   m_GameObject: {fileID: 1792393979}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 784bb7bcd99182149a9540b6aac3c780, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
