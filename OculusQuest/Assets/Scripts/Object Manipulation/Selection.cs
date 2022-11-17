@@ -42,6 +42,7 @@ public class Selection : MonoBehaviour
     void Start()
     {
         InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
+        actionTrigger = GameObject.FindObjectOfType<ActionTriggerScript>().GetComponent<ActionTriggerScript>();
 
         m_hands = InputDevices.m_hands;
 
@@ -242,8 +243,15 @@ public class Selection : MonoBehaviour
             rootBone = m_hands[handIndex].Bones[0];
             initialRootBonePos = rootBone.Transform.position;
             initialRootBoneRotation = rootBone.Transform.rotation;
-            initialPos = selectedObject.transform.position;
+            Collider selectedObjectCollider = selectedObject.GetComponent<Collider>();
+            if (!selectedObjectCollider)
+            {
+                selectedObjectCollider = selectedObject.GetComponentInChildren<Collider>();
+            }
+            initialPos = selectedObjectCollider.bounds.center;
+            //initialPos = selectedObject.transform.position;
             initialRotation = selectedObject.transform.rotation;
+            Debug.Log("Initial info " + initialPos + " " + initialRotation);
         }
     }
     
