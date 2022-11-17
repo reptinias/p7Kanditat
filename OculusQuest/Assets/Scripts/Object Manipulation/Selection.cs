@@ -220,6 +220,7 @@ public class Selection : MonoBehaviour
                 //draw invisible ray cast/vector
 
                 line.SetPositions(new Vector3[2] { transformPosition, endPosition });
+                InitialiseMoveAndRotate();
             }
             else
             {
@@ -234,12 +235,10 @@ public class Selection : MonoBehaviour
         }
     }
 
-    public void MoveAndRotate(int handIndex)
+    public void InitialiseMoveAndRotate()
     {
-        if (selectedObject)
+        if (selectedObject && moveAndRotate)
         {
-            moveAndRotate = true;
-            rootBone = m_hands[handIndex].Bones[0];
             initialRootBonePos = rootBone.Transform.position;
             initialRootBoneRotation = rootBone.Transform.rotation;
             Collider selectedObjectCollider = selectedObject.GetComponent<Collider>();
@@ -252,6 +251,13 @@ public class Selection : MonoBehaviour
             initialRotation = selectedObject.transform.rotation;
             Debug.Log("Initial info " + initialPos + " " + initialRotation);
         }
+    }
+
+    public void MoveAndRotate(int handIndex)
+    {
+        moveAndRotate = true;
+        rootBone = m_hands[handIndex].Bones[0];
+        InitialiseMoveAndRotate();
     }
 
     public void StopMoveAndRotate()
