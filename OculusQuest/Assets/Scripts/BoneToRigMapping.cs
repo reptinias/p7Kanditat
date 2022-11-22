@@ -48,6 +48,8 @@ public class BoneToRigMapping : MonoBehaviour
     private Material[] finger0Materials = new Material[5];
     private Material[] finger1Materials = new Material[5];
 
+    private MeshRenderer meshRend;
+
     int handIndex;
 
     /// <summary>
@@ -78,6 +80,8 @@ public class BoneToRigMapping : MonoBehaviour
                     finger1Materials[j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
 
             }
+
+        meshRend = GetComponent<MeshRenderer>(); 
         
     }
 
@@ -151,8 +155,6 @@ public class BoneToRigMapping : MonoBehaviour
             {
                 finger_index.Remove(fingerIdx);
 
-                fingerMaterials[handIndex, fingerIdx].SetColor("_Color", Color.white);
-
                 string text = "";
                 foreach (int idx in finger_index)
                     text += idx.ToString() + " ";
@@ -192,7 +194,7 @@ public class BoneToRigMapping : MonoBehaviour
                 handIndex = 1;
             }
 
-            //if it is the tip of the Index
+            //if it is the tip of the finger
             for (int i = 0; i < fingerTips.Length; i++) //OVRPlugin.BoneId fingertip in fingerTips)
             {
                 if (boneId == fingerTips[i])
@@ -206,6 +208,7 @@ public class BoneToRigMapping : MonoBehaviour
                             {
                                 curFingertip = fingerTips[i];
                                 curFingertipBone = fingerTipBone;
+                                meshRend.materials[i].SetColor("_Color", fingerColor[i]);
                                 return i;
                             }
                         }
