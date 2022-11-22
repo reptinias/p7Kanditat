@@ -42,6 +42,12 @@ public class BoneToRigMapping : MonoBehaviour
     List<int> finger_index = new List<int>();
     private NewReadInputs InputDevices;
 
+    private Color[,] fingerColor = { { Color.black, Color.blue, Color.yellow, Color.red, Color.green}, { Color.black, Color.blue, Color.yellow, Color.red, Color.green } };
+
+    private Material[,] fingerMaterials = new Material[2, 5];
+
+    int handIndex;
+
     /// <summary>
     /// Start
     /// </summary>
@@ -59,6 +65,10 @@ public class BoneToRigMapping : MonoBehaviour
 
         //we don't want the cube to move over collision, so let's just use a trigger
         GetComponent<Collider>().isTrigger = true;
+
+        for (int i = 0; i < trackedHands.Length; i++)
+            for (int j = 0; j < 5; j++)
+                fingerMaterials[i, j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
     }
 
     /// <summary>
@@ -99,6 +109,8 @@ public class BoneToRigMapping : MonoBehaviour
             {
                 finger_index.Add(fingerIdx);
 
+                fingerMaterials[handIndex,fingerIdx].SetColor("Tint", fingerColor[handIndex,fingerIdx]);
+
                 string text = "";
                 foreach (int idx in finger_index)
                     text += idx.ToString() + " ";
@@ -129,6 +141,8 @@ public class BoneToRigMapping : MonoBehaviour
             {
                 finger_index.Remove(fingerIdx);
 
+                fingerMaterials[handIndex, fingerIdx].SetColor("Tint", Color.white);
+
                 string text = "";
                 foreach (int idx in finger_index)
                     text += idx.ToString() + " ";
@@ -158,7 +172,7 @@ public class BoneToRigMapping : MonoBehaviour
             OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
             int[] fingerTipsIndex = {5, 8, 11, 14, 18};
 
-            int handIndex = -1;
+            handIndex = -1;
             if (collider.transform.IsChildOf(trackedHands[0].transform))
             {
                 handIndex = 0;
