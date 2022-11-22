@@ -51,6 +51,7 @@ public class BoneToRigMapping : MonoBehaviour
     private MeshRenderer meshRend;
 
     int handIndex;
+    int curIndex;
 
     /// <summary>
     /// Start
@@ -203,12 +204,14 @@ public class BoneToRigMapping : MonoBehaviour
                     {
                         if (curFingertip != fingerTips[i])
                         {
+                            fingerMaterials[handIndex, curIndex].SetColor("_Color", Color.white);
                             OVRBone fingerTipBone = m_hands[handIndex].Bones[fingerTipsIndex[i]];
                             if (collider.bounds.Contains(fingerTipBone.Transform.position))
                             {
                                 curFingertip = fingerTips[i];
+                                curIndex = i;
                                 curFingertipBone = fingerTipBone;
-                                meshRend.materials[i].SetColor("_Color", fingerColor[i]);
+                                meshRend.material.SetColor("_Color", fingerColor[i]);
                                 return i;
                             }
                         }
