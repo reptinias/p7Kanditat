@@ -42,9 +42,11 @@ public class BoneToRigMapping : MonoBehaviour
     List<int> finger_index = new List<int>();
     private NewReadInputs InputDevices;
 
-    private Color[,] fingerColor = { { Color.black, Color.blue, Color.yellow, Color.red, Color.green}, { Color.black, Color.blue, Color.yellow, Color.red, Color.green } };
+    private Color[] fingerColor = { Color.black, Color.blue, Color.yellow, Color.red, Color.green };
 
     private Material[,] fingerMaterials = new Material[2, 5];
+    private Material[] finger0Materials = new Material[5];
+    private Material[] finger1Materials = new Material[5];
 
     int handIndex;
 
@@ -68,7 +70,15 @@ public class BoneToRigMapping : MonoBehaviour
 
         for (int i = 0; i < trackedHands.Length; i++)
             for (int j = 0; j < 5; j++)
+            {
                 fingerMaterials[i, j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
+                if (i==0)
+                    finger0Materials[j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
+                else
+                    finger1Materials[j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
+
+            }
+        
     }
 
     /// <summary>
@@ -109,7 +119,7 @@ public class BoneToRigMapping : MonoBehaviour
             {
                 finger_index.Add(fingerIdx);
 
-                fingerMaterials[handIndex,fingerIdx].SetColor("Tint", fingerColor[handIndex,fingerIdx]);
+                fingerMaterials[handIndex,fingerIdx].SetColor("Tint", fingerColor[fingerIdx]);
 
                 string text = "";
                 foreach (int idx in finger_index)
