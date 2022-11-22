@@ -3307,6 +3307,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 683047392623115409, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
+      propertyPath: isInsightPassthroughEnabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 683047392632818037, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
       propertyPath: m_Name
       value: OVRCameraRigCustom
@@ -3325,7 +3329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 683047392632984917, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 683047392632984917, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
       propertyPath: m_LocalPosition.z

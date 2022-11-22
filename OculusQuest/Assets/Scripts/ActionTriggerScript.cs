@@ -99,17 +99,17 @@ public class ActionTriggerScript : MonoBehaviour
                     //selector.MoveAndRotate(i, transRot);
                 }
                 
-                if (Input.GetMouseButtonDown(0))
+                /*if (Input.GetMouseButtonDown(0))
                 {
                     animationPlayer.playRecording();
-                }
+                }*/
 
                 if (tempGesture[i] == "pistol")
                 {
                     teleport.Indicator(i);
                 }
 
-                if (prevGestures[i] == "pistol" && tempGesture[i] == "1-finger point")
+                if (prevGestures[i] == "pistol" && tempGesture[i] == "open hand")
                 {
                     teleport.Teleportation(i);
                 }

@@ -27,7 +27,7 @@ public class TeleportationScript : MonoBehaviour
         {
             if (hit.transform.gameObject.CompareTag("Ground"))
             {
-                transform.position = hit.point;
+                transform.position = new Vector3(hit.point.x, 1.8f, hit.point.z);
             }
         }
     }
