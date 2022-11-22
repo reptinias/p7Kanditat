@@ -119,7 +119,7 @@ public class BoneToRigMapping : MonoBehaviour
             {
                 finger_index.Add(fingerIdx);
 
-                fingerMaterials[handIndex,fingerIdx].SetColor("Tint", fingerColor[fingerIdx]);
+                fingerMaterials[handIndex,fingerIdx].SetColor("_Color", fingerColor[fingerIdx]);
 
                 string text = "";
                 foreach (int idx in finger_index)
@@ -151,7 +151,7 @@ public class BoneToRigMapping : MonoBehaviour
             {
                 finger_index.Remove(fingerIdx);
 
-                fingerMaterials[handIndex, fingerIdx].SetColor("Tint", Color.white);
+                fingerMaterials[handIndex, fingerIdx].SetColor("_Color", Color.white);
 
                 string text = "";
                 foreach (int idx in finger_index)
