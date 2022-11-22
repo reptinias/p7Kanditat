@@ -13,7 +13,10 @@ public class ActionTriggerScript : MonoBehaviour
     public string[] prevGestures = {" ", " "};
     private OVRSkeleton[] m_hands;
     private OVRHand[] trackedHands;
-    private bool transRot = false; 
+    private bool transRot = false;
+    private bool contradiction = false;
+    public  GameObject[] recordingLight;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +30,9 @@ public class ActionTriggerScript : MonoBehaviour
         };
         animationRecorder = GameObject.Find("Animation Master").GetComponent<AnimationRecorder>();
         selector = GameObject.FindObjectOfType<Selection>();
+        recordingLight[0].SetActive(false);
+        recordingLight[1].SetActive(false);
+        
     }
 
     // Update is called once per frame
@@ -41,11 +47,24 @@ public class ActionTriggerScript : MonoBehaviour
                 break;
             }
         }*/
-
+        
         bool shouldTransRot = false;
         int handIndexTransRot = -1;
 
         string[] tempGesture = {gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
+        
+        if (tempGesture[0] == "thumb up" && tempGesture[1] == "open hand"     ||
+            tempGesture[1] == "thumb up" && tempGesture[0] == "open hand"     ||
+            tempGesture[0] == "1-finger point" && tempGesture[1] == "ok hand" ||
+            tempGesture[1] == "1-finger point" && tempGesture[0] == "ok hand"   )
+        {
+            contradiction = true;
+        }
+        else
+        {
+            contradiction = false;
+        }
+        
         if (tempGesture[0] != tempGesture[1])
         {
             for (int i = 0; i < 2; i++)
@@ -55,30 +74,20 @@ public class ActionTriggerScript : MonoBehaviour
                     continue;
                 }
 
-                if (tempGesture[0] == "thumb up" && tempGesture[1] == "open hand" ||
-                    tempGesture[1] == "thumb up" && tempGesture[0] == "open hand")
+                if (!contradiction)
                 {
-                    continue;
-                }
-                else{ 
                     // vvv Fix start stop contradiction vvv
                     // vvv plus accidental gesture      vvv
                     if (tempGesture[i] == "thumb up" && selector.allowRecording)
                     {
                         animationRecorder.StartRecording();
+                        recordingLight[i].SetActive(true);
                     }
                     if (tempGesture[i] == "open hand")
                     {
                         animationRecorder.StopRecording();
+                        recordingLight[i].SetActive(false);
                     }
-                }
-
-                if (tempGesture[0] == "1-finger point" && tempGesture[1] == "ok hand" ||
-                    tempGesture[1] == "1-finger point" && tempGesture[0] == "ok hand")
-                {
-                    continue;
-                }
-                else{
                     if (tempGesture[i] == "1-finger point")
                     {
                         selector.SelectObject(i);

@@ -14,7 +14,7 @@ public class Selection : MonoBehaviour
 
     float distance = 50f;
 
-    GameObject selectedObject;
+    private GameObject selectedObject = null;
 
     InteractableObject curInteractableObject;
     InteractableObject selectedInteractableObject;
@@ -38,6 +38,7 @@ public class Selection : MonoBehaviour
     private OVRBone rootBone;
 
     private ActionTriggerScript actionTrigger;
+    public bool newSelection;
 
     // Start is called before the first frame update
     void Start()
@@ -154,6 +155,7 @@ public class Selection : MonoBehaviour
         }
         actionTrigger.ResetTransRotation();
         allowRecording = false;
+        newSelection = false;
     }
 
     void RemoveSelectedObjects()
@@ -236,6 +238,8 @@ public class Selection : MonoBehaviour
         {
             //DeselectObject();
         }
+
+        newSelection = true;
     }
 
     public void InitialiseMoveAndRotate()
@@ -282,5 +286,10 @@ public class Selection : MonoBehaviour
         /*if (Input.GetMouseButtonDown(0)){
             SelectObject();
         }*/
+    }
+
+    public GameObject getSelectedObject()
+    {
+        return selectedObject;
     }
 }
