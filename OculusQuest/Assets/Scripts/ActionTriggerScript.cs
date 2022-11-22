@@ -8,6 +8,8 @@ public class ActionTriggerScript : MonoBehaviour
     private NewReadInputs readInputs;
     private GestureRecognition[] gestureRecognition;
     private AnimationRecorder animationRecorder;
+    private AnimationPlayer animationPlayer;
+    private TeleportationScript teleport;
     private Selection selector;
     public string[] currentGestures = {" ", " "};
     public string[] prevGestures = {" ", " "};
@@ -29,6 +31,8 @@ public class ActionTriggerScript : MonoBehaviour
             GameObject.Find("OVRCameraRigCustom/TrackingSpace/RightHandAnchor").GetComponent<GestureRecognition>()
         };
         animationRecorder = GameObject.Find("Animation Master").GetComponent<AnimationRecorder>();
+        animationPlayer = GameObject.Find("Animation Master").GetComponent<AnimationPlayer>();
+        teleport = GameObject.FindObjectOfType<TeleportationScript>();
         selector = GameObject.FindObjectOfType<Selection>();
         recordingLight[0].SetActive(false);
         recordingLight[1].SetActive(false);
@@ -38,16 +42,6 @@ public class ActionTriggerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*for (int i = 0; i < 2; i++)
-        {
-            string[] newGesture = gestureRecognition[i].getGesture();
-            if (newGesture[0] != "open hand" && currentGestures[i] != newGesture[0] && currentGestures[i] != newGesture[1])
-            {
-                opdateCurrentGesture();
-                break;
-            }
-        }*/
-        
         bool shouldTransRot = false;
         int handIndexTransRot = -1;
 
@@ -104,6 +98,21 @@ public class ActionTriggerScript : MonoBehaviour
                     handIndexTransRot = i;
                     //selector.MoveAndRotate(i, transRot);
                 }
+                
+                if (Input.GetMouseButtonDown(0))
+                {
+                    animationPlayer.playRecording();
+                }
+
+                if (tempGesture[i] == "pistol")
+                {
+                    teleport.Indicator(i);
+                }
+
+                if (prevGestures[i] == "pistol" && tempGesture[i] == "1-finger point")
+                {
+                    teleport.Teleportation(i);
+                }
             }
 
             if (transRot != shouldTransRot)
@@ -115,6 +124,7 @@ public class ActionTriggerScript : MonoBehaviour
                     selector.StopMoveAndRotate();
             }
         }
+        prevGestures = tempGesture;
     }
 
     public void ResetTransRotation()

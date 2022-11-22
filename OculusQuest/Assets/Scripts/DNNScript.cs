@@ -40,7 +40,7 @@ public class DNNScript : MonoBehaviour
                     predictionString = "closed hand";
                     break;
                 case 2:
-                    predictionString = "1-finger point";
+                    predictionString = "pistol";
                     break;
                 case 3:
                     predictionString = "thumb up";

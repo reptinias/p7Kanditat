@@ -25,17 +25,17 @@ public class AnimationPlayer : MonoBehaviour
         {
             updateController();
         }
-        
-        if (Input.GetMouseButtonDown(0))
-        {
-            Debug.Log("play animation");
-            animator.Play("Animation");
-        }
     }
 
     void updateController()
     {
         target = selector.getSelectedObject();
         animator = target.GetComponent<Animator>();
+    }
+
+    public void playRecording()
+    {
+        Debug.Log("play animation");
+        animator.Play("Animation");
     }
 }
