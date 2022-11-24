@@ -6,9 +6,9 @@ public class ChangeHandMaterial : MonoBehaviour
 {
     private BoneMappingHandler boneMappingHandler;
 
-    public GameObject[] colorChangeObjects;
+    //public GameObject[] colorChangeObjects;
 
-    public GameObject[] otherObjs;
+    //public GameObject[] otherObjs;
 
     // Start is called before the first frame update
     void Start()

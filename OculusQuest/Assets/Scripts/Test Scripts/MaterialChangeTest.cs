@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MaterialChangeTest : MonoBehaviour
 {
-    public MeshRenderer meshRend;
     private BoneMappingHandler boneMappingHandler;
 
     public GameObject[] colorChangeObjects;
