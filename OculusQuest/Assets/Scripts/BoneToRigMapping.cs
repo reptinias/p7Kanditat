@@ -51,15 +51,35 @@ public class BoneToRigMapping : MonoBehaviour
     private MeshRenderer meshRend;
 
     int handIndex;
-    int curIndex;
+
+    public int curIndex;
+
+    BoneMappingHandler boneMappingHandler;
+    ChangeHandMaterial changeHandMaterialScript;
+
+    public void SetIndexes(int hand, int finger)
+    {
+        handIndex = hand;
+        curIndex = finger;
+    }
+
+    public int[] GetPreviousIndexes()
+    {
+        return new int[]{handIndex, curIndex};
+    }
 
     /// <summary>
     /// Start
     /// </summary>
     void Start()
     {
+        changeHandMaterialScript = GameObject.FindObjectOfType<ChangeHandMaterial>();
+
+        //changeHandMaterialScript.ChangeMaterial(0,curIndex, gameObject);
         //StartMapping();
         m_renderer = GetComponent<Renderer>();
+
+        boneMappingHandler = GameObject.FindObjectOfType<BoneMappingHandler>();
 
         InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
         trackedHands = InputDevices.trackedHands;
@@ -83,7 +103,7 @@ public class BoneToRigMapping : MonoBehaviour
             }
 
         meshRend = GetComponent<MeshRenderer>(); 
-        
+
     }
 
     /// <summary>
@@ -124,7 +144,8 @@ public class BoneToRigMapping : MonoBehaviour
             {
                 finger_index.Add(fingerIdx);
 
-                fingerMaterials[handIndex,fingerIdx].SetColor("_Color", fingerColor[fingerIdx]);
+                //fingerMaterials[handIndex,fingerIdx].SetColor("_Color", fingerColor[fingerIdx]);
+                changeHandMaterialScript.ChangeMaterial(handIndex, fingerIdx, gameObject);
 
                 string text = "";
                 foreach (int idx in finger_index)
@@ -211,7 +232,7 @@ public class BoneToRigMapping : MonoBehaviour
                                 curFingertip = fingerTips[i];
                                 curIndex = i;
                                 curFingertipBone = fingerTipBone;
-                                meshRend.material.SetColor("_Color", fingerColor[i]);
+                                //meshRend.material.SetColor("_Color", fingerColor[i]);
                                 return i;
                             }
                         }
