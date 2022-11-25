@@ -34,25 +34,28 @@ public class DNNScript : MonoBehaviour
             switch (predictionvalue)
             {
                 case 0:
-                    predictionString = "open hand";
+                    predictionString = "relaxed hand";
                     break;
                 case 1:
-                    predictionString = "closed hand";
+                    predictionString = "pistol hand";
                     break;
                 case 2:
-                    predictionString = "pistol";
+                    predictionString = "pointing hand";
                     break;
                 case 3:
-                    predictionString = "thumb up";
+                    predictionString = "closed hand";
                     break;
                 case 4:
-                    predictionString = "ok hand";
+                    predictionString = "stretched hand";
                     break;
                 case 5:
-                    predictionString = "pinch";
+                    predictionString = "ok hand";
                     break;
                 case 6:
-                    predictionString = "half pinch";
+                    predictionString = "thumb up";
+                    break;
+                case 7:
+                    predictionString = "thumb down";
                     break;
             }
 

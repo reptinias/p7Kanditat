@@ -125,22 +125,22 @@ public class LoggingManager : MonoBehaviour
             collections[collectionLabel].label = collectionLabel;
         }
         foreach(KeyValuePair<string, object> pair in logData) {
-            /*if (!collections[collectionLabel].log.ContainsKey(pair.Key)) {
+            if (!collections[collectionLabel].log.ContainsKey(pair.Key)) {
                 collections[collectionLabel].log.Add(pair.Key, new Dictionary<int, object>());
 
-                /*if (!collections[collectionLabel].log.ContainsKey("Timestamp")) {
+                if (!collections[collectionLabel].log.ContainsKey("Timestamp")) {
                     collections[collectionLabel].log["Timestamp"] = new Dictionary<int, object>();
                 }
                 if (!collections[collectionLabel].log.ContainsKey("Framecount")) {
                     collections[collectionLabel].log["Framecount"] = new Dictionary<int, object>();
                 }
                 if (!collections[collectionLabel].log.ContainsKey("SessionID")) {
-                collections[collectionLabel].log["SessionID"] = new Dictionary<int, object>();
+                    collections[collectionLabel].log["SessionID"] = new Dictionary<int, object>();
                 }
                 if (!collections[collectionLabel].log.ContainsKey("Email")) {
-                collections[collectionLabel].log["Email"] = new Dictionary<int, object>();
+                    collections[collectionLabel].log["Email"] = new Dictionary<int, object>();
                 }
-            }*/
+            }
             int count = collections[collectionLabel].count;
             if (logMode == LogMode.Append) {
                 if (collections[collectionLabel].log[pair.Key].ContainsKey(count)) {

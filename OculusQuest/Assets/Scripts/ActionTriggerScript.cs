@@ -77,7 +77,7 @@ public class ActionTriggerScript : MonoBehaviour
                         animationRecorder.StartRecording();
                         recordingLight[i].SetActive(true);
                     }
-                    if (tempGesture[i] == "open hand")
+                    if (tempGesture[i] == "stretched hand")
                     {
                         animationRecorder.StopRecording();
                         recordingLight[i].SetActive(false);
@@ -104,12 +104,12 @@ public class ActionTriggerScript : MonoBehaviour
                     animationPlayer.playRecording();
                 }*/
 
-                if (tempGesture[i] == "pistol")
+                if (tempGesture[i] == "pointing hand")
                 {
                     teleport.Indicator(i);
                 }
 
-                if (prevGestures[i] == "pistol" && tempGesture[i] == "open hand")
+                if (prevGestures[i] == "pistol hand" && tempGesture[i] == "pointing hand")
                 {
                     teleport.Teleportation(i);
                 }

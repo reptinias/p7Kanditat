@@ -50,22 +50,22 @@ public class BoneToRigMapping : MonoBehaviour
 
     private MeshRenderer meshRend;
 
-    int handIndex;
+    int curHandIndex = -1;
 
-    public int curIndex;
+    int curFingerIndex = -1;
 
     BoneMappingHandler boneMappingHandler;
     ChangeHandMaterial changeHandMaterialScript;
 
     public void SetIndexes(int hand, int finger)
     {
-        handIndex = hand;
-        curIndex = finger;
+        curHandIndex = hand;
+        curFingerIndex = finger;
     }
 
     public int[] GetPreviousIndexes()
     {
-        return new int[]{handIndex, curIndex};
+        return new int[]{curHandIndex, curFingerIndex};
     }
 
     /// <summary>
@@ -137,25 +137,19 @@ public class BoneToRigMapping : MonoBehaviour
     {
         if (!curMapping)
         {
-            int fingerIdx = GetFingerIndex(collider);
+            int[] handAndFingerIndex = GetHandAndFingerIndex(collider);
             //if there is an associated hand, it means that an index of one of two hands is entering the cube
             //change the color of the cube accordingly (blue for left hand, green for right one)
-            if (fingerIdx != -1)
-            {
-                finger_index.Add(fingerIdx);
+            if (handAndFingerIndex[0] != -1 && handAndFingerIndex[1] != -1)
+            
 
                 //fingerMaterials[handIndex,fingerIdx].SetColor("_Color", fingerColor[fingerIdx]);
-                changeHandMaterialScript.ChangeMaterial(handIndex, fingerIdx, gameObject);
-
-                string text = "";
-                foreach (int idx in finger_index)
-                    text += idx.ToString() + " ";
-
-                testText.text = text;
-                //m_renderer.material.color = fingerIdx == 0 ? m_renderer.material.color = Color.blue : m_renderer.material.color = Color.green;
+                changeHandMaterialScript.ChangeMaterial(handAndFingerIndex[0], handAndFingerIndex[1], gameObject);
+            
+            //m_renderer.material.color = fingerIdx == 0 ? m_renderer.material.color = Color.blue : m_renderer.material.color = Color.green;
                //m_isIndexStaying[0] = true;
                 //m_isIndexStaying[1] = true;
-            }
+            
         }
     }
 
@@ -165,7 +159,7 @@ public class BoneToRigMapping : MonoBehaviour
     /// </summary>
     /// <param name="collider">Collider of interest</param>
     private void OnTriggerExit(Collider collider)
-    {
+    {/*
         if (!curMapping)
         {
             //get hand associated with trigger
@@ -175,18 +169,11 @@ public class BoneToRigMapping : MonoBehaviour
             //so set the color of the cube back to white, or to the one of the other hand, if it is in
             if (fingerIdx != -1)
             {
-                finger_index.Remove(fingerIdx);
-
-                string text = "";
-                foreach (int idx in finger_index)
-                    text += idx.ToString() + " ";
-
-                testText.text = text;
                 //m_isIndexStaying[handIdx] = false;
                 //m_renderer.material.color = m_isIndexStaying[0] ? m_renderer.material.color = Color.blue :
                 //(m_isIndexStaying[1] ? m_renderer.material.color = Color.green : Color.white);
             }
-        }
+        }*/
     }
 
     /// <summary>
@@ -194,8 +181,9 @@ public class BoneToRigMapping : MonoBehaviour
     /// </summary>
     /// <param name="collider">Collider of interest</param>
     /// <returns>0 if the collider represents the finger tip of left hand, 1 if it is the one of right hand, -1 if it is not an index fingertip</returns>
-    private int GetFingerIndex(Collider collider)
+    private int[] GetHandAndFingerIndex(Collider collider)
     {
+        int handIndex = -1;
         //Checking Oculus code, it is possible to see that physics capsules gameobjects always end with _CapsuleCollider
         if (collider.gameObject.name.Contains("_CapsuleCollider"))
         {
@@ -205,8 +193,7 @@ public class BoneToRigMapping : MonoBehaviour
 
             OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
             int[] fingerTipsIndex = {5, 8, 11, 14, 18};
-
-            handIndex = -1;
+            
             if (collider.transform.IsChildOf(trackedHands[0].transform))
             {
                 handIndex = 0;
@@ -225,22 +212,22 @@ public class BoneToRigMapping : MonoBehaviour
                     {
                         if (curFingertip != fingerTips[i])
                         {
-                            fingerMaterials[handIndex, curIndex].SetColor("_Color", Color.white);
+                            //fingerMaterials[handIndex, curIndex].SetColor("_Color", Color.white);
                             OVRBone fingerTipBone = m_hands[handIndex].Bones[fingerTipsIndex[i]];
                             if (collider.bounds.Contains(fingerTipBone.Transform.position))
                             {
                                 curFingertip = fingerTips[i];
-                                curIndex = i;
+                                //curIndex = i;
                                 curFingertipBone = fingerTipBone;
                                 //meshRend.material.SetColor("_Color", fingerColor[i]);
-                                return i;
+                                return new int[] { handIndex, i };
                             }
                         }
                     }
                 }
             }
         }
-        return -1;
+        return new int[] { handIndex, -1 };
 
     }
 

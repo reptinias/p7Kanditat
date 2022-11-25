@@ -43,16 +43,16 @@ public class ChangeHandMaterial : MonoBehaviour
 
     public void ChangeMaterial(int handIdx, int fingerIdx, GameObject otherobj)
     {
-        BoneToRigMapping boneToRig = otherobj.GetComponent<BoneToRigMapping>();
-        if (boneToRig)
+        /*BoneToRigMapping boneToRig = otherobj.GetComponent<BoneToRigMapping>();
+        if (boneToRig) // They should have?
         {
             if (boneToRig.GetPreviousIndexes()[0] != handIdx || boneToRig.GetPreviousIndexes()[1] != fingerIdx)
                 boneMappingHandler.ChangeFinger(boneToRig.GetPreviousIndexes()[0], boneToRig.GetPreviousIndexes()[1], null);
 
             //otherobj.GetComponent<MeshRenderer>().material.color = Color.white;
             boneToRig.SetIndexes(handIdx, fingerIdx);
-        }
-        boneMappingHandler.ChangeFinger(handIdx, fingerIdx, otherobj);
+        }*/
+        boneMappingHandler.MapFinger(handIdx, fingerIdx, otherobj);
 
     }
 
