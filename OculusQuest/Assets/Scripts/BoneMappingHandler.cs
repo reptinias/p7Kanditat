@@ -16,7 +16,7 @@ public class BoneMappingHandler : MonoBehaviour
     public Material[] fingerMaterials0TEST = new Material[5];
     public Material[] fingerMaterials1TEST = new Material[5];
 
-    private GameObject[][] mappedObjects = new GameObject[2][];
+    public GameObject[][] mappedObjects = new GameObject[2][];
 
     private GameObject[] objArr;
     // Start is called before the first frame update

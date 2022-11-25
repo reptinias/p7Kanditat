@@ -10,7 +10,7 @@ public class AnimationRecorder : MonoBehaviour
     private GameObjectRecorder m_Recorder;
     public GameObject target;
     private AnimatorController controller;
-    private bool recording = false;
+    public bool recording = false;
     private AnimationClip clip;
 
     private void Start()

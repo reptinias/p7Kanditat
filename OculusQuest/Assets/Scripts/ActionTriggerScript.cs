@@ -15,9 +15,11 @@ public class ActionTriggerScript : MonoBehaviour
     public string[] prevGestures = {" ", " "};
     private OVRSkeleton[] m_hands;
     private OVRHand[] trackedHands;
-    private bool transRot = false;
+    public bool transRot = false;
     private bool contradiction = false;
     public  GameObject[] recordingLight;
+    public int gestureShift = 0;
+    public int animationPlay = 0;
     
     // Start is called before the first frame update
     void Start()
@@ -46,7 +48,7 @@ public class ActionTriggerScript : MonoBehaviour
         int handIndexTransRot = -1;
 
         string[] tempGesture = {gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
-        
+        currentGestures = new string[]{gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
         if (tempGesture[0] == "thumb up" && tempGesture[1] == "open hand"     ||
             tempGesture[1] == "thumb up" && tempGesture[0] == "open hand"     ||
             tempGesture[0] == "1-finger point" && tempGesture[1] == "ok hand" ||
@@ -99,10 +101,15 @@ public class ActionTriggerScript : MonoBehaviour
                     //selector.MoveAndRotate(i, transRot);
                 }
                 
-                /*if (Input.GetMouseButtonDown(0))
+                if (tempGesture[i] == "thumb down" && tempGesture[i] != prevGestures[i])
                 {
+                    animationPlay = 1;
                     animationPlayer.playRecording();
-                }*/
+                }
+                else
+                {
+                    animationPlay = 0;
+                }
 
                 if (tempGesture[i] == "pointing hand")
                 {
@@ -123,6 +130,15 @@ public class ActionTriggerScript : MonoBehaviour
                 else
                     selector.StopMoveAndRotate();
             }
+        }
+
+        if (prevGestures[0] != currentGestures[0] && prevGestures[1] != currentGestures[1])
+        {
+            gestureShift = 1;
+        }
+        else
+        {
+            gestureShift = 0;
         }
         prevGestures = tempGesture;
     }
