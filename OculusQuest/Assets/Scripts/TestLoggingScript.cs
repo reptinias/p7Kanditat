@@ -117,7 +117,7 @@ public class TestLoggingScript : MonoBehaviour
         
         if (animeRecorder.recording)
         {
-            loggingManager.Log("MyLabel", "SRecord Animation", 1);
+            loggingManager.Log("MyLabel", "Record Animation", 1);
         }
         else
         {

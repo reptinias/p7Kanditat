@@ -87,10 +87,15 @@ public class ActionTriggerScript : MonoBehaviour
                     if (tempGesture[i] == "pointing hand")
                     {
                         selector.SelectObject(i);
+                        if (selector.getSelectedObject() != null)
+                        {
+                            recordingLight[i].SetActive(true); 
+                        }
                     }
                     if (tempGesture[i] == "ok hand")
                     {
                         selector.DeselectObject();
+                        recordingLight[i].SetActive(false); 
                     }
                 }
 

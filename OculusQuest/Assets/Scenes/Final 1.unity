@@ -390,6 +390,7 @@ GameObject:
   m_Component:
   - component: {fileID: 97702328}
   - component: {fileID: 97702327}
+  - component: {fileID: 97702329}
   m_Layer: 0
   m_Name: Logging
   m_TagString: Untagged
@@ -432,6 +433,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &97702329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97702326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b003d6086869be499b3e1b58e47f897, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AnimationObjects: []
 --- !u!4 &121540012 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1952732389617918461, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
@@ -728,6 +742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targets: []
+  recording: 0
 --- !u!4 &268409826
 Transform:
   m_ObjectHideFlags: 0
@@ -3341,7 +3356,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 683047392632984917, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.772
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 683047392632984917, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3640,11 +3655,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88a44bb8e82c96145ad107ab96258e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nnmodel: {fileID: 5022602860645237092, guid: bb6355b67577c61478fc676f2b3137f5, type: 3}
+  nnmodel: {fileID: 5022602860645237092, guid: 55303f9b0c918394dbce7576979fc48d, type: 3}
   predString:
   - 
   - 
   procesGesture: 0000
+  predThreshold: 95
 --- !u!114 &1676371501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3663,9 +3679,12 @@ MonoBehaviour:
   prevGestures:
   - ' '
   - ' '
+  transRot: 0
   recordingLight:
   - {fileID: 1293220811}
   - {fileID: 440365218}
+  gestureShift: 0
+  animationPlay: 0
 --- !u!1 &1704000141
 GameObject:
   m_ObjectHideFlags: 0
