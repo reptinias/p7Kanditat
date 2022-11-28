@@ -233,11 +233,14 @@ public class BoneToRigMapping : MonoBehaviour
 
     public void StartMapping()
     {
-        curMapping = true;
-        initialFingertipPos = curFingertipBone.Transform.position;
-        initialFingertipRotation = curFingertipBone.Transform.rotation;
-        initialPos = transform.position;
-        initialRotation = transform.rotation;
+        if (curFingertipBone != null)
+        {
+            curMapping = true;
+            initialFingertipPos = curFingertipBone.Transform.position;
+            initialFingertipRotation = curFingertipBone.Transform.rotation;
+            initialPos = transform.position;
+            initialRotation = transform.rotation;
+        }
     }
 
     public void StopMapping()
