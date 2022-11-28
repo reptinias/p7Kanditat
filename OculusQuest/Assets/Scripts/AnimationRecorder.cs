@@ -7,39 +7,70 @@ using UnityEngine;
 
 public class AnimationRecorder : MonoBehaviour
 {
-    private GameObjectRecorder m_Recorder;
-    public GameObject target;
-    private AnimatorController controller;
+    private GameObjectRecorder[] m_Recorders;
+    public List<GameObject> targets = new List<GameObject>();
+    //private AnimatorController controller;
+    private List<Animation> anims = new List<Animation>();
     public bool recording = false;
-    private AnimationClip clip;
+    private List<AnimationClip> clips = new List<AnimationClip>();
+    private List<bool> isTarget = new List<bool>();
 
     private void Start()
     {
-        controller = target.GetComponent<Animator>().runtimeAnimatorController as AnimatorController;
+        foreach (GameObject target in targets)
+        {
+            anims.Add(target.GetComponent<Animation>());
+            clips.Add(null);
+            isTarget.Add(true);
+
+        }
+    }
+
+    public void RemoveTargets()
+    {
+        for (int i = 0; i < isTarget.Count; i++)
+        {
+            isTarget[i] = false;
+        }
     }
 
     void LateUpdate()
     {
-       /* //If the program is recording and the p-key is pressed, stop recording
-    
-        if (recording && Input.GetKey("p"))
-        {
-            StopRecording();
-        }
+        /* //If the program is recording and the p-key is pressed, stop recording
 
-        //If the program is NOT recording and the k-key is pressed, start recording
-        if (recording == false && Input.GetKey("k"))
-        {
-            StartRecording(target, controller);
-        }*/
+         if (recording && Input.GetKey("p"))
+         {
+             StopRecording();
+         }
+
+         //If the program is NOT recording and the k-key is pressed, start recording
+         if (recording == false && Input.GetKey("k"))
+         {
+             StartRecording(target, controller);
+         }*/
         //Records changes to the object and saves them to the recorder
         if (recording)
         {
-            if (clip == null)
-                return;
-            m_Recorder.TakeSnapshot(Time.deltaTime);
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (!isTarget[i])
+                    continue;
+
+                if (clips[i] == null)
+                    continue;
+                m_Recorders[i].TakeSnapshot(Time.deltaTime);
+            }
         }
-        
+
+    }
+
+    public void PlayRecording()
+    {
+        for (int i = 0; i < targets.Count; i++)
+        {
+            if (!anims[i].isPlaying)
+                anims[i].PlayQueued("Test");
+        }
     }
 
     //Called to start recording. Takes a target object and that target's AnimatorController as arguments(will fix later)
@@ -49,17 +80,26 @@ public class AnimationRecorder : MonoBehaviour
         if (!recording)
         {
             Debug.Log("i've started recording");
-            m_Recorder = new GameObjectRecorder(target);
 
-            // Bind all the Transforms on the GameObject and all its children.
-            m_Recorder.BindComponentsOfType<Transform>(target, true);
-            //Clears clip data
-            clip = null;
-            clip = new AnimationClip();
+            m_Recorders = new GameObjectRecorder[targets.Count];
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (!isTarget[i])
+                    continue;
 
-            //Safeguard. Dunno if it does anything anymore
-            target.GetComponent<Animator>().StopPlayback();
-            recording = true;
+                m_Recorders[i] = new GameObjectRecorder(targets[i]);
+
+                // Bind all the Transforms on the GameObject and all its children.
+                m_Recorders[i].BindComponent(targets[i].transform);
+                //m_Recorders[i].BindComponentsOfType<Transform>(targets[i], true);
+                //Clears clip data
+                if (clips[i] == null)
+                    clips[i] = new AnimationClip { name = "Test" };
+
+                //Safeguard. Dunno if it does anything anymore
+                //target.GetComponent<Animator>().StopPlayback();
+                recording = true;
+            }
         }
     }
 
@@ -69,31 +109,59 @@ public class AnimationRecorder : MonoBehaviour
         if (recording)
         {
             Debug.Log("i've stopped recording");
-            if (clip == null)
-                return;
-
-            if (m_Recorder.isRecording)
+            for (int i = 0; i < targets.Count; i++)
             {
-                //Creates a new animation clip in the designated path
-                AssetDatabase.CreateAsset(clip,
-                    "Assets/" + target.name + "Anim" + System.DateTime.Now.Minute.ToString() +
-                    System.DateTime.Now.Second.ToString() + ".anim");
-                //Saves clip to AnimatorController
-                controller.AddMotion(clip);
-                // Save the recorded session to the clip.
-                m_Recorder.SaveToClip(clip);
+                if (!isTarget[i])
+                    continue;
 
-                //Safeguard. Dunno if it does anything anymore
-                target.GetComponent<Animator>().StopPlayback();
+                if (clips[i] == null)
+                    continue;
 
+                if (m_Recorders[i].isRecording)
+                {
+                    //Creates a new animation clip in the designated path
+                    //AssetDatabase.CreateAsset(clip, "Assets/" + target.name + "Anim" + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".anim");
+                    //Saves clip to AnimatorController
+                    clips[i].legacy = true;
+                    //anim.clip = clip;
+                    anims[i].AddClip(clips[i], "Test");
+
+                    //Animator animator = target.GetComponent<Animator>();
+                    //animator.GetCurrentAnimatorClipInfo(0)[0].clip.;
+                    //AnimatorState state = controller.AddMotion(clip);
+                    //clip.wrapMode = WrapMode.Loop;
+                    // Save the recorded session to the clip.
+                    m_Recorders[i].SaveToClip(clips[i]);
+
+
+                    //Safeguard. Dunno if it does anything anymore
+                    //target.GetComponent<Animator>().StopPlayback();
+
+                }
+                recording = false;
             }
-            recording = false;
         }
+    }
+
+    void Save()
+    {
+        for (int i = 0; i < targets.Count; i++)
+        {
+            //Creates a new animation clip in the designated path
+            AssetDatabase.CreateAsset(clips[i], "Assets/" + targets[i].name + "Anim" + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".anim");
+        }
+    }
+
+    public void OnApplicationQuit()
+    {
+        Save();
     }
 
     public void SetTarget(GameObject newTarget)
     {
-        target = newTarget;
-        controller = target.GetComponent<Animator>().runtimeAnimatorController as AnimatorController;
+        targets.Add(newTarget);
+        anims.Add(newTarget.GetComponent<Animation>());
+        clips.Add(null);
+        isTarget.Add(true);
     }
 }
