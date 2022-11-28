@@ -11,6 +11,9 @@ public class RecordingLightScript : MonoBehaviour
     private int difHand;
     private NewReadInputs inputDevices;
     private int collisionAmount = 0;
+    private Renderer renderer;
+    public Color litColor;
+    public Color unlitColor;
 
     public bool pressed = false;
 
@@ -29,6 +32,7 @@ public class RecordingLightScript : MonoBehaviour
         inputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
         trackedHand = inputDevices.trackedHands[difHand];
         light.enabled = false;
+        renderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -49,10 +53,12 @@ public class RecordingLightScript : MonoBehaviour
                     Debug.Log("Pressed");
                     if (light.enabled == false)
                     {
+                        renderer.material.SetColor ("_Color", litColor);
                         light.enabled = true;
                     }
-                    else if(light.enabled == true)
+                    else if(light.enabled)
                     {
+                        renderer.material.SetColor ("_Color", unlitColor);
                         light.enabled = false;
                     }
                 }

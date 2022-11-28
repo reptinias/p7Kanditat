@@ -18,6 +18,7 @@ public class ActionTriggerScript : MonoBehaviour
     public bool transRot = false;
     private bool contradiction = false;
     public  GameObject[] recordingLight;
+    public  RecordingLightScript[] recordingLightScripts;
     public int gestureShift = 0;
     public int animationPlay = 0;
     
@@ -36,6 +37,11 @@ public class ActionTriggerScript : MonoBehaviour
         animationPlayer = GameObject.Find("Animation Master").GetComponent<AnimationPlayer>();
         teleport = GameObject.FindObjectOfType<TeleportationScript>();
         selector = GameObject.FindObjectOfType<Selection>();
+        recordingLightScripts = new RecordingLightScript[]
+        {
+            GameObject.Find("OVRCameraRigCustom/TrackingSpace/LeftHandAnchor/LeftOVRHandPrefab/RecordingLight").GetComponent<RecordingLightScript>(),
+            GameObject.Find("OVRCameraRigCustom/TrackingSpace/RightHandAnchor/RightOVRHandPrefab/RecordingLight").GetComponent<RecordingLightScript>()
+        };
         recordingLight[0].SetActive(false);
         recordingLight[1].SetActive(false);
         
@@ -74,11 +80,11 @@ public class ActionTriggerScript : MonoBehaviour
                 {
                     // vvv Fix start stop contradiction vvv
                     // vvv plus accidental gesture      vvv
-                    if (tempGesture[i] == "thumb up" && selector.allowRecording)
+                    if (recordingLightScripts[i].pressed && selector.allowRecording)
                     {
                         animationRecorder.StartRecording();
                     }
-                    if (tempGesture[i] == "stretched hand")
+                    if (recordingLightScripts[i].pressed && !selector.allowRecording)
                     {
                         animationRecorder.StopRecording();
                     }
