@@ -110,7 +110,7 @@ public class Selection : MonoBehaviour
 
                 GameObject parentObject;
 
-                if (obj.GetComponent<Animator>())
+                if (obj.GetComponent<Animation>())
                     parentObject = obj;
                 else
                     parentObject = obj.transform.parent.gameObject;
@@ -128,6 +128,7 @@ public class Selection : MonoBehaviour
                 objects.Add(obj);
 
                 curInteractableObject.AddBone(rs);
+                print("Added bone to: " + curInteractableObject);
                 rs.SpawnSelectionBall(curInteractableObject);
             }
         }
