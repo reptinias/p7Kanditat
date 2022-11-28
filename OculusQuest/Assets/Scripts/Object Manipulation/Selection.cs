@@ -50,6 +50,7 @@ public class Selection : MonoBehaviour
 
         allowRecording = false;
         UpdateObjectsInScene();
+        DeselectObject();
     }
 
     void UpdateObjectsInScene()
@@ -76,7 +77,7 @@ public class Selection : MonoBehaviour
                 MakeObjectSelectable(parent.transform.GetChild(i).gameObject, true);
             }
 
-            if (parent.transform.GetChild(i).GetComponent<TwoBoneIKConstraint>())
+            if (parent.transform.GetChild(i).GetComponent<TwoBoneIKConstraint>() || parent.transform.GetChild(i).GetComponent<ChainIKConstraint>())
             {
                 Transform[] cArr = parent.transform.GetChild(i).GetComponentsInChildren<Transform>();
                 foreach (Transform child in cArr)
