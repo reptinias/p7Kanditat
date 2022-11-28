@@ -12,6 +12,12 @@ public class RigSelection : MonoBehaviour
     public Material selectedMat;
 
     bool sphereSelected = false;
+    BoneMappingHandler boneMappingHandler;
+
+    private void Start()
+    {
+        boneMappingHandler = GameObject.FindObjectOfType<BoneMappingHandler>();
+    }
 
     public void SpawnSelectionBall(InteractableObject io)
     {
@@ -19,6 +25,11 @@ public class RigSelection : MonoBehaviour
         sphere.transform.parent = transform;
         sphere.transform.localPosition = new Vector3(0,0,0);
         interactableObject = io;
+
+        boneMappingHandler = GameObject.FindObjectOfType<BoneMappingHandler>();
+        var s = sphere.GetComponent<BoneToRigMapping>();
+        print(s);
+        boneMappingHandler.AddRigComponents(s);
     }
 
     /*public void EnableInteractableObject()

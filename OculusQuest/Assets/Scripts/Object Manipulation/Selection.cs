@@ -40,10 +40,13 @@ public class Selection : MonoBehaviour
     private ActionTriggerScript actionTrigger;
     public bool newSelection;
 
+    BoneMappingHandler boneMappingHandler;
+
     // Start is called before the first frame update
     void Start()
     {
-        InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
+        boneMappingHandler = GameObject.FindObjectOfType<BoneMappingHandler>();
+           InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
         actionTrigger = GameObject.FindObjectOfType<ActionTriggerScript>().GetComponent<ActionTriggerScript>();
 
         m_hands = InputDevices.m_hands;

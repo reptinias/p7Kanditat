@@ -6,7 +6,7 @@ using UnityEngine.PlayerLoop;
 
 public class BoneMappingHandler : MonoBehaviour
 {
-    public BoneToRigMapping[] rigComponents;
+    public List<BoneToRigMapping> rigComponents =  new List<BoneToRigMapping>();
     bool mapTransforms;
     private OVRHand[] trackedHands;
     private NewReadInputs InputDevices;
@@ -126,5 +126,10 @@ public class BoneMappingHandler : MonoBehaviour
     {
         foreach (BoneToRigMapping comp in rigComponents)
             comp.StopMapping();
+    }
+
+    public void AddRigComponents(BoneToRigMapping boneToRigMapping)
+    {
+        rigComponents.Add(boneToRigMapping);
     }
 }
