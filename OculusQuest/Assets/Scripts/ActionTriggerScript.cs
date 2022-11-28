@@ -77,12 +77,10 @@ public class ActionTriggerScript : MonoBehaviour
                     if (tempGesture[i] == "thumb up" && selector.allowRecording)
                     {
                         animationRecorder.StartRecording();
-                        recordingLight[i].SetActive(true);
                     }
                     if (tempGesture[i] == "stretched hand")
                     {
                         animationRecorder.StopRecording();
-                        recordingLight[i].SetActive(false);
                     }
                     if (tempGesture[i] == "pointing hand")
                     {
@@ -109,7 +107,8 @@ public class ActionTriggerScript : MonoBehaviour
                 if (tempGesture[i] == "thumb down" && tempGesture[i] != prevGestures[i])
                 {
                     animationPlay = 1;
-                    animationPlayer.playRecording();
+                    animationRecorder.PlayRecording();
+                    //animationPlayer.playRecording();
                 }
                 else
                 {
@@ -132,14 +131,14 @@ public class ActionTriggerScript : MonoBehaviour
                 }
             }
 
-            if (transRot != shouldTransRot)
+            /*if (transRot != shouldTransRot)
             {
                 transRot = shouldTransRot;
                 if (transRot)
                     selector.MoveAndRotate(handIndexTransRot);
                 else
                     selector.StopMoveAndRotate();
-            }
+            }*/
         }
 
         if (prevGestures[0] != currentGestures[0] && prevGestures[1] != currentGestures[1])
