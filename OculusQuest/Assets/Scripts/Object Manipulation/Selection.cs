@@ -189,7 +189,7 @@ public class Selection : MonoBehaviour
         {
             GameObject tempObj = hit.transform.gameObject;
 
-            Animator targetAnim = tempObj.GetComponent<Animator>();
+            Animation targetAnim = tempObj.GetComponent<Animation>();
             if (!targetAnim && tempObj.transform.parent)
             {
                 tempObj = tempObj.transform.parent.gameObject;

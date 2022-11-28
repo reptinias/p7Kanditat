@@ -10,7 +10,6 @@ public class AnimationPlayer : MonoBehaviour
     public Animator animator;
     private Selection selector;
     
-    
     // Start is called before the first frame update
     void Start()
     {
