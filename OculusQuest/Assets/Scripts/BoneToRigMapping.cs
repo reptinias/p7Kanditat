@@ -118,8 +118,8 @@ public class BoneToRigMapping : MonoBehaviour
             Vector3 differencePos = curFingertipBone.Transform.position - initialFingertipPos;//20 -30 = -10
             Quaternion differenceRot = Quaternion.Inverse(initialFingertipRotation) * curFingertipBone.Transform.rotation;//20 -30 = -10
 
-            transform.position = initialPos + differencePos;
-            transform.rotation = initialRotation * differenceRot;
+            transform.parent.position = initialPos + differencePos;
+            transform.parent.rotation = initialRotation * differenceRot;
         }
         /*
         //check for middle finger pinch on the left hand, and make che cube red in this case
@@ -240,8 +240,8 @@ public class BoneToRigMapping : MonoBehaviour
             curMapping = true;
             initialFingertipPos = curFingertipBone.Transform.position;
             initialFingertipRotation = curFingertipBone.Transform.rotation;
-            initialPos = transform.position;
-            initialRotation = transform.rotation;
+            initialPos = transform.parent.position;
+            initialRotation = transform.parent.rotation;
             animRecorder.SetTarget(gameObject);
         }
     }
