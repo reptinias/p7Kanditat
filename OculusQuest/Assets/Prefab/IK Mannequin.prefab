@@ -265,7 +265,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2584467062422792024}
-  - component: {fileID: 6535433474632722140}
   - component: {fileID: 2584467062422792037}
   - component: {fileID: 2584467062422792038}
   - component: {fileID: 2584467062422792039}
@@ -295,21 +294,6 @@ Transform:
   m_Father: {fileID: 6876163524708775878}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!111 &6535433474632722140
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4125883620963331346}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &2584467062422792037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,7 +341,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4125883620963331346}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
@@ -490,6 +474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8864410155158653552}
   - component: {fileID: 5799456290142907736}
+  - component: {fileID: 497581220}
   m_Layer: 0
   m_Name: ZSphere_1
   m_TagString: Untagged
@@ -582,6 +567,20 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.00012356741, y: -0.0003168583, z: 0.00057026884}
     m_Extent: {x: 0.0074742143, y: 0.014666667, z: 0.007210243}
   m_DirtyAABB: 0
+--- !u!64 &497581220
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5338025731290967102}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 986904166304423244, guid: c5b6532321bbb8940b70d09b5c2a19c0, type: 3}
 --- !u!1 &5944954492809992926
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,9 +623,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6876163524708775878}
   - component: {fileID: 688248786002013628}
+  - component: {fileID: 1382825242}
   m_Layer: 0
   m_Name: IK Mannequin
-  m_TagString: Untagged
+  m_TagString: AnimateAble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -640,7 +640,7 @@ Transform:
   m_GameObject: {fileID: 6063774637353069948}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 2.0357969, y: 0.00000047683716, z: -0.029801369}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8864410155158653552}
@@ -668,6 +668,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!111 &1382825242
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6063774637353069948}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &6177080956082581015
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,7 +1086,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215491135961661496}
   m_LocalRotation: {x: -0.70761776, y: 0.0067330883, z: -0.70654184, w: -0.00551617}
-  m_LocalPosition: {x: 0.091, y: 0.086, z: 0.144}
+  m_LocalPosition: {x: 0.09, y: 0.08, z: 0.83}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.09999998}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1675,7 +1690,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215491137380137988}
   m_LocalRotation: {x: -0.24972805, y: 0.02570143, z: -0.08280337, w: 0.96442676}
-  m_LocalPosition: {x: -0.11, y: 0.33, z: 0.2}
+  m_LocalPosition: {x: -0.32, y: -0.91, z: 0.9}
   m_LocalScale: {x: 1.0000001, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
