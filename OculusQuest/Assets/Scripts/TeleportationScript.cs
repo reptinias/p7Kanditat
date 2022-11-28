@@ -27,9 +27,11 @@ public class TeleportationScript : MonoBehaviour
         {
             if (hit.transform.gameObject.CompareTag("Ground"))
             {
-                transform.position = new Vector3(hit.point.x, 1.8f, hit.point.z);
+                transform.position = new Vector3(hit.point.x, 1f, hit.point.z);
             }
         }
+
+        line.enabled = false;
     }
 
     public void Indicator(int index)
@@ -47,6 +49,5 @@ public class TeleportationScript : MonoBehaviour
                 line.SetPositions(new Vector3[2]{hands[index].Bones.ElementAt(20).Transform.position, hit.point});
             }
         }
-
     }
 }

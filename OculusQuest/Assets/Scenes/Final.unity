@@ -728,6 +728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1121438048}
+  recording: 0
 --- !u!4 &268409826
 Transform:
   m_ObjectHideFlags: 0
@@ -3640,7 +3641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88a44bb8e82c96145ad107ab96258e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nnmodel: {fileID: 5022602860645237092, guid: bb6355b67577c61478fc676f2b3137f5, type: 3}
+  nnmodel: {fileID: 5022602860645237092, guid: 55303f9b0c918394dbce7576979fc48d, type: 3}
   predString:
   - 
   - 
@@ -3663,9 +3664,12 @@ MonoBehaviour:
   prevGestures:
   - ' '
   - ' '
+  transRot: 0
   recordingLight:
   - {fileID: 1293220811}
   - {fileID: 440365218}
+  gestureShift: 0
+  animationPlay: 0
 --- !u!1 &1704000141
 GameObject:
   m_ObjectHideFlags: 0

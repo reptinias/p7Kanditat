@@ -84,7 +84,7 @@ public class ActionTriggerScript : MonoBehaviour
                         animationRecorder.StopRecording();
                         recordingLight[i].SetActive(false);
                     }
-                    if (tempGesture[i] == "1-finger point")
+                    if (tempGesture[i] == "pointing hand")
                     {
                         selector.SelectObject(i);
                     }
@@ -113,7 +113,12 @@ public class ActionTriggerScript : MonoBehaviour
 
                 if (tempGesture[i] == "pointing hand")
                 {
+                    teleport.line.enabled = false;
                     teleport.Indicator(i);
+                }
+                else
+                {
+                    teleport.line.enabled = false;
                 }
 
                 if (prevGestures[i] == "pistol hand" && tempGesture[i] == "pointing hand")

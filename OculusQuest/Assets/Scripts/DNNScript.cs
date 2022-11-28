@@ -22,17 +22,22 @@ public class DNNScript : MonoBehaviour
     public Prediction prediction;
     public string[] predString = new string[2];
     public bool[] procesGesture = new bool[2];
+    public float predThreshold;
 
     public struct Prediction
     {
         public int predictedValue;
         public float[] predicted;
         public string predictionString;
+        public float predThreshold;
         
         public string convertPrediction(int predictionvalue)
         {
             switch (predictionvalue)
             {
+                case -1:
+                    predictionString = "Not predictable";
+                    break;
                 case 0:
                     predictionString = "relaxed hand";
                     break;
@@ -65,7 +70,14 @@ public class DNNScript : MonoBehaviour
         public string SetPrediction(Tensor tensor, int handIndex)
         {
             predicted = tensor.AsFloats();
-            predictedValue = Array.IndexOf(predicted, predicted.Max());
+            if (predicted.Max() > predThreshold)
+            {
+                predictedValue = Array.IndexOf(predicted, predicted.Max());
+            }
+            else
+            {
+                predictedValue = -1;
+            }
             //Debug.Log($" hand {handIndex} predicted as {convertPrediction(predictedValue)}");
             return convertPrediction(predictedValue);
         }

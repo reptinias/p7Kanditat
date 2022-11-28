@@ -10,9 +10,11 @@ public class TestLoggingScript : MonoBehaviour
     private GameObject user;
     private BoneMappingHandler mappingHandler;
     private AnimationRecorder animeRecorder;
+    private int betweenTasks = 0;
     public GameObject[] AnimationObjects;
 
-    private int TestIndex = 0;
+    private int TaskIndex = 0;
+    private int TrailIndex = 0;
     
     int[,] translatedMapArray = new int[2,5];
     
@@ -31,6 +33,23 @@ public class TestLoggingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown("space"))
+        {
+            if (betweenTasks == 0)
+            {
+                betweenTasks = 1;
+            }
+            else
+            {
+                betweenTasks = 0;
+                TrailIndex++;
+                TaskIndex++;
+            }
+        }
+        
+        loggingManager.Log("MyLabel", "Trail ID", TrailIndex);
+        loggingManager.Log("MyLabel", "Task ID", TaskIndex);
+        
         for (int i = 0; i < 2; i++)
         {
             for (int j = 0; j < 5; j++)
@@ -53,9 +72,9 @@ public class TestLoggingScript : MonoBehaviour
         };
         
         Dictionary<string, float> animetableData = new Dictionary<string, float>() {
-            {"AObject X", AnimationObjects[TestIndex].transform.position.x},
-            {"AObject Y", AnimationObjects[TestIndex].transform.position.y},
-            {"AObject Z", AnimationObjects[TestIndex].transform.position.z}
+            {"AObject X", AnimationObjects[TaskIndex].transform.position.x},
+            {"AObject Y", AnimationObjects[TaskIndex].transform.position.y},
+            {"AObject Z", AnimationObjects[TaskIndex].transform.position.z}
         };
         
         Dictionary<string, int> handMapping = new Dictionary<string, int>() {
@@ -106,6 +125,8 @@ public class TestLoggingScript : MonoBehaviour
         }
         
         loggingManager.Log("MyLabel", "Play Animation", action.animationPlay);
+        
+        loggingManager.Log("MyLabel", "Between tasks", betweenTasks);
         
         // Tell the logging manager to save the data (to disk and SQL by default).
         loggingManager.SaveLog("MyLabel");
