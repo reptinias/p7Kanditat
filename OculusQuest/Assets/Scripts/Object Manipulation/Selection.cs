@@ -141,8 +141,8 @@ public class Selection : MonoBehaviour
 
         if (io)
             obj.GetComponent<InteractableObject>().EnableOutline(false);
-        if (rs)
-            obj.GetComponent<RigSelection>().SelectSphere(false);
+        //if (rs)
+            //obj.GetComponent<RigSelection>().SelectSphere(false);
     }
 
     public void DeselectObject() //
@@ -216,11 +216,11 @@ public class Selection : MonoBehaviour
                     animationRecorder.SetTarget(selectedInteractableObject.gameObject);
                 }
 
-                RigSelection rs = selectedObject.GetComponent<RigSelection>();
+                /*RigSelection rs = selectedObject.GetComponent<RigSelection>();
                 if (rs)
                 {
                     rs.SelectSphere(true);
-                }
+                }*/
 
                 print(hit.transform);
                 //draw invisible ray cast/vector

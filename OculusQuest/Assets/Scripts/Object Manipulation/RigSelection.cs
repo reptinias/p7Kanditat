@@ -31,7 +31,7 @@ public class RigSelection : MonoBehaviour
         sphere.SetActive(enabled);
     }
 
-    public void SelectSphere(bool selected)
+   /* public void SelectSphere(bool selected)
     {
         sphereSelected = selected;
 
@@ -40,7 +40,7 @@ public class RigSelection : MonoBehaviour
         else
             sphere.GetComponent<MeshRenderer>().material = notSelectedMat;
 
-    }
+    }*/
 
     private void Update()
     {

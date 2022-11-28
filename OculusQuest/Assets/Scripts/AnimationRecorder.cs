@@ -147,8 +147,9 @@ public class AnimationRecorder : MonoBehaviour
     {
         for (int i = 0; i < targets.Count; i++)
         {
-            //Creates a new animation clip in the designated path
-            AssetDatabase.CreateAsset(clips[i], "Assets/" + targets[i].name + "Anim" + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".anim");
+            if (clips[i] != null)
+                //Creates a new animation clip in the designated path
+                AssetDatabase.CreateAsset(clips[i], "Assets/" + targets[i].name + "Anim" + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + ".anim");
         }
     }
 

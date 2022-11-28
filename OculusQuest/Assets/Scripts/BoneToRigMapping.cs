@@ -56,6 +56,7 @@ public class BoneToRigMapping : MonoBehaviour
 
     BoneMappingHandler boneMappingHandler;
     ChangeHandMaterial changeHandMaterialScript;
+    AnimationRecorder animRecorder;
 
     public void SetIndexes(int hand, int finger)
     {
@@ -74,6 +75,7 @@ public class BoneToRigMapping : MonoBehaviour
     void Start()
     {
         changeHandMaterialScript = GameObject.FindObjectOfType<ChangeHandMaterial>();
+        animRecorder = GameObject.FindObjectOfType<AnimationRecorder>();
 
         //changeHandMaterialScript.ChangeMaterial(0,curIndex, gameObject);
         //StartMapping();
@@ -240,6 +242,7 @@ public class BoneToRigMapping : MonoBehaviour
             initialFingertipRotation = curFingertipBone.Transform.rotation;
             initialPos = transform.position;
             initialRotation = transform.rotation;
+            animRecorder.SetTarget(gameObject);
         }
     }
 
