@@ -159,20 +159,22 @@ public class AnimationRecorder : MonoBehaviour
 
     public void SetTarget(GameObject newTarget)
     {
+        bool hasAlreadyBeenUsed = false;
         for (int i = 0; i < targets.Count; i++)
         {
-            if (newTarget != targets[i])
-            {
-                targets.Add(newTarget);
-                anims.Add(newTarget.GetComponent<Animation>());
-                clips.Add(null);
-                isTarget.Add(true);
-                return;
-            }
-            else
+            if (newTarget == targets[i])
             {
                 isTarget[i] = true;
+                hasAlreadyBeenUsed = true;
+
             }
+        }
+        if (!hasAlreadyBeenUsed)
+        {
+            targets.Add(newTarget);
+            anims.Add(newTarget.GetComponent<Animation>());
+            clips.Add(null);
+            isTarget.Add(true);
         }
     }
 }
