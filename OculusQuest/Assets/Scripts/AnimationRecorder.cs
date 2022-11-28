@@ -17,13 +17,13 @@ public class AnimationRecorder : MonoBehaviour
 
     private void Start()
     {
-        foreach (GameObject target in targets)
+        /* foreach (GameObject target in targets)
         {
             anims.Add(target.GetComponent<Animation>());
             clips.Add(null);
             isTarget.Add(true);
 
-        }
+        }*/
     }
 
     public void RemoveTargets()
@@ -159,9 +159,20 @@ public class AnimationRecorder : MonoBehaviour
 
     public void SetTarget(GameObject newTarget)
     {
-        targets.Add(newTarget);
-        anims.Add(newTarget.GetComponent<Animation>());
-        clips.Add(null);
-        isTarget.Add(true);
+        for (int i = 0; i < targets.Count; i++)
+        {
+            if (newTarget != targets[i])
+            {
+                targets.Add(newTarget);
+                anims.Add(newTarget.GetComponent<Animation>());
+                clips.Add(null);
+                isTarget.Add(true);
+                return;
+            }
+            else
+            {
+                isTarget[i] = true;
+            }
+        }
     }
 }
