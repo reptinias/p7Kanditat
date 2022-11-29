@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HandShaderOverlapTest : MonoBehaviour
 {
-    private Color[] fingerColor = { Color.black, Color.blue, Color.yellow, Color.red, Color.green, Color.white };
+    private Color[] fingerColor = { Color.magenta, Color.blue, Color.yellow, Color.red, Color.green, Color.white };
     SkinnedMeshRenderer smr;
     private void Start()
     {

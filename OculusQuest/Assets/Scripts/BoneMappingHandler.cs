@@ -10,8 +10,8 @@ public class BoneMappingHandler : MonoBehaviour
     public bool mapTransforms;
     private OVRHand[] trackedHands;
     private NewReadInputs InputDevices;
-    private Color[] fingerColor = { Color.black, Color.blue, Color.yellow, Color.red, Color.green };
-    private Color white = new Color(1,1,1,0.3f);
+    private Color[] fingerColor = { Color.magenta, Color.blue, Color.yellow, Color.red, Color.green };
+    private Color defaultColor = new Color(0.5f, 0.5f, 0.5f, 0.3f);
 
     public Material[][] fingerMaterials = new Material[2][];
     public Material[] fingerMaterials0TEST = new Material[5];
@@ -73,7 +73,7 @@ public class BoneMappingHandler : MonoBehaviour
                 if (mappedObjects[i][j])
                 {
                     mappedObjects[i][j].GetComponent<BoneToRigMapping>().ResetFinger();
-                    mappedObjects[i][j].GetComponent<MeshRenderer>().material.SetColor("_Color", white);
+                    mappedObjects[i][j].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
                     mappedObjects[i][j] = null;
                 }
                 fingerMaterials[i][j].SetColor("_Color", Color.white);
@@ -98,7 +98,7 @@ public class BoneMappingHandler : MonoBehaviour
 
             //den henter selv den nye
             
-            mappedObjects[prevHandIndex][prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", white);
+            mappedObjects[prevHandIndex][prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
             mappedObjects[prevHandIndex][prevFingerIndex] = null;
         }
         
@@ -128,7 +128,7 @@ public class BoneMappingHandler : MonoBehaviour
             if (mappedObjects[handIndex][ fingerIdx] != null)
             {
                 mappedObjects[handIndex][ fingerIdx].GetComponent<MeshRenderer>().material
-                    .SetColor("_Color", white);
+                    .SetColor("_Color", defaultColor);
                 //fingerMaterials[handIndex, fingerIndex]
             }
             

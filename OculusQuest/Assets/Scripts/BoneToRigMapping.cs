@@ -81,7 +81,7 @@ public class BoneToRigMapping : MonoBehaviour
     /// </summary>
     void Start()
     {
-        GetComponent<MeshRenderer>().material.color = new Color(1,1,1,.3f);
+        GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.5f, 0.5f, .3f);
         changeHandMaterialScript = GameObject.FindObjectOfType<ChangeHandMaterial>();
         animRecorder = GameObject.FindObjectOfType<AnimationRecorder>();
 
