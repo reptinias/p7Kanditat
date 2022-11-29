@@ -78,7 +78,7 @@ public class BoneMappingHandler : MonoBehaviour
                     mappedObjects[i][j].GetComponent<MeshRenderer>().material.SetColor("_Color", white);
                     mappedObjects[i][j] = null;
                 }
-                fingerMaterials[i][j].SetColor("_Color", white);
+                fingerMaterials[i][j].SetColor("_Color", Color.white);
             }
         }
     }
