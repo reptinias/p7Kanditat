@@ -218,7 +218,7 @@ public class Selection : MonoBehaviour
 
                     selectedInteractableObject = selectedObject.GetComponent<InteractableObject>();
                     selectedInteractableObject.EnableOutline(true);
-                    animationRecorder.SetTarget(selectedInteractableObject.gameObject);
+                    //animationRecorder.SetTarget(selectedInteractableObject.gameObject);
                 }
 
                 /*RigSelection rs = selectedObject.GetComponent<RigSelection>();
