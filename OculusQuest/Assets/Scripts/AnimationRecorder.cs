@@ -68,8 +68,9 @@ public class AnimationRecorder : MonoBehaviour
     {
         for (int i = 0; i < targets.Count; i++)
         {
-            if (!anims[i].isPlaying)
-                anims[i].PlayQueued("Test");
+            if (anims[i].clip)
+                if (!anims[i].isPlaying)
+                    anims[i].PlayQueued("Test");
         }
     }
 

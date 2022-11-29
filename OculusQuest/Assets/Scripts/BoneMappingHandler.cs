@@ -57,6 +57,21 @@ public class BoneMappingHandler : MonoBehaviour
             StopMapping();
     }
 
+    public void RemoveAllMapping()
+    {
+        for (int i = 0; i < mappedObjects.Length; i++)
+        {
+            for (int j = 0; j < mappedObjects[i].Length; j++)
+            {
+                mappedObjects[i][j].GetComponent<BoneToRigMapping>().ResetFinger();
+                mappedObjects[i][j].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
+                mappedObjects[i][j] = null;
+
+                fingerMaterials[i][j].SetColor("_Color", Color.white);
+            }
+        }
+    }
+
     public void MapFinger(int handIndex, int fingerIndex, GameObject collidedObj)
     {
         int[] handAndFingerIndex = collidedObj.GetComponent<BoneToRigMapping>().GetPreviousIndexes();

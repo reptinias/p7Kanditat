@@ -151,6 +151,8 @@ public class Selection : MonoBehaviour
     public void DeselectObject() //
     {
         RemoveSelectedObjects();
+
+        boneMappingHandler.RemoveAllMapping();
         
         selectedObject = null;
         if (selectedInteractableObject)
