@@ -116,7 +116,10 @@ public class AnimationRecorder : MonoBehaviour
                     continue;
 
                 if (clips[i] == null)
+                {
+                    Debug.LogError("AAAAAAAAAAaaa: " + i);
                     continue;
+                }
 
                 if (m_Recorders[i].isRecording)
                 {
