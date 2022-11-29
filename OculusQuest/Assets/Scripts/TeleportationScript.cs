@@ -20,8 +20,8 @@ public class TeleportationScript : MonoBehaviour
     public void Teleportation(int index)
     {
         RaycastHit hit;
-        Ray ray = new Ray(hands[index].Bones.ElementAt(20).Transform.position, hands[index].Bones.ElementAt(20).Transform.position 
-                                                                               - hands[index].Bones.ElementAt(8).Transform.position);
+        Ray ray = new Ray(hands[index].Bones.ElementAt(20).Transform.position, hands[index].Bones.ElementAt(7).Transform.position 
+                                                                               - hands[index].Bones.ElementAt(6).Transform.position);
 
         if (Physics.Raycast(ray, out hit))
         {
@@ -37,10 +37,10 @@ public class TeleportationScript : MonoBehaviour
     public void Indicator(int index)
     {
         RaycastHit hit;
-        Ray ray = new Ray(hands[index].Bones.ElementAt(20).Transform.position, hands[index].Bones.ElementAt(20).Transform.position 
-                                                                               - hands[index].Bones.ElementAt(8).Transform.position);
-        Vector3 endPosition = hands[index].Bones.ElementAt(20).Transform.position + (maxLineLength * hands[index].Bones.ElementAt(20).Transform.position 
-            - hands[index].Bones.ElementAt(8).Transform.position);
+        Ray ray = new Ray(hands[index].Bones.ElementAt(20).Transform.position, hands[index].Bones.ElementAt(7).Transform.position 
+                                                                               - hands[index].Bones.ElementAt(6).Transform.position);
+        Vector3 endPosition = hands[index].Bones.ElementAt(20).Transform.position + (maxLineLength * hands[index].Bones.ElementAt(7).Transform.position 
+            - hands[index].Bones.ElementAt(6).Transform.position);
 
         if (Physics.Raycast(ray, out hit))
         {

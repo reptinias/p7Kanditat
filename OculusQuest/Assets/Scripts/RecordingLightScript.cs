@@ -35,10 +35,12 @@ public class RecordingLightScript : MonoBehaviour
         renderer = GetComponent<Renderer>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (collisionAmount < 0)
+        {
+            collisionAmount = 0;
+        }
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -49,7 +51,7 @@ public class RecordingLightScript : MonoBehaviour
             {
                 if (collisionAmount == 0)
                 {
-                    pressed = true;
+                    pressed = !pressed;
                     Debug.Log("Pressed");
                     if (light.enabled == false)
                     {
@@ -62,6 +64,8 @@ public class RecordingLightScript : MonoBehaviour
                         light.enabled = false;
                     }
                 }
+
+
                 collisionAmount++;
             }
         }

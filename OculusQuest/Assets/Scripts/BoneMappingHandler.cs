@@ -7,7 +7,7 @@ using UnityEngine.PlayerLoop;
 public class BoneMappingHandler : MonoBehaviour
 {
     public List<BoneToRigMapping> rigComponents =  new List<BoneToRigMapping>();
-    bool mapTransforms;
+    public bool mapTransforms;
     private OVRHand[] trackedHands;
     private NewReadInputs InputDevices;
     private Color[] fingerColor = { Color.black, Color.blue, Color.yellow, Color.red, Color.green };
@@ -51,14 +51,10 @@ public class BoneMappingHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            mapTransforms = !mapTransforms;
-            if (mapTransforms)
-                StartMapping();
-            else
-                StopMapping();
-        }
+        if (mapTransforms)
+            StartMapping();
+        else
+            StopMapping();
     }
 
     public void MapFinger(int handIndex, int fingerIndex, GameObject collidedObj)

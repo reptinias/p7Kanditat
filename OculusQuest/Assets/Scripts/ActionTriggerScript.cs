@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ActionTriggerScript : MonoBehaviour
 {
+    private BoneMappingHandler boneMapper;
     private NewReadInputs readInputs;
     private GestureRecognition[] gestureRecognition;
     private AnimationRecorder animationRecorder;
@@ -21,6 +22,7 @@ public class ActionTriggerScript : MonoBehaviour
     public  RecordingLightScript[] recordingLightScripts;
     public int gestureShift = 0;
     public int animationPlay = 0;
+    private bool recording = false;
     
     // Start is called before the first frame update
     void Start()
@@ -44,7 +46,7 @@ public class ActionTriggerScript : MonoBehaviour
         };
         recordingLight[0].SetActive(false);
         recordingLight[1].SetActive(false);
-        
+        boneMapper = GameObject.FindObjectOfType<BoneMappingHandler>().GetComponent<BoneMappingHandler>();
     }
 
     // Update is called once per frame
@@ -53,12 +55,11 @@ public class ActionTriggerScript : MonoBehaviour
         bool shouldTransRot = false;
         int handIndexTransRot = -1;
 
-        string[] tempGesture = {gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
         currentGestures = new string[]{gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
-        if (tempGesture[0] == "thumb up" && tempGesture[1] == "open hand"     ||
-            tempGesture[1] == "thumb up" && tempGesture[0] == "open hand"     ||
-            tempGesture[0] == "1-finger point" && tempGesture[1] == "ok hand" ||
-            tempGesture[1] == "1-finger point" && tempGesture[0] == "ok hand"   )
+        if (currentGestures[0] == "thumb up" && currentGestures[1] == "open hand"     ||
+            currentGestures[1] == "thumb up" && currentGestures[0] == "open hand"     ||
+            currentGestures[0] == "1-finger point" && currentGestures[1] == "ok hand" ||
+            currentGestures[1] == "1-finger point" && currentGestures[0] == "ok hand"   )
         {
             contradiction = true;
         }
@@ -67,73 +68,78 @@ public class ActionTriggerScript : MonoBehaviour
             contradiction = false;
         }
         
-        if (tempGesture[0] != tempGesture[1])
+        if (currentGestures[0] != currentGestures[1])
         {
             for (int i = 0; i < 2; i++)
             {
-                if (!trackedHands[i].IsTracked)
+                // vvv Fix start stop contradiction vvv
+                // vvv plus accidental gesture      vvv
+                if (recordingLight[i].activeSelf)
                 {
-                    continue;
-                }
-
-                if (!contradiction)
-                {
-                    // vvv Fix start stop contradiction vvv
-                    // vvv plus accidental gesture      vvv
-                    if (recordingLightScripts[i].pressed && selector.allowRecording)
+                    if (!animationRecorder.recording && recordingLightScripts[i].pressed && !recording)
                     {
                         animationRecorder.StartRecording();
+                        boneMapper.mapTransforms = true;
+                        recording = true;
                     }
-                    if (recordingLightScripts[i].pressed && !selector.allowRecording)
+                    else if (animationRecorder.recording && !recordingLightScripts[i].pressed && recording)
                     {
                         animationRecorder.StopRecording();
+                        boneMapper.mapTransforms = false;
+                        recording = false;
                     }
-                    if (tempGesture[i] == "pointing hand")
+                }
+
+
+                if (!animationRecorder.recording)
+                {
+                    if (currentGestures[i] == "pointing hand")
                     {
                         selector.SelectObject(i);
                         if (selector.getSelectedObject() != null)
                         {
-                            recordingLight[i].SetActive(true); 
+                            recordingLight[i].SetActive(true);
                         }
                     }
-                    if (tempGesture[i] == "ok hand")
+
+                    if (currentGestures[i] == "ok hand")
                     {
                         selector.DeselectObject();
-                        recordingLight[i].SetActive(false); 
+                        recordingLight[i].SetActive(false);
                     }
-                }
 
-                if (tempGesture[i] == "closed hand")
-                {
-                    shouldTransRot = true;
-                    handIndexTransRot = i;
-                    //selector.MoveAndRotate(i, transRot);
-                }
-                
-                if (tempGesture[i] == "thumb down" && tempGesture[i] != prevGestures[i])
-                {
-                    animationPlay = 1;
-                    animationRecorder.PlayRecording();
-                    //animationPlayer.playRecording();
-                }
-                else
-                {
-                    animationPlay = 0;
-                }
+                    if (currentGestures[i] == "closed hand")
+                    {
+                        shouldTransRot = true;
+                        handIndexTransRot = i;
+                        //selector.MoveAndRotate(i, transRot);
+                    }
 
-                if (tempGesture[i] == "pointing hand")
-                {
-                    teleport.line.enabled = false;
-                    teleport.Indicator(i);
-                }
-                else
-                {
-                    teleport.line.enabled = false;
-                }
+                    if (currentGestures[i] == "thumb down" && currentGestures[i] != prevGestures[i])
+                    {
+                        animationPlay = 1;
+                        animationRecorder.PlayRecording();
+                        //animationPlayer.playRecording();
+                    }
+                    else
+                    {
+                        animationPlay = 0;
+                    }
 
-                if (prevGestures[i] == "pistol hand" && tempGesture[i] == "pointing hand")
-                {
-                    teleport.Teleportation(i);
+                    if (currentGestures[i] == "pointing hand" || currentGestures[i] == "pistol hand")
+                    {
+                        teleport.line.enabled = true;
+                        teleport.Indicator(i);
+                    }
+                    else
+                    {
+                        teleport.line.enabled = false;
+                    }
+
+                    if (prevGestures[i] == "pistol hand" && currentGestures[i] == "pointing hand")
+                    {
+                        teleport.Teleportation(i);
+                    }
                 }
             }
 
@@ -155,7 +161,7 @@ public class ActionTriggerScript : MonoBehaviour
         {
             gestureShift = 0;
         }
-        prevGestures = tempGesture;
+        prevGestures = currentGestures;
     }
 
     public void ResetTransRotation()
