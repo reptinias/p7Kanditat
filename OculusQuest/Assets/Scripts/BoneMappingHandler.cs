@@ -20,9 +20,11 @@ public class BoneMappingHandler : MonoBehaviour
     public GameObject[][] mappedObjects = new GameObject[2][];
 
     private GameObject[] objArr;
+    AnimationRecorder animRecorder;
     // Start is called before the first frame update
     void Start()
     {
+        animRecorder = GameObject.FindObjectOfType<AnimationRecorder>();
         InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
         trackedHands = InputDevices.trackedHands;
         print("MAPPED OBJECTS");
@@ -105,6 +107,10 @@ public class BoneMappingHandler : MonoBehaviour
         alphaCol.a = 0.3f;
         mappedObjects[handIndex][ fingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", alphaCol);
         fingerMaterials[handIndex][ fingerIndex].SetColor("_Color", fingerColor[fingerIndex]);
+
+        if (!mappedObjects[handIndex][fingerIndex].transform.parent.gameObject.GetComponent<Animation>())
+            mappedObjects[handIndex][fingerIndex].transform.parent.gameObject.AddComponent<Animation>();
+        animRecorder.SetTarget(mappedObjects[handIndex][fingerIndex].transform.parent.gameObject);
 
     }
 
