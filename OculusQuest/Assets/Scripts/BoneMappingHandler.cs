@@ -23,10 +23,6 @@ public class BoneMappingHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i<  fingerColor.Length; i++)
-        {
-            fingerColor[i] = new Color(fingerColor[i].r, fingerColor[i].g, fingerColor[i].b, .3f);
-        }
         InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
         trackedHands = InputDevices.trackedHands;
         print("MAPPED OBJECTS");
@@ -105,7 +101,9 @@ public class BoneMappingHandler : MonoBehaviour
         }
         
         mappedObjects[handIndex][fingerIndex] = collidedObj;
-        mappedObjects[handIndex][ fingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", fingerColor[fingerIndex]);
+        Color alphaCol = fingerColor[fingerIndex];
+        alphaCol.a = 0.3f;
+        mappedObjects[handIndex][ fingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", alphaCol);
         fingerMaterials[handIndex][ fingerIndex].SetColor("_Color", fingerColor[fingerIndex]);
 
     }
@@ -130,7 +128,9 @@ public class BoneMappingHandler : MonoBehaviour
             
             fingerMaterials[handIndex][ fingerIdx].SetColor("_Color", fingerColor[fingerIdx]);
             mappedObjects[handIndex][ fingerIdx] = otherObject;
-            mappedObjects[handIndex][ fingerIdx].GetComponent<MeshRenderer>().material.SetColor("_Color", fingerColor[fingerIdx]);
+            Color alphaCol = fingerColor[fingerIdx];
+            alphaCol.a = 0.3f;
+            mappedObjects[handIndex][fingerIdx].GetComponent<MeshRenderer>().material.SetColor("_Color", alphaCol);
         }
         else
         {
