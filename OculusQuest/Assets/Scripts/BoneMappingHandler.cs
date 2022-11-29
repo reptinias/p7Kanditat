@@ -44,8 +44,10 @@ public class BoneMappingHandler : MonoBehaviour
             fingerMaterials[i] = fingerMaterialArr;
         }
         print( mappedObjects.Length);
+        print( mappedObjects[0].Length);
+        print( mappedObjects[1].Length);
 
-        
+
     }
 
     // Update is called once per frame
@@ -63,10 +65,12 @@ public class BoneMappingHandler : MonoBehaviour
         {
             for (int j = 0; j < mappedObjects[i].Length; j++)
             {
-                mappedObjects[i][j].GetComponent<BoneToRigMapping>().ResetFinger();
-                mappedObjects[i][j].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
-                mappedObjects[i][j] = null;
-
+                if (mappedObjects[i][j])
+                {
+                    mappedObjects[i][j].GetComponent<BoneToRigMapping>().ResetFinger();
+                    mappedObjects[i][j].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
+                    mappedObjects[i][j] = null;
+                }
                 fingerMaterials[i][j].SetColor("_Color", Color.white);
             }
         }
