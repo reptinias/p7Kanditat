@@ -86,7 +86,12 @@ public class AnimationRecorder : MonoBehaviour
             for (int i = 0; i < targets.Count; i++)
             {
                 if (!isTarget[i])
+                {
+                    Debug.LogError("Start Recording not target?");
+
                     continue;
+                }
+
 
                 m_Recorders[i] = new GameObjectRecorder(targets[i]);
 
@@ -96,6 +101,8 @@ public class AnimationRecorder : MonoBehaviour
                 //Clears clip data
                 if (clips[i] == null)
                     clips[i] = new AnimationClip { name = "Test" };
+                else
+                    Debug.LogError("Start Recording not null");
 
                 //Safeguard. Dunno if it does anything anymore
                 //target.GetComponent<Animator>().StopPlayback();
