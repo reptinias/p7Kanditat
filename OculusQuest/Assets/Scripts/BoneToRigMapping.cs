@@ -249,6 +249,8 @@ public class BoneToRigMapping : MonoBehaviour
             initialFingertipRotation = curFingertipBone.Transform.rotation;
             initialPos = transform.parent.position;
             initialRotation = transform.parent.rotation;
+            if (!transform.parent.gameObject.GetComponent<Animation>())
+                transform.parent.gameObject.AddComponent<Animation>();
             animRecorder.SetTarget(transform.parent.gameObject);
         }
     }
