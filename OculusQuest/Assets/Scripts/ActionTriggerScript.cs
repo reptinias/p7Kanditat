@@ -153,7 +153,7 @@ public class ActionTriggerScript : MonoBehaviour
             }*/
         }
 
-        if (prevGestures[0] != currentGestures[0] && prevGestures[1] != currentGestures[1])
+        if (prevGestures[0] != currentGestures[0] || prevGestures[1] != currentGestures[1])
         {
             gestureShift = 1;
         }

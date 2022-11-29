@@ -11,10 +11,11 @@ public class TestLoggingScript : MonoBehaviour
     private BoneMappingHandler mappingHandler;
     private AnimationRecorder animeRecorder;
     private int betweenTasks = 0;
+    private ChangeModel changeModel;
     public GameObject[] AnimationObjects;
 
-    private int TaskIndex = 0;
     private int TrailIndex = 0;
+    private string modelName = "";
     
     int[,] translatedMapArray = new int[2,5];
     
@@ -27,7 +28,9 @@ public class TestLoggingScript : MonoBehaviour
         user = GameObject.Find("OVRCameraRigCustom");
         mappingHandler = GameObject.FindObjectOfType<BoneMappingHandler>();
         animeRecorder = GameObject.FindObjectOfType<AnimationRecorder>();
-        
+        changeModel = GameObject.FindObjectOfType<ChangeModel>();
+        AnimationObjects = changeModel.models;
+
     }
 
     // Update is called once per frame
@@ -43,12 +46,14 @@ public class TestLoggingScript : MonoBehaviour
             {
                 betweenTasks = 0;
                 TrailIndex++;
-                TaskIndex++;
             }
+
+            TrailIndex = changeModel.GetTestId();
+            modelName = changeModel.GetModelName();
         }
         
         loggingManager.Log("MyLabel", "Trail ID", TrailIndex);
-        loggingManager.Log("MyLabel", "Task ID", TaskIndex);
+        loggingManager.Log("MyLabel", "Model Name", modelName);
         
         for (int i = 0; i < 2; i++)
         {
@@ -65,19 +70,21 @@ public class TestLoggingScript : MonoBehaviour
             }
         }
         
-        Dictionary<string, float> userData = new Dictionary<string, float>() {
+        Dictionary<string, object> userData = new Dictionary<string, object>() {
             {"User X", user.transform.position.x},
             {"User Y", user.transform.position.y},
             {"User Z", user.transform.position.z}
         };
+        loggingManager.Log("MyLabel", userData);
         
-        Dictionary<string, float> animetableData = new Dictionary<string, float>() {
-            {"AObject X", AnimationObjects[TaskIndex].transform.position.x},
-            {"AObject Y", AnimationObjects[TaskIndex].transform.position.y},
-            {"AObject Z", AnimationObjects[TaskIndex].transform.position.z}
+        Dictionary<string, object> animetableData = new Dictionary<string, object>() {
+            {"AObject X", AnimationObjects[TrailIndex].transform.position.x},
+            {"AObject Y", AnimationObjects[TrailIndex].transform.position.y},
+            {"AObject Z", AnimationObjects[TrailIndex].transform.position.z}
         };
+        loggingManager.Log("MyLabel", animetableData);
         
-        Dictionary<string, int> handMapping = new Dictionary<string, int>() {
+        Dictionary<string, object> handMapping = new Dictionary<string, object>() {
             {"Left Hand Thumb", translatedMapArray[0,0]},
             {"Left Hand Index", translatedMapArray[0,1]},
             {"Left Hand Long", translatedMapArray[0,2]},
@@ -89,23 +96,16 @@ public class TestLoggingScript : MonoBehaviour
             {"Right Hand Ring", translatedMapArray[1,3]},
             {"Right Hand Picky", translatedMapArray[1,4]},
         };
+        loggingManager.Log("MyLabel", handMapping);
         
         loggingManager.Log("MyLabel", "Gesture Shift", action.gestureShift);
 
-        Dictionary<string, string> currentGestures = new Dictionary<string, string>() {
+        Dictionary<string, object> currentGestures = new Dictionary<string, object>() {
             {"Left Hand", action.currentGestures[0]},
             {"Right Hand", action.currentGestures[1]}
         };
-        
-        if (action.transRot = false)
-        {
-            loggingManager.Log("MyLabel", "Rotate or Translate", 0);
-        }
-        else
-        {
-            loggingManager.Log("MyLabel", "Rotate or Translate", 1);
-        }
-        
+        loggingManager.Log("MyLabel", currentGestures);
+
         if (selector.getSelectedObject() == null)
         {
             loggingManager.Log("MyLabel", "Selected Object", 0);
@@ -128,15 +128,18 @@ public class TestLoggingScript : MonoBehaviour
         
         loggingManager.Log("MyLabel", "Between tasks", betweenTasks);
         
-        // Tell the logging manager to save the data (to disk and SQL by default).
-        loggingManager.SaveLog("MyLabel");
+        if (Input.GetKeyDown("return"))
+        {
+            // Tell the logging manager to save the data (to disk and SQL by default).
+            loggingManager.SaveLog("MyLabel");
 
-        // After saving the data, you can tell the logging manager to clear its logs.
-        // Now its ready to save more data. Saving data will append to the existing log.
-        loggingManager.ClearLog("MyLabel");
+            // After saving the data, you can tell the logging manager to clear its logs.
+            // Now its ready to save more data. Saving data will append to the existing log.
+            loggingManager.ClearLog("MyLabel");
 
-        // If you want to start a new file, you can ask loggingManager to generate
-        // a new file timestamp. Saving data hereafter will go to the new file.
-        loggingManager.NewFilestamp();
+            // If you want to start a new file, you can ask loggingManager to generate
+            // a new file timestamp. Saving data hereafter will go to the new file.
+            loggingManager.NewFilestamp();
+        }
     }
 }
