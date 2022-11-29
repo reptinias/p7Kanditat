@@ -8,10 +8,13 @@ public class ChangeModel : MonoBehaviour
     public GameObject[] models;
     private GameObject tempModel;
     private int testId = 0;
+    private bool changeModel = true;
+    private Selection selector;
 
     // Start is called before the first frame update
     void Start()
     {
+        selector = GameObject.FindObjectOfType<Selection>();
         Shuffle();
         DeactivateModels();
     }
@@ -21,15 +24,22 @@ public class ChangeModel : MonoBehaviour
     {
         if (Input.GetKeyDown("space"))
         {
-            
-            DeactivateModels();
-            models[testId].SetActive(true);
-            testId++;
-            if (testId > 2)
+            if (changeModel)
             {
-                testId = 2;
+                selector.DeselectObject();
+                DeactivateModels();
+                models[testId].SetActive(true);
+                testId++;
+                if (testId > 2)
+                {
+                    testId = 2;
+                }
+                changeModel = false;
             }
-            
+            else
+            {
+                changeModel = true;
+            }
         }
     }
 

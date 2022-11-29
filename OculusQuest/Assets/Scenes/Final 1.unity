@@ -401,7 +401,7 @@ MonoBehaviour:
   email: anonymous
   connectToMySQL: {fileID: 0}
   enableCSVSave: 1
-  savePath: C:\Users\kspar\OculusQuest\Assets\TestData
+  savePath: C:\Users\kspar\p7Kanditat\OculusQuest\Assets\TestData
   filePrefix: log
   fileExtension: .csv
 --- !u!4 &97702328
@@ -432,9 +432,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AnimationObjects:
-  - {fileID: 17454693}
-  - {fileID: 1862854032}
-  - {fileID: 1097868201}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &97702330
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ public class TestLoggingScript : MonoBehaviour
     private GameObject user;
     private BoneMappingHandler mappingHandler;
     private AnimationRecorder animeRecorder;
-    private int betweenTasks = 0;
+    private int betweenTasks = 1;
     private ChangeModel changeModel;
     public GameObject[] AnimationObjects;
 
