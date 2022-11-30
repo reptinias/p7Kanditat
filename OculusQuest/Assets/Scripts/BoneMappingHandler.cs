@@ -9,6 +9,7 @@ public class BoneMappingHandler : MonoBehaviour
     public List<BoneToRigMapping> rigComponents =  new List<BoneToRigMapping>();
     public bool mapTransforms;
     private OVRHand[] trackedHands;
+    private OVRSkeleton[] m_hands;
     private NewReadInputs InputDevices;
     private Color[] fingerColor = { Color.magenta, Color.blue, Color.yellow, Color.red, Color.green };
     private Color defaultColor = new Color(0.5f, 0.5f, 0.5f, 0.3f);
@@ -27,6 +28,7 @@ public class BoneMappingHandler : MonoBehaviour
         animRecorder = GameObject.FindObjectOfType<AnimationRecorder>();
         InputDevices = GameObject.Find("ReadInputs").GetComponent<NewReadInputs>();
         trackedHands = InputDevices.trackedHands;
+        m_hands = InputDevices.m_hands;
         print("MAPPED OBJECTS");
         for (int i = 0; i < trackedHands.Length; i++)
         {
@@ -144,10 +146,51 @@ public class BoneMappingHandler : MonoBehaviour
         }
     }
 
+    public Vector3 CalcMidPoint(List<Vector3> points)
+    {
+        float xTotal = 0;
+        float yTotal = 0;
+        float zTotal = 0;
+        for (int i = 0; i < points.Count; i++)
+        {
+            xTotal = points[i].x;
+            yTotal = points[i].y;
+            zTotal = points[i].z;
+        }
+        return new Vector3(xTotal / points.Count, yTotal / points.Count, zTotal / points.Count);
+    }
+
     void StartMapping()
     {
-        foreach (BoneToRigMapping comp in rigComponents)
-            comp.StartMapping();
+        List<Vector3> spherePoints = new List<Vector3>();
+        List<Vector3> handPoints = new List<Vector3>();
+
+        OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
+        int[] fingerTipsIndex = { 5, 8, 11, 14, 18 };
+
+        
+
+        for (int i = 0; i < rigComponents.Count; i++) {
+            spherePoints.Add(rigComponents[i].transform.position);
+            handPoints.Add(m_hands[fingerTipsIndex[i]].transform.position);
+        }
+
+
+        Vector3 midPointSphere = CalcMidPoint(spherePoints);
+        Vector3 midPointHand = CalcMidPoint(handPoints);
+        float distHand = Vector3.Distance(midPointHand, handPoints[0]);
+        float distSphere = Vector3.Distance(midPointSphere, spherePoints[0]);
+        float scale = distSphere / distHand;
+
+
+
+        for (int i = 0; i < rigComponents.Count; i++)
+        {
+            Vector3 heading = spherePoints[i] - midPointSphere;
+            var distance = heading.magnitude;
+            var direction = heading / distance;
+            rigComponents[i].StartMapping(spherePoints, handPoints);
+        }
     }
 
     void StopMapping()

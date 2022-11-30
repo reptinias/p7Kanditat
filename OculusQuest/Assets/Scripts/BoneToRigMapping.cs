@@ -59,6 +59,10 @@ public class BoneToRigMapping : MonoBehaviour
     ChangeHandMaterial changeHandMaterialScript;
     AnimationRecorder animRecorder;
 
+    List<Vector3> spherePoints;
+    List<Vector3> handPoints;
+    float scale;
+
     public void SetIndexes(int hand, int finger)
     {
         curHandIndex = hand;
@@ -123,13 +127,25 @@ public class BoneToRigMapping : MonoBehaviour
     {
         if (curMapping)
         {
-            Vector3 differencePos = m_hands[curHandIndex].Bones[0].Transform.position - initialFingertipPos;//20 -30 = -10
-            Vector3 differencePosLocal = curFingertipBone.Transform.localPosition - initialFingertipPosLocal;//20 -30 = -10
+            //Vector3 differencePos = m_hands[curHandIndex].Bones[0].Transform.position - initialFingertipPos;//20 -30 = -10
+            //Vector3 differencePosLocal = curFingertipBone.Transform.localPosition - initialFingertipPosLocal;//20 -30 = -10
             Quaternion differenceRot = Quaternion.Inverse(initialFingertipRotation) * curFingertipBone.Transform.rotation;//20 -30 = -10
 
-            transform.parent.position = initialPos + differencePos;
-            transform.parent.position += differencePosLocal;
+            //transform.parent.position = initialPos + differencePos;
+            //transform.parent.position += differencePosLocal;
             transform.parent.rotation = initialRotation * differenceRot;
+
+
+            Vector3 midPointSphere = boneMappingHandler.CalcMidPoint(spherePoints);
+            Vector3 midPointHand = boneMappingHandler.CalcMidPoint(handPoints);
+            float distHand = Vector3.Distance(midPointHand, transform.parent.position);
+            float distSphere = Vector3.Distance(midPointSphere, transform.parent.position);
+
+            Vector3 heading = transform.parent.position - midPointSphere;
+            var distance = heading.magnitude;
+            var direction = heading / distance;
+
+            transform.parent.position = midPointSphere + Vector3.Scale(direction, Vector3.Scale(new Vector3(distHand, distHand, distHand), new Vector3(scale, scale, scale)));
         }
         /*
         //check for middle finger pinch on the left hand, and make che cube red in this case
@@ -243,7 +259,7 @@ public class BoneToRigMapping : MonoBehaviour
 
     }
 
-    public void StartMapping()
+    public void StartMapping(List<Vector3> spherePoints, List<Vector3> handPoints)
     {
         if (curFingertipBone != null)
         {
@@ -254,6 +270,13 @@ public class BoneToRigMapping : MonoBehaviour
             initialRotation = transform.parent.rotation;
 
             initialFingertipPos = m_hands[curHandIndex].Bones[0].Transform.position;
+
+            Vector3 midPointSphere = boneMappingHandler.CalcMidPoint(spherePoints);
+            Vector3 midPointHand = boneMappingHandler.CalcMidPoint(handPoints);
+
+            float distHand = Vector3.Distance(midPointHand, handPoints[0]);
+            float distSphere = Vector3.Distance(midPointSphere, spherePoints[0]);
+            scale = distSphere / distHand;
         }
     }
 
