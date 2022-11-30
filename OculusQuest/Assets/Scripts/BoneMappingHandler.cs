@@ -168,11 +168,9 @@ public class BoneMappingHandler : MonoBehaviour
         OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
         int[] fingerTipsIndex = { 5, 8, 11, 14, 18 };
 
-        
-
         for (int i = 0; i < rigComponents.Count; i++) {
             spherePoints.Add(rigComponents[i].transform.position);
-            handPoints.Add(m_hands[fingerTipsIndex[i]].transform.position);
+            handPoints.Add(m_hands[fingerTipsIndex[rigComponents[i].GetPreviousIndexes()[1]]].transform.position);
         }
 
 
