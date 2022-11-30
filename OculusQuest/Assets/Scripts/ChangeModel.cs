@@ -15,7 +15,7 @@ public class ChangeModel : MonoBehaviour
     void Start()
     {
         selector = GameObject.FindObjectOfType<Selection>();
-        Shuffle();
+        //Shuffle();
         DeactivateModels();
     }
 
@@ -30,9 +30,9 @@ public class ChangeModel : MonoBehaviour
                 DeactivateModels();
                 models[testId].SetActive(true);
                 testId++;
-                if (testId > 2)
+                if (testId > 3)
                 {
-                    testId = 2;
+                    testId = 3;
                 }
                 changeModel = false;
             }

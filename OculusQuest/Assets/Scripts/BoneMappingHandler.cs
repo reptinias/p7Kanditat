@@ -59,11 +59,11 @@ public class BoneMappingHandler : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {/*
         if (mapTransforms)
             StartMapping();
         else
-            StopMapping();
+            StopMapping();*/
     }
 
     public void RemoveAllMapping()
@@ -146,58 +146,71 @@ public class BoneMappingHandler : MonoBehaviour
         }
     }
 
-    public Vector3 CalcMidPoint(List<Vector3> points)
+    public Vector3 CalcMidPoint(List<Transform> points)
     {
         float xTotal = 0;
         float yTotal = 0;
         float zTotal = 0;
         for (int i = 0; i < points.Count; i++)
         {
-            xTotal = points[i].x;
-            yTotal = points[i].y;
-            zTotal = points[i].z;
+            xTotal += points[i].position.x;
+            yTotal += points[i].position.y;
+            zTotal += points[i].position.z;
         }
         return new Vector3(xTotal / points.Count, yTotal / points.Count, zTotal / points.Count);
     }
 
-    void StartMapping()
+    List<Transform> spherePoints = new List<Transform>();
+    List<Transform> handPoints = new List<Transform>();
+    public void StartMapping()
     {
-        List<Vector3> spherePoints = new List<Vector3>();
-        List<Vector3> handPoints = new List<Vector3>();
+        spherePoints = new List<Transform>();
+        handPoints = new List<Transform>();
 
         OVRPlugin.BoneId[] fingerTips = { OVRPlugin.BoneId.Hand_Thumb3, OVRPlugin.BoneId.Hand_Index3, OVRPlugin.BoneId.Hand_Middle3, OVRPlugin.BoneId.Hand_Ring3, OVRPlugin.BoneId.Hand_Pinky3 };
         int[] fingerTipsIndex = { 5, 8, 11, 14, 18 };
 
-        for (int i = 0; i < rigComponents.Count; i++) {
-            spherePoints.Add(rigComponents[i].transform.position);
+        print("START MAPPING EPIC");
+        for (int j = 0; j < mappedObjects.Length; j++)
+            for (int i = 0; i < mappedObjects[j].Length; i++) {
+                if (mappedObjects[j][i])
+                {
+                    spherePoints.Add(mappedObjects[j][i].transform.parent);
 
-            int handIndex = rigComponents[i].GetPreviousIndexes()[0];
-            int fingerIndex = rigComponents[i].GetPreviousIndexes()[1];
-            handPoints.Add(m_hands[handIndex].Bones[fingerTipsIndex[fingerIndex]].Transform.position);
-        }
+                    int handIndex = mappedObjects[j][i].GetComponent<BoneToRigMapping>().GetPreviousIndexes()[0];
+                    int fingerIndex = mappedObjects[j][i].GetComponent<BoneToRigMapping>().GetPreviousIndexes()[1];
+                    print("hand index: " + handIndex);
+                    print("finger index: " + fingerIndex);
+
+                    handPoints.Add(m_hands[handIndex].Bones[fingerTipsIndex[fingerIndex]].Transform);
+                }
+            }
 
 
         Vector3 midPointSphere = CalcMidPoint(spherePoints);
         Vector3 midPointHand = CalcMidPoint(handPoints);
-        float distHand = Vector3.Distance(midPointHand, handPoints[0]);
-        float distSphere = Vector3.Distance(midPointSphere, spherePoints[0]);
+        float distHand = Vector3.Distance(midPointHand, handPoints[0].position);
+        float distSphere = Vector3.Distance(midPointSphere, spherePoints[0].position);
         float scale = distSphere / distHand;
 
 
 
         for (int i = 0; i < rigComponents.Count; i++)
         {
-            Vector3 heading = spherePoints[i] - midPointSphere;
+            Vector3 heading = spherePoints[i].position - midPointSphere;
             var distance = heading.magnitude;
             var direction = heading / distance;
             rigComponents[i].StartMapping(spherePoints, handPoints);
         }
     }
 
-    void StopMapping()
+    public void StopMapping()
     {
-        foreach (BoneToRigMapping comp in rigComponents)
-            comp.StopMapping();
+        print("STOPS MAPPING :)");
+        for (int i = 0; i < rigComponents.Count; i++)
+        {
+            rigComponents[i].StopMapping();
+        }
     }
 
     public void AddRigComponents(BoneToRigMapping boneToRigMapping)

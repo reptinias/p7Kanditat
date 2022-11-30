@@ -130,6 +130,7 @@ public class TestLoggingScript : MonoBehaviour
         
         if (Input.GetKeyDown("return"))
         {
+            Debug.Log("CSV Saved");
             // Tell the logging manager to save the data (to disk and SQL by default).
             loggingManager.SaveLog("MyLabel");
 

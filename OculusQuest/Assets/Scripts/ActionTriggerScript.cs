@@ -79,18 +79,19 @@ public class ActionTriggerScript : MonoBehaviour
                     if (!animationRecorder.recording && recordingLightScripts[i].pressed && !recording)
                     {
                         animationRecorder.StartRecording();
-                        boneMapper.mapTransforms = true;
                         recording = true;
+                        boneMapper.StartMapping();
                     }
                     else if (animationRecorder.recording && !recordingLightScripts[i].pressed && recording)
                     {
+                        print("STOP RECORDING?!?!??!? :)");
                         animationRecorder.StopRecording();
-                        boneMapper.mapTransforms = false;
                         recording = false;
+                        boneMapper.StopMapping();
                     }
                 }
 
-
+                // gøre så man kun kan selecte med en hånd (BOOLS MIKAEL BOOLS)
                 if (!animationRecorder.recording)
                 {
                     if (currentGestures[i] == "pointing hand")
@@ -125,7 +126,7 @@ public class ActionTriggerScript : MonoBehaviour
                     {
                         animationPlay = 0;
                     }
-
+/*
                     if (currentGestures[i] == "pointing hand" || currentGestures[i] == "pistol hand")
                     {
                         teleport.line.enabled = true;
@@ -140,6 +141,7 @@ public class ActionTriggerScript : MonoBehaviour
                     {
                         teleport.Teleportation(i);
                     }
+                    */
                 }
             }
 
