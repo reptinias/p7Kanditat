@@ -123,7 +123,7 @@ public class BoneToRigMapping : MonoBehaviour
     {
         if (curMapping)
         {
-            Vector3 differencePos = curFingertipBone.Transform.position - initialFingertipPos;//20 -30 = -10
+            Vector3 differencePos = m_hands[curHandIndex].Bones[0].Transform.position - initialFingertipPos;//20 -30 = -10
             Vector3 differencePosLocal = curFingertipBone.Transform.localPosition - initialFingertipPosLocal;//20 -30 = -10
             Quaternion differenceRot = Quaternion.Inverse(initialFingertipRotation) * curFingertipBone.Transform.rotation;//20 -30 = -10
 
