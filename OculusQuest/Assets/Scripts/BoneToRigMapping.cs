@@ -35,6 +35,7 @@ public class BoneToRigMapping : MonoBehaviour
     bool curMapping = false;
 
     Vector3 initialFingertipPos;
+    Vector3 initialFingertipPosLocal;
     Quaternion initialFingertipRotation;
     Vector3 initialPos;
     Quaternion initialRotation;
@@ -105,15 +106,14 @@ public class BoneToRigMapping : MonoBehaviour
             for (int j = 0; j < 5; j++)
             {
                 fingerMaterials[i, j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
-                if (i==0)
+                if (i == 0)
                     finger0Materials[j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
                 else
                     finger1Materials[j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
 
             }
 
-        meshRend = GetComponent<MeshRenderer>(); 
-
+        meshRend = GetComponent<MeshRenderer>();
     }
 
     /// <summary>
@@ -124,9 +124,11 @@ public class BoneToRigMapping : MonoBehaviour
         if (curMapping)
         {
             Vector3 differencePos = curFingertipBone.Transform.position - initialFingertipPos;//20 -30 = -10
+            Vector3 differencePosLocal = curFingertipBone.Transform.localPosition - initialFingertipPosLocal;//20 -30 = -10
             Quaternion differenceRot = Quaternion.Inverse(initialFingertipRotation) * curFingertipBone.Transform.rotation;//20 -30 = -10
 
             transform.parent.position = initialPos + differencePos;
+            transform.parent.position += differencePosLocal;
             transform.parent.rotation = initialRotation * differenceRot;
         }
         /*
@@ -246,10 +248,12 @@ public class BoneToRigMapping : MonoBehaviour
         if (curFingertipBone != null)
         {
             curMapping = true;
-            initialFingertipPos = curFingertipBone.Transform.position;
+            initialFingertipPosLocal = curFingertipBone.Transform.localPosition;
             initialFingertipRotation = curFingertipBone.Transform.rotation;
             initialPos = transform.parent.position;
             initialRotation = transform.parent.rotation;
+
+            initialFingertipPos = m_hands[curHandIndex].Bones[0].Transform.position;
         }
     }
 
