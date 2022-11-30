@@ -170,7 +170,10 @@ public class BoneMappingHandler : MonoBehaviour
 
         for (int i = 0; i < rigComponents.Count; i++) {
             spherePoints.Add(rigComponents[i].transform.position);
-            handPoints.Add(m_hands[fingerTipsIndex[rigComponents[i].GetPreviousIndexes()[1]]].transform.position);
+
+            int handIndex = rigComponents[i].GetPreviousIndexes()[0];
+            int fingerIndex = rigComponents[i].GetPreviousIndexes()[1];
+            handPoints.Add(m_hands[handIndex].Bones[fingerTipsIndex[fingerIndex]].Transform.position);
         }
 
 
