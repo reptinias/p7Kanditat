@@ -113,8 +113,10 @@ public class BoneMappingHandler : MonoBehaviour
             print("Default Color: " + defaultColor +  " hihihihihi");
             mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
             mappedObjects[prevHandIndex].y[prevFingerIndex] = null;
+            mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<BoneToRigMapping>().ResetFinger();
+
         }
-        
+
         mappedObjects[handIndex].y[fingerIndex] = collidedObj;
         Color alphaCol = fingerColor[fingerIndex];
         alphaCol.a = 0.3f;
