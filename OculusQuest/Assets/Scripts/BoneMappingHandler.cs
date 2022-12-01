@@ -106,7 +106,11 @@ public class BoneMappingHandler : MonoBehaviour
             fingerMaterials[prevHandIndex][prevFingerIndex].SetColor("_Color", Color.white);
 
             //den henter selv den nye
-            
+            print("Indexes: " + prevHandIndex + " , " + prevFingerIndex +" hihihihihi");
+            print("Mapped Object: " + mappedObjects[prevHandIndex].y[prevFingerIndex] + " hihihihihi");
+            print("MeshRenderer: " + mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>() + " hihihihihi");
+            print("Material: " + mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material + " hihihihihi");
+            print("Default Color: " + defaultColor +  " hihihihihi");
             mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
             mappedObjects[prevHandIndex].y[prevFingerIndex] = null;
         }
