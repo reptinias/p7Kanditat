@@ -67,11 +67,11 @@ public class ChangeModel : MonoBehaviour
 
     public void DeactivateModels()
     {
+        animRecorder.RemoveTargets();
+        selection.DeselectObject();
         foreach (GameObject model in models)
         {
             model.SetActive(false);
         }
-        animRecorder.RemoveTargets();
-        selection.DeselectObject();
     }
 }

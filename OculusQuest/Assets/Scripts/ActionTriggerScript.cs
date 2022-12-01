@@ -121,17 +121,26 @@ public class ActionTriggerScript : MonoBehaviour
                         boneMapper.StopMapping();
                     }
 
-                    if (currentGestures[i] == "thumb down" && currentGestures[i] != prevGestures[i])
+                    if (currentGestures[i] == "thumb up" && animationRecorder.playingAnimation)
+                    {
+                        animationRecorder.PlayRecording();
+                    }
+                    if (currentGestures[i] == "thumb down" && !animationRecorder.playingAnimation)
+                    {
+                        animationRecorder.StopPlayingClip();
+                    }
+
+                    if (animationRecorder.playingAnimation)
                     {
                         animationPlay = 1;
-                        animationRecorder.PlayRecording();
-                        //animationPlayer.playRecording();
                     }
-                    else
+                    else if(!animationRecorder.playingAnimation)
                     {
                         animationPlay = 0;
                     }
-/*
+                    
+                    
+                    /*
                     if (currentGestures[i] == "pointing hand" || currentGestures[i] == "pistol hand")
                     {
                         teleport.line.enabled = true;

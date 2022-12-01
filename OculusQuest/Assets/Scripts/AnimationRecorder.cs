@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class AnimationRecorder : MonoBehaviour
 {
+    public bool playingAnimation = false;
     private GameObjectRecorder[] m_Recorders;
     public List<GameObject> targets = new List<GameObject>();
     //private AnimatorController controller;
@@ -66,16 +67,19 @@ public class AnimationRecorder : MonoBehaviour
 
     public void PlayRecording()
     {
+        playingAnimation = true;
         for (int i = 0; i < targets.Count; i++)
         {
             if (anims[i].GetClipCount() > 0)
                 if (!anims[i].isPlaying)
                     anims[i].PlayQueued("Test");
         }
+
     }
 
     public void StopPlayingClip()
     {
+        playingAnimation = false;
         for (int i = 0; i < targets.Count; i++)
         {
             if (anims[i].GetClipCount() > 0)
