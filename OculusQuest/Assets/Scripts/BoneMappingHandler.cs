@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using System;
+
+[Serializable]
+public class GameObjectArray
+{
+    public GameObject[] y;
+}
 
 public class BoneMappingHandler : MonoBehaviour
 {
@@ -18,7 +25,7 @@ public class BoneMappingHandler : MonoBehaviour
     public Material[] fingerMaterials0TEST = new Material[5];
     public Material[] fingerMaterials1TEST = new Material[5];
 
-    public GameObject[][] mappedObjects = new GameObject[2][];
+    public GameObjectArray[] mappedObjects = new GameObjectArray[2];
 
     private GameObject[] objArr;
     AnimationRecorder animRecorder;
@@ -34,9 +41,9 @@ public class BoneMappingHandler : MonoBehaviour
         {
             Material[] fingerMaterialArr= new Material[5];
             objArr = new GameObject[5];
-            mappedObjects[i] = objArr;
+            mappedObjects[i].y = objArr;
             
-            print("Mapped objects length: " +  mappedObjects[i].Length);
+            print("Mapped objects length: " +  mappedObjects[i].y.Length);
             for (int j = 0; j < 5; j++)
             {
                 fingerMaterialArr[j] = trackedHands[i].GetComponent<SkinnedMeshRenderer>().materials[j];
@@ -51,8 +58,8 @@ public class BoneMappingHandler : MonoBehaviour
             fingerMaterials[i] = fingerMaterialArr;
         }
         print( mappedObjects.Length);
-        print( mappedObjects[0].Length);
-        print( mappedObjects[1].Length);
+        print( mappedObjects[0].y.Length);
+        print( mappedObjects[1].y.Length);
 
 
     }
@@ -70,13 +77,13 @@ public class BoneMappingHandler : MonoBehaviour
     {
         for (int i = 0; i < mappedObjects.Length; i++)
         {
-            for (int j = 0; j < mappedObjects[i].Length; j++)
+            for (int j = 0; j < mappedObjects[i].y.Length; j++)
             {
-                if (mappedObjects[i][j])
+                if (mappedObjects[i].y[j])
                 {
-                    mappedObjects[i][j].GetComponent<BoneToRigMapping>().ResetFinger();
-                    mappedObjects[i][j].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
-                    mappedObjects[i][j] = null;
+                    mappedObjects[i].y[j].GetComponent<BoneToRigMapping>().ResetFinger();
+                    mappedObjects[i].y[j].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
+                    mappedObjects[i].y[j] = null;
                 }
                 fingerMaterials[i][j].SetColor("_Color", Color.white);
             }
@@ -100,19 +107,19 @@ public class BoneMappingHandler : MonoBehaviour
 
             //den henter selv den nye
             
-            mappedObjects[prevHandIndex][prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
-            mappedObjects[prevHandIndex][prevFingerIndex] = null;
+            mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
+            mappedObjects[prevHandIndex].y[prevFingerIndex] = null;
         }
         
-        mappedObjects[handIndex][fingerIndex] = collidedObj;
+        mappedObjects[handIndex].y[fingerIndex] = collidedObj;
         Color alphaCol = fingerColor[fingerIndex];
         alphaCol.a = 0.3f;
-        mappedObjects[handIndex][ fingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", alphaCol);
+        mappedObjects[handIndex].y[ fingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", alphaCol);
         fingerMaterials[handIndex][ fingerIndex].SetColor("_Color", fingerColor[fingerIndex]);
 
-        if (!mappedObjects[handIndex][fingerIndex].transform.parent.gameObject.GetComponent<Animation>())
-            mappedObjects[handIndex][fingerIndex].transform.parent.gameObject.AddComponent<Animation>();
-        animRecorder.SetTarget(mappedObjects[handIndex][fingerIndex].transform.parent.gameObject);
+        if (!mappedObjects[handIndex].y[fingerIndex].transform.parent.gameObject.GetComponent<Animation>())
+            mappedObjects[handIndex].y[fingerIndex].transform.parent.gameObject.AddComponent<Animation>();
+        animRecorder.SetTarget(mappedObjects[handIndex].y[fingerIndex].transform.parent.gameObject);
 
     }
 
@@ -127,18 +134,18 @@ public class BoneMappingHandler : MonoBehaviour
             print("(index) is material: "+(bool)fingerMaterials[handIndex][ fingerIdx]);
             print("(index)Material name: " + fingerMaterials[handIndex][ fingerIdx].name);
             
-            if (mappedObjects[handIndex][ fingerIdx] != null)
+            if (mappedObjects[handIndex].y[ fingerIdx] != null)
             {
-                mappedObjects[handIndex][ fingerIdx].GetComponent<MeshRenderer>().material
+                mappedObjects[handIndex].y[ fingerIdx].GetComponent<MeshRenderer>().material
                     .SetColor("_Color", defaultColor);
                 //fingerMaterials[handIndex, fingerIndex]
             }
             
             fingerMaterials[handIndex][ fingerIdx].SetColor("_Color", fingerColor[fingerIdx]);
-            mappedObjects[handIndex][ fingerIdx] = otherObject;
+            mappedObjects[handIndex].y[ fingerIdx] = otherObject;
             Color alphaCol = fingerColor[fingerIdx];
             alphaCol.a = 0.3f;
-            mappedObjects[handIndex][fingerIdx].GetComponent<MeshRenderer>().material.SetColor("_Color", alphaCol);
+            mappedObjects[handIndex].y[fingerIdx].GetComponent<MeshRenderer>().material.SetColor("_Color", alphaCol);
         }
         else
         {
@@ -159,6 +166,7 @@ public class BoneMappingHandler : MonoBehaviour
 
     List<Transform> spherePoints = new List<Transform>();
     List<Transform> handPoints = new List<Transform>();
+
     public void StartMapping()
     {
         spherePoints = new List<Transform>();
@@ -169,13 +177,13 @@ public class BoneMappingHandler : MonoBehaviour
 
         print("START MAPPING EPIC");
         for (int j = 0; j < mappedObjects.Length; j++)
-            for (int i = 0; i < mappedObjects[j].Length; i++) {
-                if (mappedObjects[j][i])
+            for (int i = 0; i < mappedObjects[j].y.Length; i++) {
+                if (mappedObjects[j].y[i])
                 {
-                    spherePoints.Add(mappedObjects[j][i].transform.parent);
+                    spherePoints.Add(mappedObjects[j].y[i].transform.parent);
 
-                    int handIndex = mappedObjects[j][i].GetComponent<BoneToRigMapping>().GetPreviousIndexes()[0];
-                    int fingerIndex = mappedObjects[j][i].GetComponent<BoneToRigMapping>().GetPreviousIndexes()[1];
+                    int handIndex = mappedObjects[j].y[i].GetComponent<BoneToRigMapping>().GetPreviousIndexes()[0];
+                    int fingerIndex = mappedObjects[j].y[i].GetComponent<BoneToRigMapping>().GetPreviousIndexes()[1];
                     print("hand index: " + handIndex);
                     print("finger index: " + fingerIndex);
 

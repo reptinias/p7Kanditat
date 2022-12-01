@@ -74,6 +74,16 @@ public class AnimationRecorder : MonoBehaviour
         }
     }
 
+    public void StopPlayingClip()
+    {
+        for (int i = 0; i < targets.Count; i++)
+        {
+            if (anims[i].GetClipCount() > 0)
+                if (!anims[i].isPlaying)
+                    anims[i].Stop();
+        }
+    }
+
     //Called to start recording. Takes a target object and that target's AnimatorController as arguments(will fix later)
     //Changes to be made: Find target object's AnimatorController automatically
     public void StartRecording()
