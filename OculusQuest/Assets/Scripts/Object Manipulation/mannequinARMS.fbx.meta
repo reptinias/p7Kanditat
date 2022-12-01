@@ -1,0 +1,167 @@
+fileFormatVersion: 2
+guid: 1fefa5b15230cd3409571d1da91cb3d2
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'Head' not found\n"
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 1
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: mannequinARMS(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Armature.004
+      parentName: mannequinARMS(Clone)
+      position: {x: 0, y: -1.3634241, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: ZSphere_1.001
+      parentName: Armature.004
+      position: {x: -0, y: 0, z: 0.015075706}
+      rotation: {x: 0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 0.01, y: 0.01, z: 0.01}
+    - name: upperarm_L
+      parentName: Armature.004
+      position: {x: -0.0027459883, y: -0.0000000032801768, z: 0.024332557}
+      rotation: {x: -0.09993273, y: 0.7214187, z: -0.6770977, w: -0.10539109}
+      scale: {x: 1, y: 1, z: 1}
+    - name: lowerarm_L
+      parentName: upperarm_L
+      position: {x: -4.632966e-10, y: 0.005041635, z: 1.0710209e-10}
+      rotation: {x: 0.045795325, y: 0.69582856, z: 0.039282687, w: 0.71566916}
+      scale: {x: 0.9999999, y: 1, z: 1}
+    - name: hand_L
+      parentName: lowerarm_L
+      position: {x: -0, y: 0.0049426677, z: -0.0000000010727672}
+      rotation: {x: -0.14995429, y: 0.019462526, z: -0.017466811, w: 0.98834705}
+      scale: {x: 0.9999999, y: 0.99999994, z: 0.9999998}
+    - name: hand_L_end
+      parentName: hand_L
+      position: {x: -0, y: 0.0025108217, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: upperarm_R
+      parentName: Armature.004
+      position: {x: 0.0027459883, y: -0.0000000032801768, z: 0.024332557}
+      rotation: {x: 0.09993273, y: 0.7214187, z: -0.6770977, w: 0.10539109}
+      scale: {x: 1, y: 1, z: 1}
+    - name: lowerarm_R
+      parentName: upperarm_R
+      position: {x: 4.632966e-10, y: 0.005041635, z: 1.0710209e-10}
+      rotation: {x: 0.04388579, y: -0.6980058, z: -0.031626984, w: 0.71404606}
+      scale: {x: 0.99999994, y: 0.9999999, z: 1}
+    - name: hand_R
+      parentName: lowerarm_R
+      position: {x: -1.11758706e-10, y: 0.004811177, z: -3.3229297e-10}
+      rotation: {x: -0.1541125, y: -0.015979795, z: 0.011144177, w: 0.9878613}
+      scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+    - name: hand_R_end
+      parentName: hand_R
+      position: {x: -0, y: 0.0025108217, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cube
+      parentName: mannequinARMS(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

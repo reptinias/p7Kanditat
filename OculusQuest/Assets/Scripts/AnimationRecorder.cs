@@ -79,7 +79,7 @@ public class AnimationRecorder : MonoBehaviour
         for (int i = 0; i < targets.Count; i++)
         {
             if (anims[i].GetClipCount() > 0)
-                if (!anims[i].isPlaying)
+                if (anims[i].isPlaying)
                     anims[i].Stop();
         }
     }
