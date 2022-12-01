@@ -79,7 +79,7 @@ public class BoneMappingHandler : MonoBehaviour
         {
             for (int j = 0; j < mappedObjects[i].y.Length; j++)
             {
-                if (mappedObjects[i].y[j])
+                if (mappedObjects[i].y[j])/111 116/
                 {
                     mappedObjects[i].y[j].GetComponent<BoneToRigMapping>().ResetFinger();
                     mappedObjects[i].y[j].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
@@ -112,8 +112,9 @@ public class BoneMappingHandler : MonoBehaviour
             print("Material: " + mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material + " hihihihihi");
             print("Default Color: " + defaultColor +  " hihihihihi");
             mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
-            mappedObjects[prevHandIndex].y[prevFingerIndex] = null;
+            
             mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<BoneToRigMapping>().ResetFinger();
+            mappedObjects[prevHandIndex].y[prevFingerIndex] = null;
 
         }
 
