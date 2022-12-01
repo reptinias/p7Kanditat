@@ -707,7 +707,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1504629716976144409, guid: 1c3cfe97f0dac8148bdcbc3121d503ee, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.051
+      value: -3.65
       objectReference: {fileID: 0}
     - target: {fileID: 1504629716976144409, guid: 1c3cfe97f0dac8148bdcbc3121d503ee, type: 3}
       propertyPath: m_LocalPosition.y
@@ -822,6 +822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dcbec7f1ff038c448482ca29d2bb32c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playingAnimation: 0
   targets: []
   recording: 0
 --- !u!4 &268409826
@@ -3569,6 +3570,9 @@ MonoBehaviour:
   length: 1
   line: {fileID: 595176747}
   newSelection: 0
+  recordingLights:
+  - {fileID: 1530536066}
+  - {fileID: 1530536065}
 --- !u!4 &1231012981
 Transform:
   m_ObjectHideFlags: 0
@@ -4560,6 +4564,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
+--- !u!114 &1530536065 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1005926690327888552, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
+  m_PrefabInstance: {fileID: 1530536064}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408984261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d8175f7f7647b147aece94a73ea76f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1530536066 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1005926691084367994, guid: 51e8faa580dbecd40845babd7f295f98, type: 3}
+  m_PrefabInstance: {fileID: 1530536064}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680677913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d8175f7f7647b147aece94a73ea76f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1562696290 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9122228013809523840, guid: 9f46ee57cedc63a4c800d7d42151b95f, type: 3}

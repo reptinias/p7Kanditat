@@ -24,6 +24,7 @@ public class ActionTriggerScript : MonoBehaviour
     public int gestureShift = 0;
     public int animationPlay = 0;
     private bool recording = false;
+    private bool isMapping = false;
     
     // Start is called before the first frame update
     void Start()
@@ -112,12 +113,14 @@ public class ActionTriggerScript : MonoBehaviour
                         recordingLight[i].SetActive(false);
                     }
 
-                    if (currentGestures[i] == "closed hand" && selectingHand != i)
+                    if (currentGestures[i] == "closed hand" && selectingHand != i && selectingHand != -1 && !isMapping)
                     {
+                        isMapping = true;
                         boneMapper.StartMapping();
                     }
-                    else if (currentGestures[i] != "closed hand")
+                    else if (currentGestures[i] != "closed hand" && isMapping && selectingHand != i)
                     {
+                        isMapping = false;
                         boneMapper.StopMapping();
                     }
 

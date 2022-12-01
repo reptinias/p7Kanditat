@@ -75,12 +75,14 @@ public class BoneMappingHandler : MonoBehaviour
 
     public void RemoveAllMapping()
     {
+        print("Remove All Mapping");
         for (int i = 0; i < mappedObjects.Length; i++)
         {
             for (int j = 0; j < mappedObjects[i].y.Length; j++)
             {
                 if (mappedObjects[i].y[j])
                 {
+                    mappedObjects[i].y[j].GetComponent<BoneToRigMapping>().StopMapping();
                     mappedObjects[i].y[j].GetComponent<BoneToRigMapping>().ResetFinger();
                     mappedObjects[i].y[j].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
                     mappedObjects[i].y[j] = null;
@@ -88,10 +90,13 @@ public class BoneMappingHandler : MonoBehaviour
                 fingerMaterials[i][j].SetColor("_Color", Color.white);
             }
         }
+        //spherePoints = new List<Transform>();
+        //handPoints = new List<Transform>();
     }
 
     public void MapFinger(int handIndex, int fingerIndex, GameObject collidedObj)
     {
+        print("Maps finger ");
         int[] handAndFingerIndex = collidedObj.GetComponent<BoneToRigMapping>().GetPreviousIndexes();
         int prevHandIndex = handAndFingerIndex[0];
         int prevFingerIndex = handAndFingerIndex[1];
@@ -100,6 +105,8 @@ public class BoneMappingHandler : MonoBehaviour
         if (prevHandIndex != -1 && prevFingerIndex != -1)
         {
             fingerMaterials[prevHandIndex][prevFingerIndex].SetColor("_Color", Color.white);
+            mappedObjects[prevHandIndex].y[prevFingerIndex] = null;
+
         }
 
         //check index, if index changed -> index def
@@ -193,29 +200,25 @@ public class BoneMappingHandler : MonoBehaviour
             }
 
 
-        Vector3 midPointSphere = CalcMidPoint(spherePoints);
-        Vector3 midPointHand = CalcMidPoint(handPoints);
-        float distHand = Vector3.Distance(midPointHand, handPoints[0].position);
-        float distSphere = Vector3.Distance(midPointSphere, spherePoints[0].position);
-        float scale = distSphere / distHand;
 
-
-
-        for (int i = 0; i < rigComponents.Count; i++)
+        for (int i = 0; i < spherePoints.Count; i++)
         {
-            Vector3 heading = spherePoints[i].position - midPointSphere;
-            var distance = heading.magnitude;
-            var direction = heading / distance;
-            rigComponents[i].StartMapping(spherePoints, handPoints);
+            spherePoints[i].GetComponentInChildren<BoneToRigMapping>().StartMapping(spherePoints, handPoints);
         }
     }
 
+    private Transform spherePointError;
     public void StopMapping()
     {
         print("STOPS MAPPING :)");
-        for (int i = 0; i < rigComponents.Count; i++)
+        for (int i = 0; i < spherePoints.Count; i++)
         {
-            rigComponents[i].StopMapping();
+            print("QQQQQQQQQQ Sphere point: "+ spherePoints[i]);
+            spherePointError = spherePoints[i];
+            print("QQQQQQQQQQ Sphere point child count: "+ spherePoints[i].childCount);
+            print("QQQQQQQQQQ Sphere point bone to rig map: "+ spherePoints[i].GetComponentInChildren<BoneToRigMapping>());
+
+            spherePoints[i].GetComponentInChildren<BoneToRigMapping>().StopMapping();
         }
     }
 

@@ -69,6 +69,8 @@ public class ChangeModel : MonoBehaviour
     {
         animRecorder.RemoveTargets();
         selection.DeselectObject();
+        
+        
         foreach (GameObject model in models)
         {
             model.SetActive(false);

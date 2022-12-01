@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,8 @@ public class Selection : MonoBehaviour
     public bool newSelection;
 
     BoneMappingHandler boneMappingHandler;
+    [SerializeField]
+    public RecordingLightScript[] recordingLights;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +57,7 @@ public class Selection : MonoBehaviour
         allowRecording = false;
         UpdateObjectsInScene();
         DeselectObject();
+
     }
 
     void UpdateObjectsInScene()
@@ -163,6 +167,10 @@ public class Selection : MonoBehaviour
         actionTrigger.ResetTransRotation();
         allowRecording = false;
         newSelection = false;
+        foreach (RecordingLightScript light in recordingLights)
+        {
+            light.collisionAmount = 0;
+        }
     }
 
     void RemoveSelectedObjects()

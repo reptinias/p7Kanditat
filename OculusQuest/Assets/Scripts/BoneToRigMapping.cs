@@ -79,6 +79,9 @@ public class BoneToRigMapping : MonoBehaviour
         curFingertip = new OVRPlugin.BoneId();
         curHandIndex = -1;
         curFingerIndex = -1;
+        handPoints = new List<Transform>();
+        spherePoints = new List<Transform>();
+        mappedAmount = 0;
         print("@Reset finger: " + curHandIndex + " , " + curFingerIndex);
 
     }
@@ -135,36 +138,45 @@ public class BoneToRigMapping : MonoBehaviour
     {
         if (curMapping)
         {
-            Vector3 differencePos = m_hands[curHandIndex].Bones[0].Transform.position - initialHandPos; //20 -30 = -10
-            Vector3 differencePosLocal =
-                curFingertipBone.Transform.localPosition - initialFingertipPosLocal; //20 -30 = -10
-
-            if (mappedAmount == 1)
+            if (mappedAmount > 0)
             {
-                transform.parent.position = initialPos + differencePos;
-                //transform.parent.position += differencePosLocal;
-            }
-            else if(mappedAmount > 1)
-            {
-                //Vector3 midPointSphere = boneMappingHandler.CalcMidPoint(spherePoints);
-                Vector3 midPointHand = boneMappingHandler.CalcMidPoint(handPoints);
+                Vector3 differencePos =
+                    m_hands[curHandIndex].Bones[0].Transform.position - initialHandPos; //20 -30 = -10
 
-                int[] fingerTipsIndex = { 5, 8, 11, 14, 18 };
 
-                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                print(m_hands[curHandIndex].Bones[fingerTipsIndex[curFingerIndex]].Transform.position);
-                print(midPointSphere);
-                print(midPointHand);
+                Vector3 differencePosLocal =
+                    curFingertipBone.Transform.localPosition - initialFingertipPosLocal; //20 -30 = -10
 
-                //transform.parent.position = midPointSphere + distHand * scale * direction; //Vector3.Scale(new Vector3(heading.x, heading.y, heading.z), new Vector3(scale, scale, scale));
-                //Vector3 mappingPos =  (differencePos + midPointSphere) + ((m_hands[curHandIndex].Bones[fingerTipsIndex[curFingerIndex]].Transform.position - midPointHand) * scale);
-                Vector3 mappingPos = Vector3.Scale(
-                                         (m_hands[curHandIndex].Bones[fingerTipsIndex[curFingerIndex]].Transform.position -
-                                          midPointHand),
-                                         new Vector3(scale, scale, scale))
+
+
+                if (mappedAmount == 1)
+                {
+                    transform.parent.position = initialPos + differencePos;
+                    //transform.parent.position += differencePosLocal;
+                }
+                else if (mappedAmount > 1)
+                {
+                    //Vector3 midPointSphere = boneMappingHandler.CalcMidPoint(spherePoints);
+                    Vector3 midPointHand = boneMappingHandler.CalcMidPoint(handPoints);
+
+                    int[] fingerTipsIndex = { 5, 8, 11, 14, 18 };
+
+                    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                    print(m_hands[curHandIndex].Bones[fingerTipsIndex[curFingerIndex]].Transform.position);
+                    print(midPointSphere);
+                    print(midPointHand);
+
+                    //transform.parent.position = midPointSphere + distHand * scale * direction; //Vector3.Scale(new Vector3(heading.x, heading.y, heading.z), new Vector3(scale, scale, scale));
+                    //Vector3 mappingPos =  (differencePos + midPointSphere) + ((m_hands[curHandIndex].Bones[fingerTipsIndex[curFingerIndex]].Transform.position - midPointHand) * scale);
+                    Vector3 mappingPos = Vector3.Scale(
+                                             (m_hands[curHandIndex].Bones[fingerTipsIndex[curFingerIndex]].Transform
+                                                  .position -
+                                              midPointHand),
+                                             new Vector3(scale, scale, scale))
                                          + midPointSphere + differencePos;
 
-                transform.parent.position = mappingPos;
+                    transform.parent.position = mappingPos;
+                }
             }
         }
         /*
@@ -282,29 +294,32 @@ public class BoneToRigMapping : MonoBehaviour
     
     public void StartMapping(List<Transform> spherePoints, List<Transform> handPoints)
     {
-        if (curFingertipBone != null)
+        if (curFingertipBone != null && curHandIndex > -1 && curFingerIndex > -1)
         {
-            curMapping = true;
-            initialFingertipPosLocal = curFingertipBone.Transform.localPosition;
-            initialFingertipRotation = curFingertipBone.Transform.rotation;
-            initialHandPos = m_hands[curHandIndex].Bones[0].Transform.position;
-            initialRotation = transform.parent.rotation;
-            initialPos = transform.parent.position;
-
-            initialFingertipPos = m_hands[curHandIndex].Bones[0].Transform.position;
-
             this.spherePoints = spherePoints;
             this.handPoints = handPoints;
             mappedAmount = handPoints.Count;
-            
-            midPointSphere = boneMappingHandler.CalcMidPoint(this.spherePoints);
-            Vector3 midPointHand = boneMappingHandler.CalcMidPoint(this.handPoints);
+            if (mappedAmount > 0)
+            {
 
-            float distHand = Vector3.Distance(midPointHand, handPoints[0].position);
-            float distSphere = Vector3.Distance(midPointSphere, spherePoints[0].position);
-            scale = distSphere / distHand;
-            if (scale < 1)
-                scale = 1;
+                curMapping = true;
+                initialFingertipPosLocal = curFingertipBone.Transform.localPosition;
+                initialFingertipRotation = curFingertipBone.Transform.rotation;
+                initialHandPos = m_hands[curHandIndex].Bones[0].Transform.position;
+                initialRotation = transform.parent.rotation;
+                initialPos = transform.parent.position;
+
+                initialFingertipPos = m_hands[curHandIndex].Bones[0].Transform.position;
+
+                midPointSphere = boneMappingHandler.CalcMidPoint(this.spherePoints);
+                Vector3 midPointHand = boneMappingHandler.CalcMidPoint(this.handPoints);
+
+                float distHand = Vector3.Distance(midPointHand, handPoints[0].position);
+                float distSphere = Vector3.Distance(midPointSphere, spherePoints[0].position);
+                scale = distSphere / distHand;
+                if (scale < 1)
+                    scale = 1;
+            }
         }
     }
 

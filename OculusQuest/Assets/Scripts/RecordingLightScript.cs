@@ -10,7 +10,7 @@ public class RecordingLightScript : MonoBehaviour
     private OVRHand trackedHand;
     private int difHand;
     private NewReadInputs inputDevices;
-    private int collisionAmount = 0;
+    public int collisionAmount = 0;
     private Renderer renderer;
     public Color litColor;
     public Color unlitColor;
