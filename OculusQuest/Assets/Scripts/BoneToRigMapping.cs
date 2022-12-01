@@ -69,6 +69,7 @@ public class BoneToRigMapping : MonoBehaviour
     {
         curHandIndex = hand;
         curFingerIndex = finger;
+        print("@Mapped to finger: " + curHandIndex +" , " + curFingerIndex);
     }
 
     public void ResetFinger()
@@ -76,6 +77,8 @@ public class BoneToRigMapping : MonoBehaviour
         curFingertipBone = null;
         curHandIndex = -1;
         curFingerIndex = -1;
+        print("@Reset finger: " + curHandIndex + " , " + curFingerIndex);
+
     }
 
     public int[] GetPreviousIndexes()
