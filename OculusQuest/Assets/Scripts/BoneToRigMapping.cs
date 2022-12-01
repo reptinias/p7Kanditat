@@ -75,6 +75,7 @@ public class BoneToRigMapping : MonoBehaviour
     public void ResetFinger()
     {
         curFingertipBone = null;
+        curFingertip = new OVRPlugin.BoneId();
         curHandIndex = -1;
         curFingerIndex = -1;
         print("@Reset finger: " + curHandIndex + " , " + curFingerIndex);
