@@ -79,7 +79,7 @@ public class BoneMappingHandler : MonoBehaviour
         {
             for (int j = 0; j < mappedObjects[i].y.Length; j++)
             {
-                if (mappedObjects[i].y[j])/111 116/
+                if (mappedObjects[i].y[j])
                 {
                     mappedObjects[i].y[j].GetComponent<BoneToRigMapping>().ResetFinger();
                     mappedObjects[i].y[j].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
@@ -95,28 +95,22 @@ public class BoneMappingHandler : MonoBehaviour
         int[] handAndFingerIndex = collidedObj.GetComponent<BoneToRigMapping>().GetPreviousIndexes();
         int prevHandIndex = handAndFingerIndex[0];
         int prevFingerIndex = handAndFingerIndex[1];
-        
-        collidedObj.GetComponent<BoneToRigMapping>().SetIndexes(handIndex, fingerIndex);
-
-        print("Prev indexes: " + prevHandIndex + " "  + prevFingerIndex);
-        print("Indexes: " + handIndex + " "  + fingerIndex);
-
+       
+        //check a, if prev 01 -> 01 def 
         if (prevHandIndex != -1 && prevFingerIndex != -1)
         {
             fingerMaterials[prevHandIndex][prevFingerIndex].SetColor("_Color", Color.white);
+        }
 
-            //den henter selv den nye
-            print("Indexes: " + prevHandIndex + " , " + prevFingerIndex +" hihihihihi");
-            print("Mapped Object: " + mappedObjects[prevHandIndex].y[prevFingerIndex] + " hihihihihi");
-            print("MeshRenderer: " + mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>() + " hihihihihi");
-            print("Material: " + mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material + " hihihihihi");
-            print("Default Color: " + defaultColor +  " hihihihihi");
+        //check index, if index changed -> index def
+        if (mappedObjects[prevHandIndex].y[prevFingerIndex])
+        {
             mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
-            
             mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<BoneToRigMapping>().ResetFinger();
             mappedObjects[prevHandIndex].y[prevFingerIndex] = null;
-
         }
+
+        collidedObj.GetComponent<BoneToRigMapping>().SetIndexes(handIndex, fingerIndex);
 
         mappedObjects[handIndex].y[fingerIndex] = collidedObj;
         Color alphaCol = fingerColor[fingerIndex];
