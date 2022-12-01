@@ -59,7 +59,7 @@ public class TestLoggingScript : MonoBehaviour
         {
             for (int j = 0; j < 5; j++)
             {
-                if (mappingHandler.mappedObjects[i][j] == null)
+                if (mappingHandler.mappedObjects[i].y[j] == null)
                 {
                     translatedMapArray[i,j] = 0;
                 }

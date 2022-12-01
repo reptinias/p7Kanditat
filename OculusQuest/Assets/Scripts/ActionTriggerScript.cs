@@ -112,11 +112,13 @@ public class ActionTriggerScript : MonoBehaviour
                         recordingLight[i].SetActive(false);
                     }
 
-                    if (currentGestures[i] == "closed hand")
+                    if (currentGestures[i] == "closed hand" && selectingHand != i)
                     {
-                        shouldTransRot = true;
-                        handIndexTransRot = i;
-                        //selector.MoveAndRotate(i, transRot);
+                        boneMapper.StartMapping();
+                    }
+                    else if (currentGestures[i] != "closed hand")
+                    {
+                        boneMapper.StopMapping();
                     }
 
                     if (currentGestures[i] == "thumb down" && currentGestures[i] != prevGestures[i])
