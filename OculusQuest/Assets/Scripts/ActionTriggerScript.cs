@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ActionTriggerScript : MonoBehaviour
 {
+    private int selectingHand = -1;
     private BoneMappingHandler boneMapper;
     private NewReadInputs readInputs;
     private GestureRecognition[] gestureRecognition;
@@ -96,6 +97,7 @@ public class ActionTriggerScript : MonoBehaviour
                 {
                     if (currentGestures[i] == "pointing hand")
                     {
+                        selectingHand = i;
                         selector.SelectObject(i);
                         if (selector.getSelectedObject() != null)
                         {
@@ -103,8 +105,9 @@ public class ActionTriggerScript : MonoBehaviour
                         }
                     }
 
-                    if (currentGestures[i] == "ok hand")
+                    if (currentGestures[i] == "ok hand" && i == selectingHand)
                     {
+                        selectingHand = -1;
                         selector.DeselectObject();
                         recordingLight[i].SetActive(false);
                     }

@@ -148,16 +148,13 @@ public class BoneMappingHandler : MonoBehaviour
 
     public Vector3 CalcMidPoint(List<Transform> points)
     {
-        float xTotal = 0;
-        float yTotal = 0;
-        float zTotal = 0;
+        Vector3 addPoints = new Vector3(0,0,0);
         for (int i = 0; i < points.Count; i++)
         {
-            xTotal += points[i].position.x;
-            yTotal += points[i].position.y;
-            zTotal += points[i].position.z;
+            addPoints += points[i].position;
         }
-        return new Vector3(xTotal / points.Count, yTotal / points.Count, zTotal / points.Count);
+        return addPoints / points.Count;
+        //return new Vector3(xTotal / points.Count, yTotal / points.Count, zTotal / points.Count);
     }
 
     List<Transform> spherePoints = new List<Transform>();
