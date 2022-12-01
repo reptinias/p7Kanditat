@@ -103,11 +103,11 @@ public class BoneMappingHandler : MonoBehaviour
         }
 
         //check index, if index changed -> index def
-        if (mappedObjects[prevHandIndex].y[prevFingerIndex])
+        if (mappedObjects[handIndex].y[fingerIndex])
         {
-            mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
-            mappedObjects[prevHandIndex].y[prevFingerIndex].GetComponent<BoneToRigMapping>().ResetFinger();
-            mappedObjects[prevHandIndex].y[prevFingerIndex] = null;
+            mappedObjects[handIndex].y[fingerIndex].GetComponent<MeshRenderer>().material.SetColor("_Color", defaultColor);
+            mappedObjects[handIndex].y[fingerIndex].GetComponent<BoneToRigMapping>().ResetFinger();
+            mappedObjects[handIndex].y[fingerIndex] = null;
         }
 
         collidedObj.GetComponent<BoneToRigMapping>().SetIndexes(handIndex, fingerIndex);
