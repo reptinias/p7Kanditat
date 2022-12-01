@@ -10,10 +10,13 @@ public class ChangeModel : MonoBehaviour
     private int testId = 0;
     private bool changeModel = true;
     private Selection selector;
-
+    AnimationRecorder animRecorder;
+    Selection selection;
     // Start is called before the first frame update
     void Start()
     {
+        selection = GameObject.FindObjectOfType<Selection>();
+        animRecorder = GameObject.FindObjectOfType<AnimationRecorder>();
         selector = GameObject.FindObjectOfType<Selection>();
         //Shuffle();
         DeactivateModels();
@@ -68,5 +71,7 @@ public class ChangeModel : MonoBehaviour
         {
             model.SetActive(false);
         }
+        animRecorder.RemoveTargets();
+        selection.DeselectObject();
     }
 }
