@@ -92,22 +92,16 @@ public class BoneMappingHandler : MonoBehaviour
 
     public void MapFinger(int handIndex, int fingerIndex, GameObject collidedObj)
     {
-        for (int i = 0; i < mappedObjects.Length; i++)
-            for (int j = 0; j < mappedObjects[i].y.Length; j++)
-            {
-                if (mappedObjects[j].y[i])
-                {
-                    int[] handAndFingerIndex = mappedObjects[j].y[i].GetComponent<BoneToRigMapping>().GetPreviousIndexes();
-                    int prevHandIndex = handAndFingerIndex[0];
-                    int prevFingerIndex = handAndFingerIndex[1];
+        int[] handAndFingerIndex = collidedObj.GetComponent<BoneToRigMapping>().GetPreviousIndexes();
+        int prevHandIndex = handAndFingerIndex[0];
+        int prevFingerIndex = handAndFingerIndex[1];
+       
+        //check a, if prev 01 -> 01 def 
+        if (prevHandIndex != -1 && prevFingerIndex != -1)
+        {
+            fingerMaterials[prevHandIndex][prevFingerIndex].SetColor("_Color", Color.white);
+        }
 
-                    //check a, if prev 01 -> 01 def 
-                    if (prevHandIndex != -1 && prevFingerIndex != -1)
-                    {
-                        fingerMaterials[prevHandIndex][prevFingerIndex].SetColor("_Color", Color.white);
-                    }
-                }
-            }
         //check index, if index changed -> index def
         if (mappedObjects[handIndex].y[fingerIndex])
         {
