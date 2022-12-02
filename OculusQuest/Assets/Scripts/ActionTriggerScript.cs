@@ -58,10 +58,10 @@ public class ActionTriggerScript : MonoBehaviour
         int handIndexTransRot = -1;
 
         currentGestures = new string[]{gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
-        if (currentGestures[0] == "thumb up" && currentGestures[1] == "open hand"     ||
-            currentGestures[1] == "thumb up" && currentGestures[0] == "open hand"     ||
-            currentGestures[0] == "1-finger point" && currentGestures[1] == "ok hand" ||
-            currentGestures[1] == "1-finger point" && currentGestures[0] == "ok hand"   )
+        if (currentGestures[0] == "thumb up" && currentGestures[1] == "thumb down"    ||
+            currentGestures[1] == "thumb up" && currentGestures[0] == "thumb down"    ||
+            currentGestures[0] == "pointing hand" && currentGestures[1] == "ok hand" ||
+            currentGestures[1] == "pointing hand" && currentGestures[0] == "ok hand" )
         {
             contradiction = true;
         }
@@ -96,21 +96,34 @@ public class ActionTriggerScript : MonoBehaviour
                 // gøre så man kun kan selecte med en hånd (BOOLS MIKAEL BOOLS)
                 if (!animationRecorder.recording)
                 {
-                    if (currentGestures[i] == "pointing hand")
+                    if (!contradiction)
                     {
-                        selectingHand = i;
-                        selector.SelectObject(i);
-                        if (selector.getSelectedObject() != null)
+                        if (currentGestures[i] == "pointing hand")
                         {
-                            recordingLight[i].SetActive(true);
+                            selectingHand = i;
+                            selector.SelectObject(i);
+                            if (selector.getSelectedObject() != null)
+                            {
+                                recordingLight[i].SetActive(true);
+                            }
                         }
-                    }
 
-                    if (currentGestures[i] == "ok hand" && i == selectingHand)
-                    {
-                        selectingHand = -1;
-                        selector.DeselectObject();
-                        recordingLight[i].SetActive(false);
+                        if (currentGestures[i] == "ok hand" && i != selectingHand)
+                        {
+                            selectingHand = -1;
+                            selector.DeselectObject();
+                            recordingLight[i].SetActive(false);
+                        }
+
+                        if (currentGestures[i] == "thumb up" && !animationRecorder.playingAnimation)
+                        {
+                            animationRecorder.PlayRecording();
+                        }
+
+                        if (currentGestures[i] == "thumb down" && animationRecorder.playingAnimation)
+                        {
+                            animationRecorder.StopPlayingClip();
+                        }
                     }
 
                     if (currentGestures[i] == "closed hand" && selectingHand != i && selectingHand != -1 && !isMapping)
@@ -118,21 +131,13 @@ public class ActionTriggerScript : MonoBehaviour
                         isMapping = true;
                         boneMapper.StartMapping();
                     }
-                    else if (currentGestures[i] != "closed hand" && isMapping && selectingHand != i)
+                    if (currentGestures[i] != "closed hand" && isMapping && selectingHand != i)
                     {
                         isMapping = false;
                         boneMapper.StopMapping();
                     }
 
-                    if (currentGestures[i] == "thumb up" && animationRecorder.playingAnimation)
-                    {
-                        animationRecorder.PlayRecording();
-                    }
-                    if (currentGestures[i] == "thumb down" && !animationRecorder.playingAnimation)
-                    {
-                        animationRecorder.StopPlayingClip();
-                    }
-
+                    
                     if (animationRecorder.playingAnimation)
                     {
                         animationPlay = 1;

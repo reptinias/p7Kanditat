@@ -18,6 +18,8 @@ public class TestLoggingScript : MonoBehaviour
     private string modelName = "";
     
     int[,] translatedMapArray = new int[2,5];
+    public int participantID;
+    public string order = "";
     
     // Start is called before the first frame update
     void Start()
@@ -52,6 +54,9 @@ public class TestLoggingScript : MonoBehaviour
             modelName = changeModel.GetModelName();
         }
         
+        loggingManager.Log("MyLabel", "ID", participantID);
+        loggingManager.Log("MyLabel", "Frame Time", Time.deltaTime);
+        loggingManager.Log("MyLabel", "Model order", order);
         loggingManager.Log("MyLabel", "Trail ID", TrailIndex);
         loggingManager.Log("MyLabel", "Model Name", modelName);
         
