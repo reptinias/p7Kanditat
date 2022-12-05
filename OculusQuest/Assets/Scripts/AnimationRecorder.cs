@@ -68,7 +68,7 @@ public class AnimationRecorder : MonoBehaviour
     public void PlayRecording()
     {
         playingAnimation = true;
-        for (int i = 0; i < targets.Count; i++)
+        for (int i = 0; i < anims.Count; i++)
         {
             if (anims[i].GetClipCount() > 0)
                 if (!anims[i].isPlaying)
@@ -101,7 +101,6 @@ public class AnimationRecorder : MonoBehaviour
             {
                 if (!isTarget[i])
                 {
-                    Debug.LogError("Start Recording not target?");
 
                     continue;
                 }
@@ -115,8 +114,7 @@ public class AnimationRecorder : MonoBehaviour
                 //Clears clip data
                 if (clips[i] == null)
                     clips[i] = new AnimationClip { name = "Test" };
-                else
-                    Debug.LogError("Start Recording not null");
+                
 
                 //Safeguard. Dunno if it does anything anymore
                 //target.GetComponent<Animator>().StopPlayback();
@@ -130,7 +128,6 @@ public class AnimationRecorder : MonoBehaviour
     {
         if (recording)
         {
-            Debug.Log("i've stopped recording");
             for (int i = 0; i < targets.Count; i++)
             {
                 if (!isTarget[i])
@@ -138,7 +135,6 @@ public class AnimationRecorder : MonoBehaviour
 
                 if (clips[i] == null)
                 {
-                    Debug.LogError("AAAAAAAAAAaaa: " + i);
                     continue;
                 }
 

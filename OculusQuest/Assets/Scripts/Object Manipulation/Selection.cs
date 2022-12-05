@@ -155,7 +155,7 @@ public class Selection : MonoBehaviour
     public void DeselectObject() //
     {
         RemoveSelectedObjects();
-
+        
         boneMappingHandler.RemoveAllMapping();
         
         selectedObject = null;
@@ -171,6 +171,7 @@ public class Selection : MonoBehaviour
         {
             light.collisionAmount = 0;
         }
+        animationRecorder.RemoveTargets();
     }
 
     void RemoveSelectedObjects()

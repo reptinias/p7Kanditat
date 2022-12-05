@@ -192,8 +192,6 @@ public class BoneMappingHandler : MonoBehaviour
 
                     int handIndex = mappedObjects[j].y[i].GetComponent<BoneToRigMapping>().GetPreviousIndexes()[0];
                     int fingerIndex = mappedObjects[j].y[i].GetComponent<BoneToRigMapping>().GetPreviousIndexes()[1];
-                    print("hand index: " + handIndex);
-                    print("finger index: " + fingerIndex);
 
                     handPoints.Add(m_hands[handIndex].Bones[fingerTipsIndex[fingerIndex]].Transform);
                 }
@@ -213,10 +211,7 @@ public class BoneMappingHandler : MonoBehaviour
         print("STOPS MAPPING :)");
         for (int i = 0; i < spherePoints.Count; i++)
         {
-            print("QQQQQQQQQQ Sphere point: "+ spherePoints[i]);
             spherePointError = spherePoints[i];
-            print("QQQQQQQQQQ Sphere point child count: "+ spherePoints[i].childCount);
-            print("QQQQQQQQQQ Sphere point bone to rig map: "+ spherePoints[i].GetComponentInChildren<BoneToRigMapping>());
 
             spherePoints[i].GetComponentInChildren<BoneToRigMapping>().StopMapping();
         }

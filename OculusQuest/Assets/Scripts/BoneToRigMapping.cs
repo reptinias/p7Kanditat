@@ -17,8 +17,6 @@ public class BoneToRigMapping : MonoBehaviour
     /// <summary>
     /// Renderer of this cube
     /// </summary>
-    private Renderer m_renderer;
-
     private OVRSkeleton[] m_hands;
     private OVRHand[] trackedHands;
 
@@ -26,30 +24,22 @@ public class BoneToRigMapping : MonoBehaviour
     /// True if an index tip is inside the cube, false otherwise.
     /// First item is left hand, second item is right hand
     /// </summary>
-    private bool[] m_isIndexStaying;
 
     private OVRBone curFingertipBone;
     OVRPlugin.BoneId curFingertip;
-    public TMP_Text testText;
 
     bool curMapping = false;
 
-    Vector3 initialFingertipPos;
     Vector3 initialFingertipPosLocal;
-    Quaternion initialFingertipRotation;
     Vector3 initialPos;
-    Quaternion initialRotation;
 
-    List<int> finger_index = new List<int>();
     private NewReadInputs InputDevices;
 
-    private Color[] fingerColor = { Color.black, Color.blue, Color.yellow, Color.red, Color.green };
 
     private Material[,] fingerMaterials = new Material[2, 5];
     private Material[] finger0Materials = new Material[5];
     private Material[] finger1Materials = new Material[5];
 
-    private MeshRenderer meshRend;
 
     int curHandIndex = -1;
 
@@ -57,8 +47,6 @@ public class BoneToRigMapping : MonoBehaviour
 
     BoneMappingHandler boneMappingHandler;
     ChangeHandMaterial changeHandMaterialScript;
-    AnimationRecorder animRecorder;
-
     List<Transform> spherePoints;
     List<Transform> handPoints;
     float scale;
@@ -98,11 +86,9 @@ public class BoneToRigMapping : MonoBehaviour
     {
         GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.5f, 0.5f, .3f);
         changeHandMaterialScript = GameObject.FindObjectOfType<ChangeHandMaterial>();
-        animRecorder = GameObject.FindObjectOfType<AnimationRecorder>();
 
         //changeHandMaterialScript.ChangeMaterial(0,curIndex, gameObject);
         //StartMapping();
-        m_renderer = GetComponent<Renderer>();
 
         boneMappingHandler = GameObject.FindObjectOfType<BoneMappingHandler>();
 
@@ -110,9 +96,7 @@ public class BoneToRigMapping : MonoBehaviour
         trackedHands = InputDevices.trackedHands;
 
         m_hands = InputDevices.m_hands;
-
-        m_isIndexStaying = new bool[2] { false, false };
-
+        
         //we don't want the cube to move over collision, so let's just use a trigger
         GetComponent<Collider>().isTrigger = true;
 
@@ -127,7 +111,6 @@ public class BoneToRigMapping : MonoBehaviour
 
             }
 
-        meshRend = GetComponent<MeshRenderer>();
     }
 
     private Vector3 midPointSphere;
@@ -304,12 +287,8 @@ public class BoneToRigMapping : MonoBehaviour
 
                 curMapping = true;
                 initialFingertipPosLocal = curFingertipBone.Transform.localPosition;
-                initialFingertipRotation = curFingertipBone.Transform.rotation;
                 initialHandPos = m_hands[curHandIndex].Bones[0].Transform.position;
-                initialRotation = transform.parent.rotation;
                 initialPos = transform.parent.position;
-
-                initialFingertipPos = m_hands[curHandIndex].Bones[0].Transform.position;
 
                 midPointSphere = boneMappingHandler.CalcMidPoint(this.spherePoints);
                 Vector3 midPointHand = boneMappingHandler.CalcMidPoint(this.handPoints);

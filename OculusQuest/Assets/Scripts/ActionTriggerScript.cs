@@ -98,7 +98,7 @@ public class ActionTriggerScript : MonoBehaviour
                 {
                     if (!contradiction)
                     {
-                        if (currentGestures[i] == "pointing hand")
+                        if (currentGestures[i] == "pointing hand" && selector.getSelectedObject() == null)
                         {
                             selectingHand = i;
                             selector.SelectObject(i);
