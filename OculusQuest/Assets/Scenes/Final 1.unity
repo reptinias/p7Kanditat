@@ -365,7 +365,7 @@ MonoBehaviour:
   email: anonymous
   connectToMySQL: {fileID: 0}
   enableCSVSave: 1
-  savePath: C:\Users\kspar\p7Kanditat\OculusQuest\Assets\TestData
+  savePath: C:\Users\Chris\OneDrive\Documents\MEGA\Studiet\GitHub\P7\p7Kanditat\OculusQuest\Assets\TestData
   filePrefix: log
   fileExtension: .csv
 --- !u!4 &97702328
@@ -399,8 +399,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  participantID: 6
-  order: cab
+  participantID: 12
+  order: abc
 --- !u!114 &97702330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,9 +415,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   models:
   - {fileID: 191572661}
-  - {fileID: 983627959}
   - {fileID: 1862854032}
   - {fileID: 1097868201}
+  - {fileID: 983627959}
 --- !u!4 &118332668 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6641385133509196825, guid: 7fd8b3b85ceb35f4dbccf0edd22fc6e7, type: 3}
