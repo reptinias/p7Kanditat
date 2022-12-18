@@ -32,7 +32,7 @@ insecureList = []
 easeList = []
 
 i = 0
-'''
+
 # fix 6 og 7 tid
 for i in range(maxID[1]):
     if i == 7:
@@ -64,6 +64,32 @@ for i in range(maxID[1]):
         timeFeltTrail.append(tempdf.iloc[0])
     timeFelt.append(timeFeltTrail)
 
+sortedGenTime = []
+qOrder = gInfo['Questionnaire Order'].values
+genTime = [list(np.float_(gInfo['1. tid brugt i min'].values)), list(np.float_(gInfo['2. tid brugt i min'].values)), list(np.float_(gInfo['3. tid brugt i min'].values))]
+genTime = np.asarray(genTime).T.tolist()
+for index, row in enumerate(genTime):
+    tempList = []
+    if qOrder[index] == 'ABC':
+        num1 = math.modf(row[0])
+        num2 = math.modf(row[1])
+        num3 = math.modf(row[2])
+        print([num1[1] * 60 + num1[0] * 100, num2[1] * 60 + num2[0] * 100, num3[1] * 60 + num3[0] * 100])
+        tempList.extend([num1[1] * 60 + num1[0] * 100, num2[1] * 60 + num2[0] * 100, num3[1] * 60 + num3[0] * 100])
+
+    if qOrder[index] == 'BCA':
+        num1 = math.modf(row[2])
+        num2 = math.modf(row[0])
+        num3 = math.modf(row[1])
+        tempList.extend([num1[1] * 60 + num1[0] * 100, num2[1] * 60 + num2[0] * 100, num3[1] * 60 + num3[0] * 100])
+
+    if qOrder[index] == 'CAB':
+        num1 = math.modf(row[1])
+        num2 = math.modf(row[0])
+        num3 = math.modf(row[2])
+        tempList.extend([num1[1] * 60 + num1[0] * 100, num2[1] * 60 + num2[0] * 100, num3[1] * 60 + num3[0] * 100])
+    sortedGenTime.append(tempList)
+
 sortedFelt = []
 qOrder = gInfo['Questionnaire Order'].values
 for index, row in enumerate(timeFelt):
@@ -81,7 +107,9 @@ for index, row in enumerate(timeFelt):
 print(modelTime)
 print(timeFelt)
 print(sortedFelt)
+print(sortedGenTime)
 
+'''
 manData = [[],[]]
 dogData = [[],[]]
 dragonData = [[],[]]
@@ -99,6 +127,8 @@ res = stats.ttest_rel(dogData[0], dogData[1])
 print(res)
 res = stats.ttest_rel(dragonData[0], dragonData[1])
 print(res)'''
+
+
 
 NasaScew = ["negativ",
             "negativ",
@@ -190,6 +220,9 @@ def calculateStd(data):
     for list in tData:
         tempList.append(round(math.sqrt(Average(list)), 2))
     return tempList
+
+print(calculateMean(sortedFelt), calculateStd(sortedFelt))
+print(calculateMean(sortedGenTime), calculateStd(sortedGenTime))
 
 for index, row in qdf.iterrows():
     mapLikert(row)
@@ -300,9 +333,17 @@ for row in sortedModelList:
         mappedList.append(round(sum(mappedValues) * mulNumber, 2))
     sortedMappedList.append(mappedList)
 
-
 sAverageData = calculateMean(sortedMappedList)
 sStdData = calculateStd(sortedMappedList)
+
+tSortedMappedList = np.asarray(sortedMappedList).T.tolist()
+print(tSortedMappedList)
+res = stats.ttest_rel(tSortedMappedList[0], tSortedMappedList[1])
+print(res)
+res = stats.ttest_rel(tSortedMappedList[3], tSortedMappedList[4])
+print(res)
+res = stats.ttest_rel(tSortedMappedList[5], tSortedMappedList[4])
+print(res)
 
 print("avg data: " + str(sAverageData))
 print("std data: " + str(sStdData))
@@ -313,16 +354,16 @@ x_pos = np.arange(len(Questionnaires))
 tick = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
 fig, ax = plt.subplots()
-ax.bar(x_pos, sAverageData, yerr=sStdData, align='center', alpha=0.5, ecolor='black', capsize=10)
-ax.set_ylabel('Average questionnaire scores')
+ax.bar(x_pos, sAverageData, yerr=sStdData, align='center', alpha=0.5, ecolor='black', capsize=13)
+ax.set_ylabel('Average questionnaire scores', fontsize=17)
 plt.ylim(0, 100)
 for i, value in enumerate(sAverageData):
-    ax.text(i, value + 14, "M = " + str(value), color='black', horizontalalignment='center')
-    ax.text(i, value + 10, "S = " + str(sStdData[i]), color='black', horizontalalignment='center')
+    ax.text(i, value + 14, "M = " + str(value), color='black', horizontalalignment='center', fontsize=13)
+    ax.text(i, value + 10, "S = " + str(sStdData[i]), color='black', horizontalalignment='center', fontsize=13)
 ax.set_xticks(x_pos)
-ax.set_xticklabels(Questionnaires)
+ax.set_xticklabels(Questionnaires, fontsize=12)
 ax.set_yticks(tick) # Grid
-ax.set_title('Different questionnaires with their mean and standard deviation')
+ax.set_title('Different questionnaires with their mean and standard deviation', fontsize=17)
 ax.yaxis.grid(True)
 plt.show()
 
@@ -383,20 +424,58 @@ for index, list in enumerate(modelQuestionnaire):
     print("avg data: " + str(sAverageData))
     print("std data: " + str(sStdData))
 
+    if index == 1:
+        tempValue = sAverageData[0]
+        sAverageData[0] = sAverageData[1]
+        sAverageData[1] = sAverageData[2]
+        sAverageData[2] = tempValue
+
+        tempValue = sAverageData[3]
+        sAverageData[3] = sAverageData[4]
+        sAverageData[4] = sAverageData[5]
+        sAverageData[5] = tempValue
+    if index == 2:
+        tempValue = sAverageData[2]
+        sAverageData[2] = sAverageData[1]
+        sAverageData[1] = sAverageData[0]
+        sAverageData[0] = tempValue
+
+        tempValue = sAverageData[5]
+        sAverageData[5] = sAverageData[4]
+        sAverageData[4] = sAverageData[3]
+        sAverageData[3] = tempValue
+
     avgdata.append(sAverageData)
     stddata.append(sStdData)
-
-    Questionnaires = ['Human NASA', 'Dog NASA', 'Dragon NASA', 'Human SAM', 'Dog SAM', 'Dragon SAM', 'SUS']
+    print(avgdata)
+    Questionnaires = ['ABC NASA', 'BCA NASA', 'CAB NASA', 'ABC SAM', 'BCA SAM', 'CAB SAM']
     x_pos = np.arange(len(Questionnaires))
 
-    ax.set_ylabel('Average questionnaire scores')
+
+    ax.set_ylabel('Average questionnaire scores', fontsize=13)
     plt.ylim(0, 100)
-    for i, value in enumerate(avgdata[index]):
-        ax.text(i * .25, value + 3, str(value), color='black', fontweight='bold')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(Questionnaires)
-    ax.set_title('Questionnaires with mean and standard deviation')
-    ax.bar(x_pos + 0.25 * index, avgdata[index], yerr=stdData, ecolor='black', width=0.25)
+    ax.set_xticklabels(Questionnaires, fontsize=13)
+    ax.set_title('Questionnaires with mean and standard deviation', fontsize=13)
+    ax.set_yticks(tick) # Grid
+    ax.bar(x_pos + 0.25 * index, avgdata[index][:6], yerr=stdData[:6], ecolor='black', width=0.25)
     ax.yaxis.grid(True)
-ax.legend(labels=['ABC', 'BCA', 'CAB'])
+ax.legend(labels=['Human', 'Dog', 'Dragon'])
+plt.show()
+
+SUSavg = [avgdata[0][6], avgdata[1][6], avgdata[2][6]]
+SUSstd = [stddata[0][6], stddata[1][6], stddata[2][6]]
+
+Questionnaires = ['ABC', 'BCA', 'CAB']
+x_pos = np.arange(len(Questionnaires))
+
+fig, ax = plt.subplots()
+ax.bar(x_pos, SUSavg, yerr=SUSstd, align='center', alpha=0.5, ecolor='black', capsize=13)
+ax.set_ylabel('Average questionnaire scores', fontsize=17)
+plt.ylim(0, 100)
+ax.set_xticks(x_pos)
+ax.set_xticklabels(Questionnaires, fontsize=12)
+ax.set_yticks(tick) # Grid
+ax.set_title('SUS mean score with standard deviation', fontsize=17)
+ax.yaxis.grid(True)
 plt.show()
