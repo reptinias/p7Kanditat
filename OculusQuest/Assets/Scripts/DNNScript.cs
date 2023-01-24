@@ -67,10 +67,11 @@ public class DNNScript : MonoBehaviour
             return predictionString;
         }
         
-        public string SetPrediction(Tensor tensor, int handIndex)
+        public string SetPrediction(Tensor tensor, int handIndex, float predThreshold)
         {
             predicted = tensor.AsFloats();
-            if (predicted.Max() > predThreshold)
+            this.predThreshold = predThreshold;
+            if (predicted.Max() > this.predThreshold)
             {
                 predictedValue = Array.IndexOf(predicted, predicted.Max());
             }
@@ -122,7 +123,7 @@ public class DNNScript : MonoBehaviour
             var input = new Tensor(1, 72, normCoordinates);
             Tensor output = _engine.Execute(input).PeekOutput();
             input.Dispose();
-            predString[handIndex] = prediction.SetPrediction(output, handIndex);
+            predString[handIndex] = prediction.SetPrediction(output, handIndex, predThreshold);
             handIndex += 1;
         }
     }

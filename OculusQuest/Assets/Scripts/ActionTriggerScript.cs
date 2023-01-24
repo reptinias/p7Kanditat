@@ -58,10 +58,10 @@ public class ActionTriggerScript : MonoBehaviour
         int handIndexTransRot = -1;
 
         currentGestures = new string[]{gestureRecognition[0].getGesture()[0], gestureRecognition[1].getGesture()[0]};
-        if (currentGestures[0] == "thumb up" && currentGestures[1] == "thumb down"    ||
-            currentGestures[1] == "thumb up" && currentGestures[0] == "thumb down"    ||
-            currentGestures[0] == "pointing hand" && currentGestures[1] == "ok hand" ||
-            currentGestures[1] == "pointing hand" && currentGestures[0] == "ok hand" )
+        if (currentGestures[0] == "thumb up"      && currentGestures[1] == "thumb down"    ||
+            currentGestures[1] == "thumb up"      && currentGestures[0] == "thumb down"    ||
+            currentGestures[0] == "pointing hand" && currentGestures[1] == "ok hand"       ||
+            currentGestures[1] == "pointing hand" && currentGestures[0] == "ok hand"         )
         {
             contradiction = true;
         }

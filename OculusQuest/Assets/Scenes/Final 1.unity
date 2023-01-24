@@ -4478,7 +4478,7 @@ MonoBehaviour:
   - 
   - 
   procesGesture: 0000
-  predThreshold: 95
+  predThreshold: 0.7
 --- !u!114 &1676371501
 MonoBehaviour:
   m_ObjectHideFlags: 0
